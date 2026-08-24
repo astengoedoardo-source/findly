@@ -3,249 +3,475 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Findly — Trova il meglio</title>
-
-  <meta
-    name="description"
-    content="Findly cerca, confronta e trova ciò che fa per te."
-  >
-
+  <title>Findly Suggest — Trova ciò che vale la pena scegliere</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <!-- NAVBAR -->
+  <!-- MENU -->
+  <aside id="sideMenu" class="side-menu">
 
+    <div class="menu-header">
+      <div class="logo">find<span>ly</span></div>
+      <button id="closeMenu" class="icon-button">×</button>
+    </div>
+
+    <nav class="menu-nav">
+      <button class="menu-item active" data-section="home">
+        <span>⌂</span> Home
+      </button>
+
+      <button class="menu-item" data-section="search">
+        <span>⌕</span> Cerca
+      </button>
+
+      <button class="menu-item" data-section="suggest">
+        <span>✦</span> Findly Suggest
+      </button>
+
+      <button class="menu-item" data-section="local">
+        <span>⌖</span> Locale
+      </button>
+
+      <button class="menu-item" data-section="discover">
+        <span>◈</span> Scopri
+      </button>
+
+      <button class="menu-item" data-section="favorites">
+        <span>♡</span> Preferiti
+      </button>
+
+      <button class="menu-item" data-section="history">
+        <span>◷</span> Cronologia
+      </button>
+
+      <button class="menu-item" data-section="goals">
+        <span>◎</span> Obiettivi
+      </button>
+
+      <button class="menu-item" data-section="profile">
+        <span>◯</span> Profilo
+      </button>
+    </nav>
+
+    <div class="menu-bottom">
+
+      <button class="menu-item" data-section="settings">
+        <span>⚙</span> Impostazioni
+      </button>
+
+      <div class="language-selector">
+        <label>Lingua</label>
+
+        <div class="language-options">
+          <button class="language active" data-lang="it">
+            🇮🇹 Italiano
+          </button>
+
+          <button class="language" data-lang="en">
+            🇬🇧 English
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </aside>
+
+  <div id="menuOverlay" class="menu-overlay"></div>
+
+  <!-- NAVBAR -->
   <header class="navbar">
 
-    <div class="logo">
-      find<span>ly</span>
-    </div>
+    <button id="openMenu" class="menu-button" aria-label="Apri menu">
+      ☰
+    </button>
 
-    <div class="demo-badge">
-      V4
-    </div>
+    <div class="logo">find<span>ly</span></div>
+
+    <div class="demo-badge">V5</div>
 
   </header>
 
-
-  <!-- MAIN -->
-
   <main>
 
-    <!-- HERO -->
+    <!-- HOME -->
+    <section id="homeSection">
 
-    <section class="hero">
+      <section class="hero">
 
-      <p class="eyebrow">
-        SMART DISCOVERY
-      </p>
+        <p class="eyebrow">SMART DISCOVERY</p>
 
-      <h1>
-        Dimmi cosa cerchi.<br>
-        <span>Findly trova il meglio.</span>
-      </h1>
+        <h1>
+          Dimmi cosa cerchi.<br>
+          <span>Findly trova ciò che vale la pena scegliere.</span>
+        </h1>
 
-      <p class="subtitle">
-        Prodotti, moda, tecnologia, film, libri, musica,
-        viaggi e luoghi. Descrivi quello che cerchi.
-        Findly farà il resto.
-      </p>
+        <p class="subtitle">
+          Non limitarti a trovare qualcosa.
+          Lascia che Findly confronti, analizzi e ti aiuti a scegliere.
+        </p>
 
-    </section>
+      </section>
 
+      <!-- QUICK SEARCH -->
+      <section class="quick-search">
 
-    <!-- SEARCH -->
+        <div class="quick-search-inner">
 
-    <section class="search-card">
+          <span class="quick-icon">⌕</span>
 
-      <!-- REQUEST -->
-
-      <div class="field">
-
-        <label for="request">
-          Cosa stai cercando?
-        </label>
-
-        <textarea
-          id="request"
-          placeholder="Es. Cerco una maglietta Ralph Lauren usata, in ottime condizioni, sotto i 50€..."
-        ></textarea>
-
-      </div>
-
-
-      <!-- CATEGORY -->
-
-      <div class="field">
-
-        <label>
-          Cosa stai cercando?
-        </label>
-
-        <div
-          id="categories"
-          class="category-grid"
-        >
-
-          <button
-            type="button"
-            class="category active"
-            data-category="products"
+          <input
+            id="quickSearch"
+            type="text"
+            placeholder="Cerca velocemente qualsiasi cosa..."
           >
-            <span>🛍️</span>
-            Prodotti
-          </button>
 
-
-          <button
-            type="button"
-            class="category"
-            data-category="fashion"
-          >
-            <span>👕</span>
-            Moda
-          </button>
-
-
-          <button
-            type="button"
-            class="category"
-            data-category="tech"
-          >
-            <span>💻</span>
-            Tecnologia
-          </button>
-
-
-          <button
-            type="button"
-            class="category"
-            data-category="auto"
-          >
-            <span>🚗</span>
-            Auto
-          </button>
-
-
-          <button
-            type="button"
-            class="category"
-            data-category="home"
-          >
-            <span>🏠</span>
-            Casa
-          </button>
-
-
-          <button
-            type="button"
-            class="category"
-            data-category="movies"
-          >
-            <span>🎬</span>
-            Film & Serie
-          </button>
-
-
-          <button
-            type="button"
-            class="category"
-            data-category="books"
-          >
-            <span>📚</span>
-            Libri
-          </button>
-
-
-          <button
-            type="button"
-            class="category"
-            data-category="music"
-          >
-            <span>🎵</span>
-            Musica
-          </button>
-
-
-          <button
-            type="button"
-            class="category"
-            data-category="travel"
-          >
-            <span>✈️</span>
-            Viaggi
-          </button>
-
-
-          <button
-            type="button"
-            class="category"
-            data-category="places"
-          >
-            <span>📍</span>
-            Luoghi & Esperienze
-          </button>
-
-
-          <button
-            type="button"
-            class="category"
-            data-category="other"
-          >
-            <span>🔎</span>
-            Altro
+          <button id="quickSearchButton">
+            →
           </button>
 
         </div>
 
-      </div>
+      </section>
 
-
-      <!-- DYNAMIC FILTERS -->
-
-      <div
-        id="dynamicFilters"
-        class="dynamic-filters"
-      >
+      <!-- SEARCH CARD -->
+      <section class="search-card">
 
         <div class="field">
 
-          <label for="budget">
-            Budget
-          </label>
+          <label>Cosa stai cercando?</label>
 
-          <select id="budget">
+          <textarea
+            id="request"
+            placeholder="Es. Cerco delle cuffie wireless con un ottimo rapporto qualità/prezzo..."
+          ></textarea>
 
-            <option value="any">
-              Qualsiasi
-            </option>
+        </div>
 
-            <option value="under50">
-              Meno di €50
-            </option>
+        <div class="grid">
 
-            <option value="under100">
-              Meno di €100
-            </option>
+          <div class="field">
 
-            <option value="100-300">
-              €100 – €300
-            </option>
+            <label>Categoria</label>
 
-            <option value="300-700">
-              €300 – €700
-            </option>
+            <select id="category">
 
-            <option value="700-1500">
-              €700 – €1.500
-            </option>
+              <option value="products">Prodotti</option>
+              <option value="tech">Tecnologia</option>
+              <option value="fashion">Moda</option>
+              <option value="auto">Auto</option>
+              <option value="home">Casa</option>
+              <option value="sport">Sport</option>
+              <option value="movies">Film & Serie</option>
+              <option value="books">Libri</option>
+              <option value="music">Musica</option>
+              <option value="travel">Viaggi</option>
+              <option value="places">Luoghi & Esperienze</option>
+              <option value="other">Altro</option>
 
-            <option value="1500plus">
-              Oltre €1.500
-            </option>
+            </select>
+
+          </div>
+
+          <div class="field">
+
+            <label>Budget</label>
+
+            <select id="budget">
+
+              <option value="any">Qualsiasi budget</option>
+              <option value="free">Gratis</option>
+              <option value="low">Sotto €100</option>
+              <option value="medium">€100 – €300</option>
+              <option value="high">€300 – €700</option>
+              <option value="premium">Oltre €700</option>
+
+            </select>
+
+          </div>
+
+        </div>
+
+        <!-- DYNAMIC FILTERS -->
+        <div id="dynamicFilters" class="dynamic-filters"></div>
+
+        <!-- PRIORITY -->
+        <div class="field">
+
+          <label>Qual è la tua priorità?</label>
+
+          <div class="priorities">
+
+            <button class="priority active" data-value="price">
+              <span>€</span>
+              Prezzo
+            </button>
+
+            <button class="priority" data-value="quality">
+              <span>★</span>
+              Qualità
+            </button>
+
+            <button class="priority" data-value="value">
+              <span>◆</span>
+              Qualità/prezzo
+            </button>
+
+            <button class="priority" data-value="reviews">
+              <span>✦</span>
+              Recensioni
+            </button>
+
+            <button class="priority" data-value="speed">
+              <span>⚡</span>
+              Velocità
+            </button>
+
+          </div>
+
+        </div>
+
+        <button id="findButton" class="find-button">
+
+          <span>Findly Suggest</span>
+
+          <span>→</span>
+
+        </button>
+
+      </section>
+
+    </section>
+
+
+    <!-- SUGGEST -->
+    <section id="suggestSection" class="feature-section hidden">
+
+      <p class="eyebrow">FINDLY SUGGEST</p>
+
+      <h2>Non sai esattamente cosa cerchi?</h2>
+
+      <p>
+        Raccontami cosa vuoi ottenere.
+        Findly ti farà le domande giuste e ti aiuterà a capire
+        quale scelta potrebbe essere migliore per te.
+      </p>
+
+      <textarea
+        id="suggestRequest"
+        placeholder="Es. Ho un weekend libero e circa €300. Vorrei fare qualcosa di veramente bello..."
+      ></textarea>
+
+      <button class="find-button" id="suggestButton">
+        Trova per me
+        <span>→</span>
+      </button>
+
+    </section>
+
+
+    <!-- LOCALE -->
+    <section id="localSection" class="feature-section hidden">
+
+      <p class="eyebrow">FINDLY LOCALE</p>
+
+      <h2>Trova le cose migliori vicino a te.</h2>
+
+      <p>
+        Ristoranti, palestre, campi da calcetto, attività,
+        negozi, eventi e molto altro.
+      </p>
+
+      <textarea
+        id="localRequest"
+        placeholder="Es. Trova un campo da calcetto per 8 persone stasera, massimo €70 l'ora..."
+      ></textarea>
+
+      <button class="find-button" id="localButton">
+        Cerca vicino a me
+        <span>→</span>
+      </button>
+
+    </section>
+
+
+    <!-- DISCOVER -->
+    <section id="discoverSection" class="feature-section hidden">
+
+      <p class="eyebrow">SCOPRI</p>
+
+      <h2>Potrebbe piacerti qualcosa che non hai ancora cercato.</h2>
+
+      <p>
+        Luoghi, esperienze, film, prodotti, attività e idee
+        selezionate da Findly.
+      </p>
+
+      <div id="discoverGrid" class="discover-grid"></div>
+
+    </section>
+
+
+    <!-- RESULTS -->
+    <section id="results" class="results hidden">
+
+      <div class="results-header">
+
+        <div>
+
+          <p class="eyebrow">FINDLY MATCH</p>
+
+          <h2>Abbiamo trovato queste opzioni.</h2>
+
+        </div>
+
+        <div class="match-count">
+          0 risultati
+        </div>
+
+      </div>
+
+      <!-- AI SUMMARY -->
+      <div id="aiSummary" class="ai-summary hidden">
+
+        <div class="ai-summary-header">
+          <span>✦</span>
+          <strong>Findly Suggest</strong>
+        </div>
+
+        <p id="aiSummaryText"></p>
+
+      </div>
+
+      <!-- RECOMMENDATIONS -->
+      <div id="recommendations" class="recommendations"></div>
+
+    </section>
+
+
+    <!-- FAVORITES -->
+    <section id="favoritesSection" class="feature-section hidden">
+
+      <p class="eyebrow">I TUOI PREFERITI</p>
+
+      <h2>Le cose che hai salvato.</h2>
+
+      <div id="favoritesList"></div>
+
+    </section>
+
+
+    <!-- HISTORY -->
+    <section id="historySection" class="feature-section hidden">
+
+      <p class="eyebrow">CRONOLOGIA</p>
+
+      <h2>Le tue ricerche recenti.</h2>
+
+      <div id="historyList"></div>
+
+    </section>
+
+
+    <!-- GOALS -->
+    <section id="goalsSection" class="feature-section hidden">
+
+      <p class="eyebrow">OBIETTIVI</p>
+
+      <h2>Cosa vuoi raggiungere?</h2>
+
+      <textarea
+        id="goalRequest"
+        placeholder="Es. Voglio organizzare un viaggio economico in estate..."
+      ></textarea>
+
+      <button class="find-button" id="goalButton">
+        Costruisci il percorso
+        <span>→</span>
+      </button>
+
+      <div id="goalsResults"></div>
+
+    </section>
+
+
+    <!-- PROFILE -->
+    <section id="profileSection" class="feature-section hidden">
+
+      <p class="eyebrow">PROFILO</p>
+
+      <h2>Il tuo Findly.</h2>
+
+      <p>
+        Qui potrai salvare preferenze, budget, interessi
+        e personalizzare i tuoi suggerimenti.
+      </p>
+
+      <button class="secondary-button" id="loginButton">
+        Accedi / Registrati
+      </button>
+
+    </section>
+
+
+    <!-- SETTINGS -->
+    <section id="settingsSection" class="feature-section hidden">
+
+      <p class="eyebrow">IMPOSTAZIONI</p>
+
+      <h2>Personalizza Findly.</h2>
+
+      <div class="settings-list">
+
+        <div class="setting-row">
+
+          <div>
+            <strong>Aspetto</strong>
+            <p>Scelto in base alle tue preferenze.</p>
+          </div>
+
+          <select id="themeSelect">
+
+            <option value="dark">Dark</option>
+            <option value="light">Light</option>
+            <option value="system">Sistema</option>
+
+          </select>
+
+        </div>
+
+
+        <div class="setting-row">
+
+          <div>
+            <strong>Dimensione testo</strong>
+            <p>Rendi l'interfaccia più facile da leggere.</p>
+          </div>
+
+          <select id="fontSizeSelect">
+
+            <option value="normal">Normale</option>
+            <option value="large">Grande</option>
+            <option value="xlarge">Molto grande</option>
+
+          </select>
+
+        </div>
+
+
+        <div class="setting-row">
+
+          <div>
+            <strong>Lingua</strong>
+            <p>Italiano o English.</p>
+          </div>
+
+          <select id="settingsLanguage">
+
+            <option value="it">🇮🇹 Italiano</option>
+            <option value="en">🇬🇧 English</option>
 
           </select>
 
@@ -253,172 +479,15 @@
 
       </div>
 
-
-      <!-- PRIORITY -->
-
-      <div class="field">
-
-        <label>
-          Cosa conta di più?
-        </label>
-
-        <div class="priorities">
-
-          <button
-            type="button"
-            class="priority active"
-            data-value="value"
-          >
-            <span>◆</span>
-            Qualità/prezzo
-          </button>
-
-
-          <button
-            type="button"
-            class="priority"
-            data-value="price"
-          >
-            <span>€</span>
-            Prezzo
-          </button>
-
-
-          <button
-            type="button"
-            class="priority"
-            data-value="quality"
-          >
-            <span>★</span>
-            Qualità
-          </button>
-
-
-          <button
-            type="button"
-            class="priority"
-            data-value="reviews"
-          >
-            <span>♥</span>
-            Recensioni
-          </button>
-
-        </div>
-
-      </div>
-
-
-      <!-- SEARCH BUTTON -->
-
-      <button
-        id="findButton"
-        class="find-button"
-        type="button"
-      >
-
-        <span>
-          🔎
-        </span>
-
-        Trova per me
-
-        <span>
-          →
-        </span>
-
-      </button>
-
-    </section>
-
-
-    <!-- RESULTS -->
-
-    <section
-      id="results"
-      class="results hidden"
-    >
-
-      <div class="results-header">
-
-        <div>
-
-          <p class="eyebrow">
-            FINDLY MATCH
-          </p>
-
-          <h2>
-            Abbiamo trovato queste opzioni.
-          </h2>
-
-        </div>
-
-
-        <div
-          id="matchCount"
-          class="match-count"
-        >
-          0 risultati
-        </div>
-
-      </div>
-
-
-      <!-- RESULT FILTERS -->
-
-      <div
-        id="resultFilters"
-        class="result-filters"
-      >
-
-        <button
-          class="result-filter active"
-          data-sort="best"
-        >
-          🏆 Migliore
-        </button>
-
-        <button
-          class="result-filter"
-          data-sort="price"
-        >
-          💰 Prezzo
-        </button>
-
-        <button
-          class="result-filter"
-          data-sort="quality"
-        >
-          ⭐ Qualità
-        </button>
-
-        <button
-          class="result-filter"
-          data-sort="reviews"
-        >
-          ♥ Recensioni
-        </button>
-
-      </div>
-
-
-      <!-- RESULTS -->
-
-      <div
-        id="recommendations"
-        class="recommendations"
-      ></div>
-
     </section>
 
   </main>
 
 
-  <!-- FOOTER -->
-
   <footer>
 
     <p>
-      Findly · Smart Discovery
+      Findly Suggest · Trova ciò che vale la pena scegliere.
     </p>
 
   </footer>
