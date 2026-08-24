@@ -8,13 +8,15 @@
 
   <meta
     name="description"
-    content="Findly trova e confronta ciò che stai cercando."
+    content="Findly cerca, confronta e trova ciò che fa per te."
   >
 
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+
+  <!-- NAVBAR -->
 
   <header class="navbar">
 
@@ -23,13 +25,17 @@
     </div>
 
     <div class="demo-badge">
-      V3
+      V4
     </div>
 
   </header>
 
 
+  <!-- MAIN -->
+
   <main>
+
+    <!-- HERO -->
 
     <section class="hero">
 
@@ -43,14 +49,19 @@
       </h1>
 
       <p class="subtitle">
-        Prodotti, film, viaggi, auto, musica e molto altro.
-        Tu descrivi quello che vuoi. Findly cerca le opzioni migliori.
+        Prodotti, moda, tecnologia, film, libri, musica,
+        viaggi e luoghi. Descrivi quello che cerchi.
+        Findly farà il resto.
       </p>
 
     </section>
 
 
+    <!-- SEARCH -->
+
     <section class="search-card">
+
+      <!-- REQUEST -->
 
       <div class="field">
 
@@ -60,54 +71,145 @@
 
         <textarea
           id="request"
-          placeholder="Es. Cerco delle cuffie wireless con un buon rapporto qualità/prezzo..."
+          placeholder="Es. Cerco una maglietta Ralph Lauren usata, in ottime condizioni, sotto i 50€..."
         ></textarea>
 
       </div>
 
 
-      <div class="grid">
+      <!-- CATEGORY -->
 
-        <div class="field">
+      <div class="field">
 
-          <label for="category">
-            Categoria
-          </label>
+        <label>
+          Cosa stai cercando?
+        </label>
 
-          <select id="category">
+        <div
+          id="categories"
+          class="category-grid"
+        >
 
-            <option value="auto">
-              🚗 Auto
-            </option>
+          <button
+            type="button"
+            class="category active"
+            data-category="products"
+          >
+            <span>🛍️</span>
+            Prodotti
+          </button>
 
-            <option value="tech" selected>
-              💻 Tecnologia
-            </option>
 
-            <option value="fashion">
-              👕 Moda
-            </option>
+          <button
+            type="button"
+            class="category"
+            data-category="fashion"
+          >
+            <span>👕</span>
+            Moda
+          </button>
 
-            <option value="sport">
-              ⚽ Sport
-            </option>
 
-            <option value="home">
-              🏠 Casa
-            </option>
+          <button
+            type="button"
+            class="category"
+            data-category="tech"
+          >
+            <span>💻</span>
+            Tecnologia
+          </button>
 
-            <option value="travel">
-              ✈️ Viaggi
-            </option>
 
-            <option value="other">
-              ✨ Altro
-            </option>
+          <button
+            type="button"
+            class="category"
+            data-category="auto"
+          >
+            <span>🚗</span>
+            Auto
+          </button>
 
-          </select>
+
+          <button
+            type="button"
+            class="category"
+            data-category="home"
+          >
+            <span>🏠</span>
+            Casa
+          </button>
+
+
+          <button
+            type="button"
+            class="category"
+            data-category="movies"
+          >
+            <span>🎬</span>
+            Film & Serie
+          </button>
+
+
+          <button
+            type="button"
+            class="category"
+            data-category="books"
+          >
+            <span>📚</span>
+            Libri
+          </button>
+
+
+          <button
+            type="button"
+            class="category"
+            data-category="music"
+          >
+            <span>🎵</span>
+            Musica
+          </button>
+
+
+          <button
+            type="button"
+            class="category"
+            data-category="travel"
+          >
+            <span>✈️</span>
+            Viaggi
+          </button>
+
+
+          <button
+            type="button"
+            class="category"
+            data-category="places"
+          >
+            <span>📍</span>
+            Luoghi & Esperienze
+          </button>
+
+
+          <button
+            type="button"
+            class="category"
+            data-category="other"
+          >
+            <span>🔎</span>
+            Altro
+          </button>
 
         </div>
 
+      </div>
+
+
+      <!-- DYNAMIC FILTERS -->
+
+      <div
+        id="dynamicFilters"
+        class="dynamic-filters"
+      >
 
         <div class="field">
 
@@ -117,20 +219,32 @@
 
           <select id="budget">
 
-            <option value="low">
-              Fino a €100
+            <option value="any">
+              Qualsiasi
             </option>
 
-            <option value="medium">
+            <option value="under50">
+              Meno di €50
+            </option>
+
+            <option value="under100">
+              Meno di €100
+            </option>
+
+            <option value="100-300">
               €100 – €300
             </option>
 
-            <option value="high">
+            <option value="300-700">
               €300 – €700
             </option>
 
-            <option value="premium">
-              Oltre €700
+            <option value="700-1500">
+              €700 – €1.500
+            </option>
+
+            <option value="1500plus">
+              Oltre €1.500
             </option>
 
           </select>
@@ -140,10 +254,12 @@
       </div>
 
 
+      <!-- PRIORITY -->
+
       <div class="field">
 
         <label>
-          Qual è la tua priorità?
+          Cosa conta di più?
         </label>
 
         <div class="priorities">
@@ -151,6 +267,16 @@
           <button
             type="button"
             class="priority active"
+            data-value="value"
+          >
+            <span>◆</span>
+            Qualità/prezzo
+          </button>
+
+
+          <button
+            type="button"
+            class="priority"
             data-value="price"
           >
             <span>€</span>
@@ -171,20 +297,10 @@
           <button
             type="button"
             class="priority"
-            data-value="value"
+            data-value="reviews"
           >
-            <span>◆</span>
-            Qualità/prezzo
-          </button>
-
-
-          <button
-            type="button"
-            class="priority"
-            data-value="speed"
-          >
-            <span>⚡</span>
-            Velocità
+            <span>♥</span>
+            Recensioni
           </button>
 
         </div>
@@ -192,20 +308,30 @@
       </div>
 
 
+      <!-- SEARCH BUTTON -->
+
       <button
         id="findButton"
         class="find-button"
         type="button"
       >
 
+        <span>
+          🔎
+        </span>
+
         Trova per me
 
-        <span>→</span>
+        <span>
+          →
+        </span>
 
       </button>
 
     </section>
 
+
+    <!-- RESULTS -->
 
     <section
       id="results"
@@ -227,12 +353,55 @@
         </div>
 
 
-        <div class="match-count">
+        <div
+          id="matchCount"
+          class="match-count"
+        >
           0 risultati
         </div>
 
       </div>
 
+
+      <!-- RESULT FILTERS -->
+
+      <div
+        id="resultFilters"
+        class="result-filters"
+      >
+
+        <button
+          class="result-filter active"
+          data-sort="best"
+        >
+          🏆 Migliore
+        </button>
+
+        <button
+          class="result-filter"
+          data-sort="price"
+        >
+          💰 Prezzo
+        </button>
+
+        <button
+          class="result-filter"
+          data-sort="quality"
+        >
+          ⭐ Qualità
+        </button>
+
+        <button
+          class="result-filter"
+          data-sort="reviews"
+        >
+          ♥ Recensioni
+        </button>
+
+      </div>
+
+
+      <!-- RESULTS -->
 
       <div
         id="recommendations"
@@ -243,6 +412,8 @@
 
   </main>
 
+
+  <!-- FOOTER -->
 
   <footer>
 
