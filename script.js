@@ -1,449 +1,319 @@
-const WORKER_URL =
-  "https://shrill-firefly-79b6.astengoedoardo.workers.dev/";
-
-const requestInput = document.getElementById("request");
-const categories = document.querySelectorAll(".category");
-const priorities = document.querySelectorAll(".priority");
+const WORKER_URL = "https://shrill-firefly-79b6.astengoedoardo.workers.dev/";
 
 const findButton = document.getElementById("findButton");
-const resultsSection = document.getElementById("results");
+const results = document.getElementById("results");
 const recommendations = document.getElementById("recommendations");
+const requestInput = document.getElementById("request");
+const categoryInput = document.getElementById("category");
+const budgetInput = document.getElementById("budget");
+const priorities = document.querySelectorAll(".priority");
+
+const openMenu = document.getElementById("openMenu");
+const closeMenu = document.getElementById("closeMenu");
+const sideMenu = document.getElementById("sideMenu");
+const menuOverlay = document.getElementById("menuOverlay");
+
+const quickSearch = document.getElementById("quickSearch");
+const quickSearchButton = document.getElementById("quickSearchButton");
 
 const dynamicFilters = document.getElementById("dynamicFilters");
-const budgetSelect = document.getElementById("budget");
-const matchCount = document.getElementById("matchCount");
 
-let selectedCategory = "products";
-let selectedPriority = "value";
-let currentResults = [];
+const themeSelect = document.getElementById("themeSelect");
+const fontSizeSelect = document.getElementById("fontSizeSelect");
+const settingsLanguage = document.getElementById("settingsLanguage");
 
+const suggestButton = document.getElementById("suggestButton");
+const localButton = document.getElementById("localButton");
+const goalButton = document.getElementById("goalButton");
 
-/* =========================
-   FILTRI DINAMICI
-========================= */
+const aiSummary = document.getElementById("aiSummary");
+const aiSummaryText = document.getElementById("aiSummaryText");
+const matchCount = document.querySelector(".match-count");
+
+let selectedPriority = "price";
 
 const categoryFilters = {
 
-  products: `
-    <div class="field">
-      <label for="productBudget">Budget</label>
-      <select id="productBudget">
-        <option value="any">Qualsiasi</option>
-        <option value="under50">Meno di €50</option>
-        <option value="under100">Meno di €100</option>
-        <option value="100-300">€100 – €300</option>
-        <option value="300-700">€300 – €700</option>
-        <option value="700plus">Oltre €700</option>
-      </select>
-    </div>
+  products: [
+    {
+      label: "Condizione",
+      options: [
+        ["any", "Qualsiasi"],
+        ["new", "Nuovo"],
+        ["used", "Usato"]
+      ]
+    }
+  ],
 
-    <div class="field">
-      <label for="condition">Condizioni</label>
-      <select id="condition">
-        <option value="any">Qualsiasi</option>
-        <option value="new">Nuovo</option>
-        <option value="used">Usato</option>
-        <option value="excellent">Usato — ottime condizioni</option>
-      </select>
-    </div>
-  `,
+  tech: [
+    {
+      label: "Condizione",
+      options: [
+        ["any", "Qualsiasi"],
+        ["new", "Nuovo"],
+        ["used", "Usato"]
+      ]
+    }
+  ],
 
-  fashion: `
-    <div class="grid">
-      <div class="field">
-        <label for="fashionBudget">Budget</label>
-        <select id="fashionBudget">
-          <option value="any">Qualsiasi</option>
-          <option value="under30">Meno di €30</option>
-          <option value="under50">Meno di €50</option>
-          <option value="under100">Meno di €100</option>
-          <option value="100plus">Oltre €100</option>
-        </select>
-      </div>
+  fashion: [
+    {
+      label: "Condizione",
+      options: [
+        ["any", "Qualsiasi"],
+        ["new", "Nuovo"],
+        ["like-new", "Come nuovo"],
+        ["used", "Usato"]
+      ]
+    },
+    {
+      label: "Taglia",
+      options: [
+        ["any", "Qualsiasi"],
+        ["XS", "XS"],
+        ["S", "S"],
+        ["M", "M"],
+        ["L", "L"],
+        ["XL", "XL"]
+      ]
+    }
+  ],
 
-      <div class="field">
-        <label for="fashionCondition">Condizioni</label>
-        <select id="fashionCondition">
-          <option value="any">Qualsiasi</option>
-          <option value="new">Nuovo</option>
-          <option value="used">Usato</option>
-          <option value="excellent">Usato — ottime condizioni</option>
-        </select>
-      </div>
-    </div>
+  movies: [
+    {
+      label: "Disponibilità",
+      options: [
+        ["any", "Qualsiasi"],
+        ["free", "Gratis"],
+        ["subscription", "Abbonamento"],
+        ["rent", "Noleggio"],
+        ["buy", "Acquisto"]
+      ]
+    }
+  ],
 
-    <div class="grid">
-      <div class="field">
-        <label for="size">Taglia</label>
-        <select id="size">
-          <option value="any">Qualsiasi</option>
-          <option value="XS">XS</option>
-          <option value="S">S</option>
-          <option value="M">M</option>
-          <option value="L">L</option>
-          <option value="XL">XL</option>
-          <option value="XXL">XXL</option>
-        </select>
-      </div>
+  books: [
+    {
+      label: "Formato",
+      options: [
+        ["any", "Qualsiasi"],
+        ["paper", "Cartaceo"],
+        ["ebook", "E-book"],
+        ["audio", "Audiolibro"]
+      ]
+    }
+  ],
 
-      <div class="field">
-        <label for="gender">Reparto</label>
-        <select id="gender">
-          <option value="any">Qualsiasi</option>
-          <option value="men">Uomo</option>
-          <option value="women">Donna</option>
-          <option value="unisex">Unisex</option>
-        </select>
-      </div>
-    </div>
-  `,
+  travel: [
+    {
+      label: "Tipo",
+      options: [
+        ["any", "Qualsiasi"],
+        ["flight", "Volo"],
+        ["hotel", "Hotel"],
+        ["package", "Viaggio completo"]
+      ]
+    }
+  ],
 
-  tech: `
-    <div class="grid">
-      <div class="field">
-        <label for="techBudget">Budget</label>
-        <select id="techBudget">
-          <option value="any">Qualsiasi</option>
-          <option value="under300">Meno di €300</option>
-          <option value="300-500">€300 – €500</option>
-          <option value="500-1000">€500 – €1.000</option>
-          <option value="1000-2000">€1.000 – €2.000</option>
-          <option value="2000plus">Oltre €2.000</option>
-        </select>
-      </div>
+  sport: [
+    {
+      label: "Tipo",
+      options: [
+        ["any", "Qualsiasi"],
+        ["field", "Campo"],
+        ["gym", "Palestra"],
+        ["activity", "Attività"]
+      ]
+    }
+  ],
 
-      <div class="field">
-        <label for="techCondition">Condizioni</label>
-        <select id="techCondition">
-          <option value="any">Qualsiasi</option>
-          <option value="new">Nuovo</option>
-          <option value="used">Usato</option>
-          <option value="refurbished">Ricondizionato</option>
-        </select>
-      </div>
-    </div>
-  `,
-
-  auto: `
-    <div class="grid">
-      <div class="field">
-        <label for="autoBudget">Prezzo massimo</label>
-        <select id="autoBudget">
-          <option value="any">Qualsiasi</option>
-          <option value="under5000">€5.000</option>
-          <option value="under10000">€10.000</option>
-          <option value="under15000">€15.000</option>
-          <option value="under20000">€20.000</option>
-          <option value="under30000">€30.000</option>
-          <option value="30000plus">Oltre €30.000</option>
-        </select>
-      </div>
-
-      <div class="field">
-        <label for="fuel">Carburante</label>
-        <select id="fuel">
-          <option value="any">Qualsiasi</option>
-          <option value="petrol">Benzina</option>
-          <option value="diesel">Diesel</option>
-          <option value="hybrid">Ibrida</option>
-          <option value="electric">Elettrica</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="grid">
-      <div class="field">
-        <label for="year">Anno minimo</label>
-        <select id="year">
-          <option value="any">Qualsiasi</option>
-          <option value="2025">2025</option>
-          <option value="2023">2023</option>
-          <option value="2021">2021</option>
-          <option value="2019">2019</option>
-          <option value="2017">2017</option>
-        </select>
-      </div>
-
-      <div class="field">
-        <label for="km">Chilometri</label>
-        <select id="km">
-          <option value="any">Qualsiasi</option>
-          <option value="30000">Meno di 30.000 km</option>
-          <option value="60000">Meno di 60.000 km</option>
-          <option value="100000">Meno di 100.000 km</option>
-        </select>
-      </div>
-    </div>
-  `,
-
-  home: `
-    <div class="field">
-      <label for="homeBudget">Budget</label>
-      <select id="homeBudget">
-        <option value="any">Qualsiasi</option>
-        <option value="under50">Meno di €50</option>
-        <option value="under100">Meno di €100</option>
-        <option value="100-300">€100 – €300</option>
-        <option value="300-700">€300 – €700</option>
-        <option value="700plus">Oltre €700</option>
-      </select>
-    </div>
-  `,
-
-  movies: `
-    <div class="grid">
-      <div class="field">
-        <label for="platform">Dove vuoi guardarlo?</label>
-        <select id="platform">
-          <option value="any">Qualsiasi piattaforma</option>
-          <option value="netflix">Netflix</option>
-          <option value="prime">Prime Video</option>
-          <option value="disney">Disney+</option>
-          <option value="max">Max</option>
-          <option value="apple">Apple TV+</option>
-        </select>
-      </div>
-
-      <div class="field">
-        <label for="watchType">Disponibilità</label>
-        <select id="watchType">
-          <option value="any">Qualsiasi</option>
-          <option value="included">Incluso nell'abbonamento</option>
-          <option value="free">Gratis</option>
-          <option value="rent">Noleggio</option>
-          <option value="buy">Acquisto</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="field">
-      <label for="movieGenre">Genere</label>
-      <select id="movieGenre">
-        <option value="any">Qualsiasi genere</option>
-        <option value="horror">Horror</option>
-        <option value="thriller">Thriller</option>
-        <option value="action">Azione</option>
-        <option value="comedy">Commedia</option>
-        <option value="drama">Drammatico</option>
-        <option value="sci-fi">Fantascienza</option>
-      </select>
-    </div>
-  `,
-
-  books: `
-    <div class="grid">
-      <div class="field">
-        <label for="bookFormat">Formato</label>
-        <select id="bookFormat">
-          <option value="any">Qualsiasi</option>
-          <option value="paper">Cartaceo</option>
-          <option value="ebook">eBook</option>
-          <option value="audio">Audiolibro</option>
-        </select>
-      </div>
-
-      <div class="field">
-        <label for="bookCondition">Condizioni</label>
-        <select id="bookCondition">
-          <option value="any">Qualsiasi</option>
-          <option value="new">Nuovo</option>
-          <option value="used">Usato</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="field">
-      <label for="bookBudget">Budget</label>
-      <select id="bookBudget">
-        <option value="any">Qualsiasi</option>
-        <option value="under10">Meno di €10</option>
-        <option value="10-20">€10 – €20</option>
-        <option value="20-40">€20 – €40</option>
-        <option value="40plus">Oltre €40</option>
-      </select>
-    </div>
-  `,
-
-  music: `
-    <div class="grid">
-      <div class="field">
-        <label for="musicType">Cosa cerchi?</label>
-        <select id="musicType">
-          <option value="any">Qualsiasi</option>
-          <option value="song">Canzone</option>
-          <option value="album">Album</option>
-          <option value="artist">Artista</option>
-          <option value="concert">Concerto</option>
-        </select>
-      </div>
-
-      <div class="field">
-        <label for="musicPlatform">Piattaforma</label>
-        <select id="musicPlatform">
-          <option value="any">Qualsiasi</option>
-          <option value="spotify">Spotify</option>
-          <option value="youtube">YouTube</option>
-          <option value="apple">Apple Music</option>
-        </select>
-      </div>
-    </div>
-  `,
-
-  travel: `
-    <div class="grid">
-      <div class="field">
-        <label for="travelBudget">Budget totale</label>
-        <select id="travelBudget">
-          <option value="any">Qualsiasi</option>
-          <option value="under300">Meno di €300</option>
-          <option value="300-500">€300 – €500</option>
-          <option value="500-1000">€500 – €1.000</option>
-          <option value="1000-2000">€1.000 – €2.000</option>
-          <option value="2000plus">Oltre €2.000</option>
-        </select>
-      </div>
-
-      <div class="field">
-        <label for="travelPeople">Persone</label>
-        <select id="travelPeople">
-          <option value="1">1 persona</option>
-          <option value="2" selected>2 persone</option>
-          <option value="3">3 persone</option>
-          <option value="4">4 persone</option>
-          <option value="5plus">5+ persone</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="field">
-      <label for="travelType">Tipo di viaggio</label>
-      <select id="travelType">
-        <option value="any">Qualsiasi</option>
-        <option value="city">Città</option>
-        <option value="beach">Mare</option>
-        <option value="nature">Natura</option>
-        <option value="nightlife">Vita notturna</option>
-        <option value="culture">Cultura</option>
-      </select>
-    </div>
-  `,
-
-  places: `
-    <div class="grid">
-      <div class="field">
-        <label for="placeType">Cosa vuoi trovare?</label>
-        <select id="placeType">
-          <option value="any">Qualsiasi</option>
-          <option value="restaurant">Ristoranti</option>
-          <option value="bar">Bar & locali</option>
-          <option value="club">Club</option>
-          <option value="beach">Spiagge</option>
-          <option value="attraction">Attrazioni</option>
-          <option value="activity">Attività</option>
-        </select>
-      </div>
-
-      <div class="field">
-        <label for="distance">Distanza</label>
-        <select id="distance">
-          <option value="any">Qualsiasi</option>
-          <option value="1">Entro 1 km</option>
-          <option value="5">Entro 5 km</option>
-          <option value="10">Entro 10 km</option>
-          <option value="25">Entro 25 km</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="field">
-      <label for="placeBudget">Prezzo</label>
-      <select id="placeBudget">
-        <option value="any">Qualsiasi</option>
-        <option value="free">Gratis</option>
-        <option value="cheap">Economico</option>
-        <option value="medium">Medio</option>
-        <option value="premium">Premium</option>
-      </select>
-    </div>
-  `,
-
-  other: `
-    <div class="field">
-      <label for="otherBudget">Budget</label>
-      <select id="otherBudget">
-        <option value="any">Qualsiasi</option>
-        <option value="under50">Meno di €50</option>
-        <option value="under100">Meno di €100</option>
-        <option value="100-300">€100 – €300</option>
-        <option value="300-700">€300 – €700</option>
-        <option value="700plus">Oltre €700</option>
-      </select>
-    </div>
-  `
+  places: [
+    {
+      label: "Distanza",
+      options: [
+        ["any", "Qualsiasi"],
+        ["near", "Vicino"],
+        ["very-near", "Molto vicino"]
+      ]
+    }
+  ]
 };
 
 
 /* =========================
-   CAMBIO CATEGORIA
-========================= */
-
-function updateCategory() {
-
-  categories.forEach(button => {
-    button.classList.remove("active");
-  });
-
-  const activeCategory = document.querySelector(
-    `.category[data-category="${selectedCategory}"]`
-  );
-
-  if (activeCategory) {
-    activeCategory.classList.add("active");
-  }
-
-  dynamicFilters.innerHTML =
-    categoryFilters[selectedCategory] || categoryFilters.other;
-}
-
-
-/* =========================
-   SELEZIONE CATEGORIA
-========================= */
-
-categories.forEach(button => {
-
-  button.addEventListener("click", () => {
-
-    selectedCategory =
-      button.dataset.category;
-
-    updateCategory();
-
-  });
-
-});
-
-
-/* =========================
-   SELEZIONE PRIORITÀ
+   PRIORITÀ
 ========================= */
 
 priorities.forEach(button => {
 
   button.addEventListener("click", () => {
 
-    priorities.forEach(item => {
-      item.classList.remove("active");
-    });
+    priorities.forEach(item =>
+      item.classList.remove("active")
+    );
 
     button.classList.add("active");
 
     selectedPriority =
-      button.dataset.value;
-
+      button.dataset.value || "price";
   });
 
 });
+
+
+/* =========================
+   MENU
+========================= */
+
+function showMenu() {
+
+  sideMenu.classList.add("open");
+  menuOverlay.classList.add("open");
+}
+
+function hideMenu() {
+
+  sideMenu.classList.remove("open");
+  menuOverlay.classList.remove("open");
+}
+
+openMenu?.addEventListener("click", showMenu);
+closeMenu?.addEventListener("click", hideMenu);
+menuOverlay?.addEventListener("click", hideMenu);
+
+
+/* =========================
+   SEZIONI
+========================= */
+
+const sections = [
+  "homeSection",
+  "suggestSection",
+  "localSection",
+  "discoverSection",
+  "favoritesSection",
+  "historySection",
+  "goalsSection",
+  "profileSection",
+  "settingsSection"
+];
+
+function showSection(sectionName) {
+
+  sections.forEach(id => {
+
+    const section =
+      document.getElementById(id);
+
+    if (section) {
+      section.classList.add("hidden");
+    }
+
+  });
+
+  const selected =
+    document.getElementById(sectionName);
+
+  if (selected) {
+    selected.classList.remove("hidden");
+  }
+
+  hideMenu();
+}
+
+document.querySelectorAll(".menu-item").forEach(item => {
+
+  item.addEventListener("click", () => {
+
+    const section =
+      item.dataset.section;
+
+    const map = {
+      home: "homeSection",
+      search: "homeSection",
+      suggest: "suggestSection",
+      local: "localSection",
+      discover: "discoverSection",
+      favorites: "favoritesSection",
+      history: "historySection",
+      goals: "goalsSection",
+      profile: "profileSection",
+      settings: "settingsSection"
+    };
+
+    document.querySelectorAll(".menu-item")
+      .forEach(button =>
+        button.classList.remove("active")
+      );
+
+    item.classList.add("active");
+
+    showSection(map[section] || "homeSection");
+  });
+
+});
+
+
+/* =========================
+   FILTRI DINAMICI
+========================= */
+
+function updateDynamicFilters() {
+
+  if (!dynamicFilters) return;
+
+  const category =
+    categoryInput.value;
+
+  const filters =
+    categoryFilters[category] || [];
+
+  dynamicFilters.innerHTML = "";
+
+  filters.forEach((filter, index) => {
+
+    const wrapper =
+      document.createElement("div");
+
+    wrapper.className = "field";
+
+    const label =
+      document.createElement("label");
+
+    label.textContent =
+      filter.label;
+
+    const select =
+      document.createElement("select");
+
+    select.dataset.dynamicFilter =
+      `filter-${index}`;
+
+    filter.options.forEach(option => {
+
+      const element =
+        document.createElement("option");
+
+      element.value = option[0];
+      element.textContent = option[1];
+
+      select.appendChild(element);
+    });
+
+    wrapper.appendChild(label);
+    wrapper.appendChild(select);
+
+    dynamicFilters.appendChild(wrapper);
+  });
+}
+
+categoryInput?.addEventListener(
+  "change",
+  updateDynamicFilters
+);
+
+updateDynamicFilters();
 
 
 /* =========================
@@ -454,209 +324,68 @@ function collectFilters() {
 
   const filters = {};
 
-  const selects =
-    dynamicFilters.querySelectorAll("select");
+  if (!dynamicFilters) {
+    return filters;
+  }
 
-  selects.forEach(select => {
+  dynamicFilters
+    .querySelectorAll("select")
+    .forEach(select => {
 
-    filters[select.id] =
-      select.value;
-
-  });
+      filters[select.dataset.dynamicFilter] =
+        select.value;
+    });
 
   return filters;
 }
 
 
 /* =========================
-   COSTRUZIONE RICERCA
+   RICERCA
 ========================= */
 
-function buildSearchQuery() {
+async function searchFindly(queryOverride = null) {
 
-  const request =
+  const query =
+    queryOverride ||
     requestInput.value.trim();
 
-  const filters =
-    collectFilters();
-
-  const filterText =
-    Object.entries(filters)
-      .map(([key, value]) => `${key}: ${value}`)
-      .join(", ");
-
-  return {
-    query: request,
-    category: selectedCategory,
-    priority: selectedPriority,
-    filters,
-    filterText
-  };
-}
-
-
-/* =========================
-   RENDER RISULTATI
-========================= */
-
-function renderResults(data) {
-
-  currentResults =
-    data.results || [];
-
-  recommendations.innerHTML = "";
-
-  if (!currentResults.length) {
-
-    recommendations.innerHTML = `
-      <div class="result-card">
-        <h3>Nessun risultato trovato</h3>
-        <p class="result-description">
-          Prova a descrivere la ricerca in modo più preciso.
-        </p>
-      </div>
-    `;
-
-    matchCount.textContent =
-      "0 risultati";
-
-    return;
-  }
-
-
-  matchCount.textContent =
-    `${currentResults.length} risultati`;
-
-
-  currentResults.forEach((item, index) => {
-
-    const card =
-      document.createElement("article");
-
-    card.className =
-      "result-card";
-
-    const score =
-      Math.round((item.score || 0) * 100);
-
-    let source =
-      "Web";
-
-    try {
-
-      const hostname =
-        new URL(item.url).hostname
-          .replace("www.", "");
-
-      source =
-        hostname.split(".")[0];
-
-      source =
-        source.charAt(0).toUpperCase() +
-        source.slice(1);
-
-    } catch {
-      source = "Web";
-    }
-
-
-    card.innerHTML = `
-
-      <div class="rank">
-        #${index + 1}
-      </div>
-
-      <div class="source-badge">
-        ${source}
-      </div>
-
-      <h3>
-        ${escapeHtml(item.title)}
-      </h3>
-
-      <p class="result-description">
-        ${escapeHtml(
-          item.description ||
-          "Nessuna descrizione disponibile."
-        )}
-      </p>
-
-      <div class="match">
-        ${score ? `${score}% match` : "Match Findly"}
-      </div>
-
-      <div class="reason">
-        🔎 Risultato trovato da Findly
-      </div>
-
-      <a
-        href="${item.url}"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="result-link"
-      >
-        Vedi sul sito →
-      </a>
-
-    `;
-
-    recommendations.appendChild(card);
-
-  });
-
-}
-
-
-/* =========================
-   SICUREZZA TESTO
-========================= */
-
-function escapeHtml(text) {
-
-  const div =
-    document.createElement("div");
-
-  div.textContent =
-    text || "";
-
-  return div.innerHTML;
-}
-
-
-/* =========================
-   TROVA
-========================= */
-
-findButton.addEventListener("click", async () => {
-
-  const search =
-    buildSearchQuery();
-
-  if (!search.query) {
+  if (!query) {
 
     requestInput.focus();
 
     return;
   }
 
-
   findButton.disabled = true;
 
-  findButton.innerHTML =
-    "🔎 Findly sta cercando...";
+  findButton.querySelector("span:first-child")
+    .textContent = "Findly sta cercando...";
 
+  results.classList.remove("hidden");
 
-  resultsSection.classList.remove("hidden");
+  recommendations.innerHTML = "";
 
-  recommendations.innerHTML = `
-    <div class="result-card">
-      <h3>Sto cercando le migliori opzioni...</h3>
-      <p class="result-description">
-        Findly sta confrontando i risultati.
-      </p>
-    </div>
-  `;
+  aiSummary.classList.add("hidden");
 
+  const payload = {
+
+    query,
+
+    category:
+      categoryInput.value,
+
+    budget:
+      budgetInput.value,
+
+    priority:
+      selectedPriority,
+
+    filters:
+      collectFilters()
+  };
+
+  saveHistory(query);
 
   try {
 
@@ -666,137 +395,661 @@ findButton.addEventListener("click", async () => {
         method: "POST",
 
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type":
+            "application/json"
         },
 
-        body: JSON.stringify({
-
-          query: search.query,
-
-          category:
-            search.category,
-
-          priority:
-            search.priority,
-
-          filters:
-            search.filters,
-
-          filterText:
-            search.filterText
-
-        })
-
+        body:
+          JSON.stringify(payload)
       });
 
+    if (!response.ok) {
+      throw new Error(
+        "Worker error"
+      );
+    }
 
     const data =
       await response.json();
 
-
-    if (!response.ok) {
-
-      throw new Error(
-        data.error ||
-        "Errore durante la ricerca."
-      );
-
-    }
-
-
     renderResults(data);
-
-
-    resultsSection.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
-
 
   } catch (error) {
 
     recommendations.innerHTML = `
-
       <div class="result-card">
-
-        <h3>
-          Qualcosa è andato storto.
-        </h3>
-
-        <p class="result-description">
-          ${escapeHtml(error.message)}
+        <div class="result-source">ERRORE</div>
+        <h3>Non riesco a completare la ricerca.</h3>
+        <p>
+          Controlla che il Worker sia online
+          e riprova.
         </p>
-
       </div>
-
     `;
+
+    console.error(error);
 
   } finally {
 
     findButton.disabled = false;
 
-    findButton.innerHTML =
-      '<span>🔎</span> Trova per me <span>→</span>';
-
+    findButton.querySelector("span:first-child")
+      .textContent = "Findly Suggest";
   }
 
-});
+  results.scrollIntoView({
+    behavior: "smooth"
+  });
+}
+
+findButton?.addEventListener(
+  "click",
+  () => searchFindly()
+);
 
 
 /* =========================
-   FILTRI RISULTATI
+   QUICK SEARCH
 ========================= */
 
-document.addEventListener("click", event => {
+function runQuickSearch() {
 
-  const button =
-    event.target.closest(".result-filter");
+  const query =
+    quickSearch.value.trim();
 
-  if (!button) return;
+  if (!query) return;
 
+  requestInput.value = query;
 
-  document
-    .querySelectorAll(".result-filter")
-    .forEach(item => {
-      item.classList.remove("active");
-    });
+  showSection("homeSection");
 
+  searchFindly(query);
+}
 
-  button.classList.add("active");
+quickSearchButton?.addEventListener(
+  "click",
+  runQuickSearch
+);
 
+quickSearch?.addEventListener(
+  "keydown",
+  event => {
 
-  const sort =
-    button.dataset.sort;
-
-
-  if (sort === "price") {
-
-    currentResults.sort(
-      (a, b) =>
-        (a.score || 0) -
-        (b.score || 0)
-    );
-
-  } else {
-
-    currentResults.sort(
-      (a, b) =>
-        (b.score || 0) -
-        (a.score || 0)
-    );
+    if (event.key === "Enter") {
+      event.preventDefault();
+      runQuickSearch();
+    }
 
   }
+);
 
 
-  renderResults({
-    results: currentResults
+/* =========================
+   RISULTATI
+========================= */
+
+function renderResults(data) {
+
+  const resultList =
+    Array.isArray(data.results)
+      ? data.results
+      : [];
+
+  matchCount.textContent =
+    `${resultList.length} risultati`;
+
+  if (!resultList.length) {
+
+    recommendations.innerHTML = `
+      <div class="result-card">
+        <h3>Nessun risultato</h3>
+        <p>
+          Prova a descrivere meglio quello che stai cercando.
+        </p>
+      </div>
+    `;
+
+    return;
+  }
+
+  recommendations.innerHTML =
+    resultList.map((result, index) => {
+
+      const score =
+        Math.round(
+          (result.score || 0.7) * 100
+        );
+
+      return `
+        <article class="result-card">
+
+          <div class="result-source">
+            ${escapeHTML(result.source || "Fonte")}
+          </div>
+
+          <h3>
+            ${index + 1}. 
+            ${escapeHTML(result.title || "Risultato")}
+          </h3>
+
+          <p>
+            ${escapeHTML(
+              result.description ||
+              "Risultato selezionato da Findly."
+            )}
+          </p>
+
+          <p style="margin-top:10px;">
+            Match Findly: <strong>${score}%</strong>
+          </p>
+
+          <a
+            class="result-link"
+            href="${safeURL(result.url)}"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Vedi risultato →
+          </a>
+
+        </article>
+      `;
+
+    }).join("");
+
+}
+
+
+/* =========================
+   SUGGEST
+========================= */
+
+suggestButton?.addEventListener(
+  "click",
+  () => {
+
+    const input =
+      document.getElementById(
+        "suggestRequest"
+      );
+
+    const value =
+      input?.value.trim();
+
+    if (!value) {
+      input?.focus();
+      return;
+    }
+
+    requestInput.value = value;
+
+    showSection("homeSection");
+
+    searchFindly(value);
+  }
+);
+
+
+/* =========================
+   LOCALE
+========================= */
+
+localButton?.addEventListener(
+  "click",
+  () => {
+
+    const input =
+      document.getElementById(
+        "localRequest"
+      );
+
+    const value =
+      input?.value.trim();
+
+    if (!value) {
+      input?.focus();
+      return;
+    }
+
+    requestInput.value =
+      value;
+
+    categoryInput.value =
+      "places";
+
+    updateDynamicFilters();
+
+    showSection(
+      "homeSection"
+    );
+
+    searchFindly(value);
+  }
+);
+
+
+/* =========================
+   TEMA
+========================= */
+
+function applyTheme(theme) {
+
+  document.body.classList.remove(
+    "light"
+  );
+
+  if (theme === "light") {
+    document.body.classList.add(
+      "light"
+    );
+  }
+
+  if (theme === "system") {
+
+    const prefersLight =
+      window.matchMedia(
+        "(prefers-color-scheme: light)"
+      ).matches;
+
+    if (prefersLight) {
+      document.body.classList.add(
+        "light"
+      );
+    }
+  }
+
+  localStorage.setItem(
+    "findly-theme",
+    theme
+  );
+}
+
+themeSelect?.addEventListener(
+  "change",
+  () => applyTheme(
+    themeSelect.value
+  )
+);
+
+const savedTheme =
+  localStorage.getItem(
+    "findly-theme"
+  ) || "dark";
+
+if (themeSelect) {
+  themeSelect.value =
+    savedTheme;
+}
+
+applyTheme(savedTheme);
+
+
+/* =========================
+   ACCESSIBILITÀ
+========================= */
+
+function applyFontSize(size) {
+
+  document.body.classList.remove(
+    "font-large",
+    "font-xlarge"
+  );
+
+  if (size === "large") {
+    document.body.classList.add(
+      "font-large"
+    );
+  }
+
+  if (size === "xlarge") {
+    document.body.classList.add(
+      "font-xlarge"
+    );
+  }
+
+  localStorage.setItem(
+    "findly-font-size",
+    size
+  );
+}
+
+fontSizeSelect?.addEventListener(
+  "change",
+  () => applyFontSize(
+    fontSizeSelect.value
+  )
+);
+
+const savedFontSize =
+  localStorage.getItem(
+    "findly-font-size"
+  ) || "normal";
+
+if (fontSizeSelect) {
+  fontSizeSelect.value =
+    savedFontSize;
+}
+
+applyFontSize(
+  savedFontSize
+);
+
+
+/* =========================
+   LINGUA
+========================= */
+
+function setLanguage(language) {
+
+  localStorage.setItem(
+    "findly-language",
+    language
+  );
+
+  document.documentElement.lang =
+    language;
+
+  document.querySelectorAll(
+    ".language"
+  ).forEach(button => {
+
+    button.classList.toggle(
+      "active",
+      button.dataset.lang === language
+    );
+
   });
 
+  if (settingsLanguage) {
+    settingsLanguage.value =
+      language;
+  }
+
+  /*
+    La traduzione completa
+    verrà collegata nel prossimo
+    aggiornamento di script.js.
+  */
+}
+
+document.querySelectorAll(
+  ".language"
+).forEach(button => {
+
+  button.addEventListener(
+    "click",
+    () => setLanguage(
+      button.dataset.lang
+    )
+  );
+
 });
+
+settingsLanguage?.addEventListener(
+  "change",
+  () => setLanguage(
+    settingsLanguage.value
+  )
+);
+
+setLanguage(
+  localStorage.getItem(
+    "findly-language"
+  ) || "it"
+);
 
 
 /* =========================
-   AVVIO
+   CRONOLOGIA
 ========================= */
 
-updateCategory();
+function saveHistory(query) {
+
+  const history =
+    JSON.parse(
+      localStorage.getItem(
+        "findly-history"
+      ) || "[]"
+    );
+
+  const updated =
+    [
+      query,
+      ...history.filter(
+        item => item !== query
+      )
+    ].slice(0, 20);
+
+  localStorage.setItem(
+    "findly-history",
+    JSON.stringify(updated)
+  );
+
+  renderHistory();
+}
+
+function renderHistory() {
+
+  const container =
+    document.getElementById(
+      "historyList"
+    );
+
+  if (!container) return;
+
+  const history =
+    JSON.parse(
+      localStorage.getItem(
+        "findly-history"
+      ) || "[]"
+    );
+
+  if (!history.length) {
+
+    container.innerHTML =
+      "<p>Nessuna ricerca recente.</p>";
+
+    return;
+  }
+
+  container.innerHTML =
+    history.map(query => `
+      <button
+        class="secondary-button"
+        style="width:100%; margin-bottom:8px; text-align:left;"
+        onclick="useHistory('${escapeAttribute(query)}')"
+      >
+        ⌕ ${escapeHTML(query)}
+      </button>
+    `).join("");
+}
+
+window.useHistory =
+  function(query) {
+
+    requestInput.value =
+      query;
+
+    showSection(
+      "homeSection"
+    );
+
+    searchFindly(query);
+  };
+
+
+/* =========================
+   PREFERITI
+========================= */
+
+function getFavorites() {
+
+  return JSON.parse(
+    localStorage.getItem(
+      "findly-favorites"
+    ) || "[]"
+  );
+}
+
+function renderFavorites() {
+
+  const container =
+    document.getElementById(
+      "favoritesList"
+    );
+
+  if (!container) return;
+
+  const favorites =
+    getFavorites();
+
+  if (!favorites.length) {
+
+    container.innerHTML =
+      "<p>Nessun preferito salvato.</p>";
+
+    return;
+  }
+
+  container.innerHTML =
+    favorites.map(item => `
+      <div class="result-card">
+        <h3>
+          ${escapeHTML(item.title)}
+        </h3>
+        <p>
+          ${escapeHTML(item.source)}
+        </p>
+      </div>
+    `).join("");
+}
+
+
+/* =========================
+   OBIETTIVI
+========================= */
+
+goalButton?.addEventListener(
+  "click",
+  () => {
+
+    const input =
+      document.getElementById(
+        "goalRequest"
+      );
+
+    const container =
+      document.getElementById(
+        "goalsResults"
+      );
+
+    const value =
+      input?.value.trim();
+
+    if (!value) {
+      input?.focus();
+      return;
+    }
+
+    container.innerHTML = `
+      <div class="ai-summary" style="margin-top:20px;">
+        <div class="ai-summary-header">
+          <span>✦</span>
+          <strong>Findly Suggest</strong>
+        </div>
+
+        <p>
+          Obiettivo ricevuto.
+          Nel prossimo aggiornamento Findly
+          costruirà automaticamente un percorso
+          personalizzato per raggiungerlo.
+        </p>
+      </div>
+    `;
+  }
+);
+
+
+/* =========================
+   DISCOVER DEMO
+========================= */
+
+function renderDiscover() {
+
+  const grid =
+    document.getElementById(
+      "discoverGrid"
+    );
+
+  if (!grid) return;
+
+  const items = [
+    "🌊 Una destinazione che potresti amare",
+    "🎬 Un film che potrebbe diventare il tuo preferito",
+    "🍜 Un posto dove mangiare vicino a te",
+    "🏃 Un'attività che potresti provare",
+    "✈️ Un viaggio da salvare",
+    "🎧 Qualcosa da ascoltare oggi"
+  ];
+
+  grid.innerHTML =
+    items.map(item => `
+      <div class="discover-card">
+        <strong>${item}</strong>
+      </div>
+    `).join("");
+}
+
+
+/* =========================
+   UTILITY
+========================= */
+
+function escapeHTML(value) {
+
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function escapeAttribute(value) {
+
+  return String(value)
+    .replaceAll("\\", "\\\\")
+    .replaceAll("'", "\\'");
+}
+
+function safeURL(value) {
+
+  try {
+
+    const url =
+      new URL(value);
+
+    if (
+      url.protocol === "http:" ||
+      url.protocol === "https:"
+    ) {
+      return url.href;
+    }
+
+  } catch (error) {}
+
+  return "#";
+}
+
+
+/* =========================
+   INIT
+========================= */
+
+renderHistory();
+renderFavorites();
+renderDiscover();
+
+showSection(
+  "homeSection"
+);
