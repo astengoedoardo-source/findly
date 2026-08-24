@@ -11,19 +11,20 @@
 
 <body>
 
-  <!-- =========================
-       MENU
-  ========================== -->
+  <!-- =====================================================
+       MENU LATERALE
+  ====================================================== -->
 
   <aside id="sideMenu" class="side-menu">
 
     <div class="menu-header">
 
-      <div class="logo">
-        F<span>indly</span>
+      <div class="logo findly-logo">
+        <span class="logo-find">FIND</span><span class="logo-ly">LY</span>
+        <span class="logo-s">S</span>
       </div>
 
-      <button id="closeMenu" class="icon-button">
+      <button id="closeMenu" class="icon-button" aria-label="Chiudi menu">
         ×
       </button>
 
@@ -34,37 +35,37 @@
 
       <button class="menu-item active" data-section="home">
         <span>⌂</span>
-        Home
+        <span data-i18n="home">Home</span>
       </button>
 
       <button class="menu-item" data-section="suggest">
         <span>✦</span>
-        Findly Suggest
+        <span data-i18n="suggest">Findly Suggest</span>
       </button>
 
       <button class="menu-item" data-section="local">
         <span>⌖</span>
-        Findly Locale
+        <span data-i18n="local">Findly Locale</span>
       </button>
 
       <button class="menu-item" data-section="discover">
         <span>◈</span>
-        Scopri
+        <span data-i18n="discover">Scopri</span>
       </button>
 
       <button class="menu-item" data-section="favorites">
         <span>♡</span>
-        Preferiti
+        <span data-i18n="favorites">Preferiti</span>
       </button>
 
       <button class="menu-item" data-section="history">
         <span>◷</span>
-        Cronologia
+        <span data-i18n="history">Cronologia</span>
       </button>
 
       <button class="menu-item" data-section="profile">
         <span>◯</span>
-        Profilo
+        <span data-i18n="profile">Profilo</span>
       </button>
 
     </nav>
@@ -74,13 +75,15 @@
 
       <button class="menu-item" data-section="settings">
         <span>⚙</span>
-        Impostazioni
+        <span data-i18n="settings">Impostazioni</span>
       </button>
 
 
       <div class="language-selector">
 
-        <label>Lingua</label>
+        <label data-i18n="languageLabel">
+          Lingua
+        </label>
 
         <div class="language-options">
 
@@ -108,21 +111,23 @@
   <div id="menuOverlay" class="menu-overlay"></div>
 
 
-  <!-- =========================
+  <!-- =====================================================
        NAVBAR
-  ========================== -->
+  ====================================================== -->
 
   <header class="navbar">
 
     <button
       id="openMenu"
-      class="menu-button">
+      class="menu-button"
+      aria-label="Apri menu">
       ☰
     </button>
 
 
-    <div class="logo">
-      F<span>indly</span>
+    <div class="logo findly-logo">
+      <span class="logo-find">FIND</span><span class="logo-ly">LY</span>
+      <span class="logo-s">S</span>
     </div>
 
   </header>
@@ -131,28 +136,34 @@
   <main>
 
 
-    <!-- =========================
+    <!-- =====================================================
          HOME
-    ========================== -->
+    ====================================================== -->
 
     <section id="homeSection">
 
 
+      <!-- HERO -->
+
       <section class="hero">
 
-        <div class="hero-logo">
-          F
+        <div class="hero-logo findly-hero-logo">
+          <span class="hero-find">FIND</span>
+          <span class="hero-s">S</span>
+          <span class="hero-ly">LY</span>
         </div>
 
-        <p class="eyebrow">
+        <p class="eyebrow" data-i18n="heroEyebrow">
           FINDLY
         </p>
 
-        <h1>
-          Trova il meglio.
+        <h1 data-i18n="heroTitle">
+          Trova il meglio
         </h1>
 
-        <p class="subtitle">
+        <p
+          class="subtitle"
+          data-i18n="heroSubtitle">
           Dimmi cosa cerchi e Findly ti aiuterà
           a trovare, confrontare e scegliere.
         </p>
@@ -160,9 +171,9 @@
       </section>
 
 
-      <!-- =========================
+      <!-- =================================================
            AI CONVERSATION
-      ========================== -->
+      ================================================== -->
 
       <section class="ai-search-card">
 
@@ -174,11 +185,11 @@
 
           <div>
 
-            <strong>
+            <strong data-i18n="talkTitle">
               Parla con Findly
             </strong>
 
-            <p>
+            <p data-i18n="talkDescription">
               Ti aiuto a capire cosa scegliere.
             </p>
 
@@ -203,7 +214,7 @@
                 Findly
               </strong>
 
-              <p>
+              <p data-i18n="welcomeMessage">
                 Cosa vuoi trovare oggi?
                 Puoi chiedermi qualsiasi cosa:
                 un film, un libro, un viaggio,
@@ -224,25 +235,48 @@
           <button
             class="suggestion"
             data-query="Non so quale film guardare stasera">
-            🎬 Non so quale film guardare
+
+            🎬
+            <span data-i18n="quickMovie">
+              Non so quale film guardare
+            </span>
+
           </button>
+
 
           <button
             class="suggestion"
             data-query="Voglio organizzare un viaggio al mare">
-            ✈️ Voglio organizzare un viaggio
+
+            ✈️
+            <span data-i18n="quickTravel">
+              Voglio organizzare un viaggio
+            </span>
+
           </button>
+
 
           <button
             class="suggestion"
             data-query="Cerco un libro interessante">
-            📚 Cerco un libro
+
+            📚
+            <span data-i18n="quickBook">
+              Cerco un libro
+            </span>
+
           </button>
+
 
           <button
             class="suggestion"
             data-query="Voglio trovare un buon ristorante">
-            🍝 Voglio mangiare bene
+
+            🍝
+            <span data-i18n="quickFood">
+              Voglio mangiare bene
+            </span>
+
           </button>
 
         </div>
@@ -252,15 +286,17 @@
 
           <textarea
             id="request"
+            data-i18n-placeholder="searchPlaceholder"
             placeholder="Scrivi a Findly..."
             rows="1"></textarea>
 
           <button
             id="findButton"
-            class="send-button">
+            class="send-button"
+            aria-label="Cerca">
 
             →
-            
+
           </button>
 
         </div>
@@ -268,9 +304,9 @@
       </section>
 
 
-      <!-- =========================
+      <!-- =================================================
            CATEGORY
-      ========================== -->
+      ================================================== -->
 
       <section class="category-section">
 
@@ -278,11 +314,11 @@
 
           <div>
 
-            <p class="eyebrow">
+            <p class="eyebrow" data-i18n="searchEyebrow">
               CERCA
             </p>
 
-            <h2>
+            <h2 data-i18n="categoryTitle">
               Oppure scegli cosa stai cercando.
             </h2>
 
@@ -294,6 +330,8 @@
         <div class="category-grid">
 
 
+          <!-- FILM -->
+
           <button
             class="category-card"
             data-category="movies">
@@ -304,11 +342,11 @@
 
             <div class="category-info">
 
-              <strong>
+              <strong data-i18n="movies">
                 Film & Serie
               </strong>
 
-              <span>
+              <span data-i18n="moviesDescription">
                 Trova cosa guardare
               </span>
 
@@ -316,6 +354,8 @@
 
           </button>
 
+
+          <!-- LIBRI -->
 
           <button
             class="category-card"
@@ -327,11 +367,11 @@
 
             <div class="category-info">
 
-              <strong>
+              <strong data-i18n="books">
                 Libri
               </strong>
 
-              <span>
+              <span data-i18n="booksDescription">
                 Trova cosa leggere
               </span>
 
@@ -339,6 +379,8 @@
 
           </button>
 
+
+          <!-- MODA -->
 
           <button
             class="category-card"
@@ -350,11 +392,11 @@
 
             <div class="category-info">
 
-              <strong>
+              <strong data-i18n="fashion">
                 Moda
               </strong>
 
-              <span>
+              <span data-i18n="fashionDescription">
                 Trova il tuo stile
               </span>
 
@@ -362,6 +404,8 @@
 
           </button>
 
+
+          <!-- TECNOLOGIA -->
 
           <button
             class="category-card"
@@ -373,11 +417,11 @@
 
             <div class="category-info">
 
-              <strong>
+              <strong data-i18n="tech">
                 Tecnologia
               </strong>
 
-              <span>
+              <span data-i18n="techDescription">
                 Confronta prodotti
               </span>
 
@@ -385,6 +429,8 @@
 
           </button>
 
+
+          <!-- VIAGGI -->
 
           <button
             class="category-card"
@@ -396,11 +442,11 @@
 
             <div class="category-info">
 
-              <strong>
+              <strong data-i18n="travel">
                 Viaggi
               </strong>
 
-              <span>
+              <span data-i18n="travelDescription">
                 Trova la tua prossima meta
               </span>
 
@@ -408,6 +454,8 @@
 
           </button>
 
+
+          <!-- CIBO -->
 
           <button
             class="category-card"
@@ -419,11 +467,11 @@
 
             <div class="category-info">
 
-              <strong>
+              <strong data-i18n="food">
                 Cibo
               </strong>
 
-              <span>
+              <span data-i18n="foodDescription">
                 Trova dove mangiare
               </span>
 
@@ -431,6 +479,8 @@
 
           </button>
 
+
+          <!-- SPORT -->
 
           <button
             class="category-card"
@@ -442,11 +492,11 @@
 
             <div class="category-info">
 
-              <strong>
+              <strong data-i18n="sport">
                 Sport
               </strong>
 
-              <span>
+              <span data-i18n="sportDescription">
                 Trova cosa fare
               </span>
 
@@ -454,6 +504,8 @@
 
           </button>
 
+
+          <!-- ALTRO -->
 
           <button
             class="category-card"
@@ -465,11 +517,11 @@
 
             <div class="category-info">
 
-              <strong>
+              <strong data-i18n="other">
                 Altro
               </strong>
 
-              <span>
+              <span data-i18n="otherDescription">
                 Cerca qualsiasi cosa
               </span>
 
@@ -482,9 +534,9 @@
       </section>
 
 
-      <!-- =========================
+      <!-- =================================================
            DYNAMIC SEARCH
-      ========================== -->
+      ================================================== -->
 
       <section
         id="dynamicSearch"
@@ -523,7 +575,9 @@
           id="dynamicSearchButton"
           class="find-button">
 
-          Trova il meglio
+          <span data-i18n="findBest">
+            Trova il meglio
+          </span>
 
           <span>
             →
@@ -537,9 +591,9 @@
     </section>
 
 
-    <!-- =========================
+    <!-- =====================================================
          FINDLY SUGGEST
-    ========================== -->
+    ====================================================== -->
 
     <section
       id="suggestSection"
@@ -550,11 +604,11 @@
         FINDLY SUGGEST
       </p>
 
-      <h2>
+      <h2 data-i18n="suggestTitle">
         Non sai quale scegliere?
       </h2>
 
-      <p>
+      <p data-i18n="suggestDescription">
         Metti a confronto due o più alternative
         e lascia che Findly analizzi le differenze.
       </p>
@@ -564,14 +618,18 @@
 
         <input
           id="compareOne"
+          data-i18n-placeholder="firstAlternative"
           placeholder="Prima alternativa">
+
 
         <div class="vs">
           VS
         </div>
 
+
         <input
           id="compareTwo"
+          data-i18n-placeholder="secondAlternative"
           placeholder="Seconda alternativa">
 
       </div>
@@ -579,6 +637,7 @@
 
       <textarea
         id="comparisonContext"
+        data-i18n-placeholder="comparisonPlaceholder"
         placeholder="Cosa conta per te? Es. voglio quello che fa più paura e che abbia le recensioni migliori...">
       </textarea>
 
@@ -587,7 +646,9 @@
         id="compareButton"
         class="find-button">
 
-        Confronta con Findly
+        <span data-i18n="compareWithFindly">
+          Confronta con Findly
+        </span>
 
         <span>
           →
@@ -604,9 +665,9 @@
     </section>
 
 
-    <!-- =========================
-         LOCAL
-    ========================== -->
+    <!-- =====================================================
+         FINDLY LOCALE
+    ====================================================== -->
 
     <section
       id="localSection"
@@ -616,11 +677,11 @@
         FINDLY LOCALE
       </p>
 
-      <h2>
+      <h2 data-i18n="localTitle">
         Trova il meglio vicino a te.
       </h2>
 
-      <p>
+      <p data-i18n="localDescription">
         Ristoranti, palestre, campi da calcetto,
         attività, negozi e molto altro.
       </p>
@@ -628,6 +689,7 @@
 
       <textarea
         id="localRequest"
+        data-i18n-placeholder="localPlaceholder"
         placeholder="Es. Trova un campo da calcetto stasera sotto €70 l'ora...">
       </textarea>
 
@@ -636,7 +698,9 @@
         id="localButton"
         class="find-button">
 
-        Cerca vicino a me
+        <span data-i18n="searchNearby">
+          Cerca vicino a me
+        </span>
 
         <span>
           →
@@ -647,9 +711,9 @@
     </section>
 
 
-    <!-- =========================
-         RESULTS
-    ========================== -->
+    <!-- =====================================================
+         RISULTATI
+    ====================================================== -->
 
     <section
       id="results"
@@ -660,12 +724,12 @@
 
         <div>
 
-          <p class="eyebrow">
+          <p class="eyebrow" data-i18n="resultsEyebrow">
             RISULTATI FINDLY
           </p>
 
-          <h2>
-            Abbiamo trovato il meglio.
+          <h2 data-i18n="resultsTitle">
+            Abbiamo trovato il meglio
           </h2>
 
         </div>
@@ -697,7 +761,7 @@
               Findly Suggest
             </strong>
 
-            <span>
+            <span data-i18n="analysis">
               La mia analisi
             </span>
 
@@ -722,12 +786,12 @@
 
         <div class="section-heading">
 
-          <p class="eyebrow">
+          <p class="eyebrow" data-i18n="topChoices">
             TOP SCELTE
           </p>
 
-          <h2>
-            Le migliori opzioni.
+          <h2 data-i18n="bestOptions">
+            Le migliori opzioni
           </h2>
 
         </div>
@@ -741,7 +805,7 @@
       </div>
 
 
-      <!-- WHERE TO WATCH / BUY -->
+      <!-- DISPONIBILITÀ -->
 
       <div
         id="availability"
@@ -749,12 +813,12 @@
 
         <div class="section-heading">
 
-          <p class="eyebrow">
+          <p class="eyebrow" data-i18n="whereToFind">
             DOVE TROVARLO
           </p>
 
-          <h2>
-            Dove puoi trovarlo.
+          <h2 data-i18n="whereYouCanFind">
+            Dove puoi trovarlo
           </h2>
 
         </div>
@@ -768,7 +832,7 @@
       </div>
 
 
-      <!-- SOURCES -->
+      <!-- FONTI -->
 
       <div
         id="recommendations"
@@ -779,19 +843,19 @@
     </section>
 
 
-    <!-- =========================
+    <!-- =====================================================
          DISCOVER
-    ========================== -->
+    ====================================================== -->
 
     <section
       id="discoverSection"
       class="feature-section hidden">
 
-      <p class="eyebrow">
+      <p class="eyebrow" data-i18n="discoverEyebrow">
         SCOPRI
       </p>
 
-      <h2>
+      <h2 data-i18n="discoverTitle">
         Potresti trovare qualcosa
         che non stavi cercando.
       </h2>
@@ -804,69 +868,67 @@
     </section>
 
 
-    <!-- =========================
+    <!-- =====================================================
          FAVORITES
-    ========================== -->
+    ====================================================== -->
 
     <section
       id="favoritesSection"
       class="feature-section hidden">
 
-      <p class="eyebrow">
+      <p class="eyebrow" data-i18n="favoritesEyebrow">
         PREFERITI
       </p>
 
-      <h2>
+      <h2 data-i18n="favoritesTitle">
         Le cose che hai salvato.
       </h2>
 
-      <div
-        id="favoritesList">
+      <div id="favoritesList">
       </div>
 
     </section>
 
 
-    <!-- =========================
+    <!-- =====================================================
          HISTORY
-    ========================== -->
+    ====================================================== -->
 
     <section
       id="historySection"
       class="feature-section hidden">
 
-      <p class="eyebrow">
+      <p class="eyebrow" data-i18n="historyEyebrow">
         CRONOLOGIA
       </p>
 
-      <h2>
+      <h2 data-i18n="historyTitle">
         Le tue ricerche.
       </h2>
 
-      <div
-        id="historyList">
+      <div id="historyList">
       </div>
 
     </section>
 
 
-    <!-- =========================
+    <!-- =====================================================
          PROFILE
-    ========================== -->
+    ====================================================== -->
 
     <section
       id="profileSection"
       class="feature-section hidden">
 
-      <p class="eyebrow">
+      <p class="eyebrow" data-i18n="profileEyebrow">
         PROFILO
       </p>
 
-      <h2>
+      <h2 data-i18n="profileTitle">
         Il tuo Findly.
       </h2>
 
-      <p>
+      <p data-i18n="profileDescription">
         In futuro potrai salvare preferenze,
         interessi e budget per ricevere
         suggerimenti sempre più personali.
@@ -874,7 +936,8 @@
 
       <button
         id="loginButton"
-        class="secondary-button">
+        class="secondary-button"
+        data-i18n="login">
 
         Accedi / Registrati
 
@@ -883,50 +946,60 @@
     </section>
 
 
-    <!-- =========================
+    <!-- =====================================================
          SETTINGS
-    ========================== -->
+    ====================================================== -->
 
     <section
       id="settingsSection"
       class="feature-section hidden">
 
-      <p class="eyebrow">
+      <p class="eyebrow" data-i18n="settingsEyebrow">
         IMPOSTAZIONI
       </p>
 
-      <h2>
+      <h2 data-i18n="settingsTitle">
         Personalizza Findly.
       </h2>
 
 
       <div class="settings-list">
 
+
+        <!-- TEMA -->
+
         <div class="setting-row">
 
           <div>
 
-            <strong>
+            <strong data-i18n="appearance">
               Aspetto
             </strong>
 
-            <p>
+            <p data-i18n="appearanceDescription">
               Scegli come vedere Findly.
             </p>
 
           </div>
 
+
           <select id="themeSelect">
 
-            <option value="dark">
+            <option
+              value="dark"
+              data-i18n="dark">
               🌙 Dark
             </option>
 
-            <option value="light">
+            <option
+              value="light"
+              data-i18n="light">
               ☀️ Light
             </option>
 
-            <option value="system">
+            <option
+              value="system"
+              data-i18n="system">
               Sistema
             </option>
 
@@ -935,19 +1008,22 @@
         </div>
 
 
+        <!-- LINGUA -->
+
         <div class="setting-row">
 
           <div>
 
-            <strong>
+            <strong data-i18n="language">
               Lingua
             </strong>
 
-            <p>
+            <p data-i18n="languageDescription">
               Scegli la lingua di Findly.
             </p>
 
           </div>
+
 
           <select id="settingsLanguage">
 
@@ -964,35 +1040,63 @@
         </div>
 
 
+        <!-- ACCESSIBILITÀ -->
+
         <div class="setting-row">
 
           <div>
 
-            <strong>
+            <strong data-i18n="textSize">
               Dimensione testo
             </strong>
 
-            <p>
+            <p data-i18n="textSizeDescription">
               Accessibilità dell'interfaccia.
             </p>
 
           </div>
 
+
           <select id="fontSizeSelect">
 
-            <option value="normal">
+            <option
+              value="normal"
+              data-i18n="normal">
               Normale
             </option>
 
-            <option value="large">
+            <option
+              value="large"
+              data-i18n="large">
               Grande
             </option>
 
-            <option value="xlarge">
+            <option
+              value="xlarge"
+              data-i18n="veryLarge">
               Molto grande
             </option>
 
           </select>
+
+        </div>
+
+
+        <!-- INTERFACCIA -->
+
+        <div class="setting-row">
+
+          <div>
+
+            <strong data-i18n="interface">
+              Interfaccia
+            </strong>
+
+            <p data-i18n="interfaceDescription">
+              Altre opzioni di personalizzazione arriveranno presto.
+            </p>
+
+          </div>
 
         </div>
 
@@ -1004,15 +1108,24 @@
   </main>
 
 
+  <!-- =====================================================
+       FOOTER
+  ====================================================== -->
+
   <footer>
 
-    Findly · Trova il meglio.
+    <span data-i18n="footer">
+      Findly · Trova il meglio.
+    </span>
 
   </footer>
 
 
+  <!-- =====================================================
+       SCRIPT
+  ====================================================== -->
+
   <script src="script.js"></script>
 
 </body>
-
 </html>
