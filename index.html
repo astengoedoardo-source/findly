@@ -1,489 +1,131 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Findly — Trova il prodotto giusto</title>
-
-<style>
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  min-height: 100vh;
-  font-family: Arial, Helvetica, sans-serif;
-  color: white;
-  background:
-    radial-gradient(circle at top, #211c45 0%, #090b12 45%);
-}
-
-.container {
-  max-width: 900px;
-  margin: auto;
-  padding: 55px 20px;
-}
-
-.hero {
-  text-align: center;
-  margin-bottom: 35px;
-}
-
-.logo {
-  font-size: 18px;
-  font-weight: bold;
-  letter-spacing: 3px;
-  color: #9d91ff;
-}
-
-h1 {
-  font-size: clamp(42px, 9vw, 76px);
-  line-height: 1;
-  letter-spacing: -4px;
-  margin: 15px 0;
-}
-
-.gradient {
-  background: linear-gradient(90deg, #9c8cff, #5ddcff);
-  -webkit-background-clip: text;
-  color: transparent;
-}
-
-.subtitle {
-  max-width: 620px;
-  margin: auto;
-  color: #a8afbd;
-  font-size: 18px;
-  line-height: 1.5;
-}
-
-.card {
-  background: rgba(18, 22, 32, 0.92);
-  border: 1px solid #292f3c;
-  border-radius: 25px;
-  padding: 25px;
-  box-shadow: 0 30px 80px rgba(0,0,0,.4);
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-
-@media (max-width: 650px) {
-  .grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-label {
-  display: block;
-  margin-bottom: 8px;
-  font-size: 12px;
-  font-weight: bold;
-  color: #abb3c1;
-  letter-spacing: .5px;
-}
-
-input,
-select {
-  width: 100%;
-  padding: 14px;
-  border-radius: 12px;
-  border: 1px solid #303746;
-  background: #0c0f16;
-  color: white;
-  font-size: 16px;
-}
-
-button {
-  width: 100%;
-  margin-top: 20px;
-  padding: 16px;
-  border: none;
-  border-radius: 13px;
-  background: linear-gradient(90deg, #796cff, #6255e8);
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.results {
-  display: none;
-  margin-top: 30px;
-}
-
-.product {
-  background: #0d1119;
-  border: 1px solid #2b313e;
-  border-radius: 18px;
-  padding: 20px;
-  margin-top: 13px;
-}
-
-.badge {
-  display: inline-block;
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: #282149;
-  color: #c8c1ff;
-  font-size: 11px;
-  font-weight: bold;
-}
-
-.product h3 {
-  margin: 13px 0 5px;
-  font-size: 20px;
-}
-
-.price {
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.score {
-  margin-top: 6px;
-  color: #c8cde0;
-}
-
-.why {
-  margin: 12px 0;
-  color: #a8afbd;
-  line-height: 1.5;
-}
-
-.cta {
-  display: inline-block;
-  padding: 11px 15px;
-  border-radius: 10px;
-  background: #252b38;
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.note {
-  margin-top: 18px;
-  color: #697282;
-  font-size: 12px;
-  line-height: 1.5;
-}
-
-.footer {
-  text-align: center;
-  margin-top: 25px;
-  color: #626b79;
-  font-size: 12px;
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Findly — Trova quello giusto</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<div class="container">
+  <header class="navbar">
+    <div class="logo">find<span>ly</span></div>
+    <div class="demo-badge">DEMO</div>
+  </header>
 
-  <div class="hero">
+  <main>
 
-    <div class="logo">FINDLY</div>
+    <section class="hero">
+      <p class="eyebrow">SMART DISCOVERY</p>
 
-    <h1>
-      Trova il
-      <span class="gradient">prodotto giusto.</span>
-    </h1>
+      <h1>Dimmi cosa cerchi.<br><span>Findly trova il resto.</span></h1>
 
-    <p class="subtitle">
-      Inserisci budget, categoria e utilizzo.
-      Findly trova le opzioni più adatte a te.
-    </p>
+      <p class="subtitle">
+        Descrivi quello che vuoi, indica il tuo budget e lascia che
+        Findly selezioni le opzioni più adatte a te.
+      </p>
+    </section>
 
-  </div>
+    <section class="search-card">
 
+      <div class="field">
+        <label>Cosa stai cercando?</label>
 
-  <div class="card">
-
-    <div class="grid">
-
-      <div>
-        <label>BUDGET MASSIMO (€)</label>
-        <input id="budget" type="number" value="700">
+        <textarea
+          id="request"
+          placeholder="Es. Cerco delle cuffie wireless per ascoltare musica, con un buon rapporto qualità/prezzo..."
+        ></textarea>
       </div>
 
-
-      <div>
-        <label>COSA CERCHI?</label>
-
-        <select id="category">
-
-          <option>PC gaming</option>
-          <option>Cuffie</option>
-          <option>Monitor</option>
-          <option>Mouse</option>
-          <option>Tastiera</option>
-
-        </select>
-      </div>
-
-
-      <div>
-
-        <label>UTILIZZO</label>
-
-        <select id="use">
-
-          <option>Gaming</option>
-          <option>Studio</option>
-          <option>Lavoro</option>
-          <option>Uso quotidiano</option>
-
-        </select>
-
-      </div>
-
-
-      <div>
-
-        <label>COSA CONTA DI PIÙ?</label>
-
-        <select id="priority">
-
-          <option>Rapporto qualità/prezzo</option>
-          <option>Prestazioni</option>
-          <option>Prezzo più basso</option>
-
-        </select>
-
-      </div>
-
-    </div>
-
-
-    <button onclick="findProducts()">
-      Trova il mio prodotto →
-    </button>
-
-
-    <div id="results" class="results"></div>
-
-
-    <div class="note">
-      Questa è la prima demo di Findly.
-      I prodotti mostrati sono dimostrativi.
-      Nella versione reale collegheremo prodotti, prezzi e link reali.
-    </div>
-
-  </div>
-
-
-  <div class="footer">
-    Findly © 2026 — AI Product Finder
-  </div>
-
-</div>
-
-
-<script>
-
-const products = [
-
-  {
-    category: "PC gaming",
-    name: "Findly Gaming Performance",
-    price: 699,
-    score: 9.4,
-    reason: "Ottimo equilibrio tra prestazioni e prezzo per il gaming."
-  },
-
-  {
-    category: "PC gaming",
-    name: "Findly Gaming Value",
-    price: 599,
-    score: 9.1,
-    reason: "La scelta equilibrata per spendere meno mantenendo buone prestazioni."
-  },
-
-  {
-    category: "PC gaming",
-    name: "Findly Gaming Budget",
-    price: 499,
-    score: 8.7,
-    reason: "Una soluzione economica per iniziare a giocare."
-  },
-
-  {
-    category: "Cuffie",
-    name: "Findly Wireless Pro",
-    price: 129,
-    score: 9.3,
-    reason: "Buon equilibrio tra comfort, autonomia e qualità audio."
-  },
-
-  {
-    category: "Cuffie",
-    name: "Findly Wireless Value",
-    price: 89,
-    score: 9.0,
-    reason: "Una soluzione economica con ottimo rapporto qualità/prezzo."
-  },
-
-  {
-    category: "Monitor",
-    name: "Findly 27 144Hz",
-    price: 149,
-    score: 9.2,
-    reason: "Alta fluidità e buon equilibrio per gaming e uso quotidiano."
-  },
-
-  {
-    category: "Monitor",
-    name: "Findly 24 144Hz",
-    price: 119,
-    score: 8.9,
-    reason: "Più economico, mantenendo una buona frequenza di aggiornamento."
-  },
-
-  {
-    category: "Mouse",
-    name: "Findly Gaming Ultra",
-    price: 49,
-    score: 9.2,
-    reason: "Leggero e preciso, ideale per il gaming competitivo."
-  },
-
-  {
-    category: "Mouse",
-    name: "Findly Gaming Value",
-    price: 29,
-    score: 8.8,
-    reason: "Una scelta economica per il gaming."
-  },
-
-  {
-    category: "Tastiera",
-    name: "Findly Mechanical 75%",
-    price: 79,
-    score: 9.1,
-    reason: "Compatta, meccanica e adatta al gaming e alla scrittura."
-  },
-
-  {
-    category: "Tastiera",
-    name: "Findly Mechanical Value",
-    price: 49,
-    score: 8.8,
-    reason: "Una tastiera meccanica economica e versatile."
-  }
-
-];
-
-
-function findProducts() {
-
-  const budget =
-    Number(document.getElementById("budget").value);
-
-  const category =
-    document.getElementById("category").value;
-
-  const priority =
-    document.getElementById("priority").value;
-
-
-  let results =
-    products.filter(product =>
-      product.category === category &&
-      product.price <= budget
-    );
-
-
-  if (priority === "Prezzo più basso") {
-
-    results.sort(
-      (a, b) => a.price - b.price
-    );
-
-  } else {
-
-    results.sort(
-      (a, b) => b.score - a.score
-    );
-
-  }
-
-
-  const box =
-    document.getElementById("results");
-
-  box.style.display = "block";
-
-
-  if (results.length === 0) {
-
-    box.innerHTML = `
-      <div class="product">
-
-        <h3>Nessun risultato</h3>
-
-        <div class="why">
-          Prova ad aumentare il budget.
-          Nella versione reale Findly potrà
-          cercare tra molti più prodotti.
+      <div class="grid">
+
+        <div class="field">
+          <label>Categoria</label>
+
+          <select id="category">
+            <option value="auto">Auto</option>
+            <option value="tech">Tecnologia</option>
+            <option value="fashion">Moda</option>
+            <option value="sport">Sport</option>
+            <option value="home">Casa</option>
+            <option value="travel">Viaggi</option>
+            <option value="other">Altro</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Budget</label>
+
+          <select id="budget">
+            <option value="low">Fino a €100</option>
+            <option value="medium">€100 – €300</option>
+            <option value="high">€300 – €700</option>
+            <option value="premium">Oltre €700</option>
+          </select>
         </div>
 
       </div>
-    `;
 
-    return;
-  }
+      <div class="field">
+        <label>Qual è la tua priorità?</label>
 
+        <div class="priorities">
 
-  box.innerHTML =
-    "<h2>Le migliori opzioni per te</h2>" +
+          <button class="priority active" data-value="price">
+            <span>€</span>
+            Prezzo
+          </button>
 
-    results.slice(0,3).map((product,index) => `
+          <button class="priority" data-value="quality">
+            <span>★</span>
+            Qualità
+          </button>
 
-      <div class="product">
+          <button class="priority" data-value="value">
+            <span>◆</span>
+            Qualità/prezzo
+          </button>
 
-        <span class="badge">
-          ${index === 0
-            ? "🥇 SCELTA MIGLIORE"
-            : "ALTERNATIVA"}
-        </span>
+          <button class="priority" data-value="speed">
+            <span>⚡</span>
+            Velocità
+          </button>
 
-        <h3>
-          ${product.name}
-        </h3>
-
-        <div class="price">
-          €${product.price}
         </div>
-
-        <div class="score">
-          ⭐ ${product.score}/10
-        </div>
-
-        <div class="why">
-          ${product.reason}
-        </div>
-
-        <a
-          class="cta"
-          href="#"
-          onclick="return false"
-        >
-          Vedi prodotto →
-        </a>
-
       </div>
 
-    `).join("");
+      <button id="findButton" class="find-button">
+        Trova per me
+        <span>→</span>
+      </button>
 
-}
+    </section>
 
-</script>
+    <section id="results" class="results hidden">
+
+      <div class="results-header">
+        <div>
+          <p class="eyebrow">FINDLY MATCH</p>
+          <h2>Abbiamo trovato queste opzioni.</h2>
+        </div>
+
+        <div class="match-count">
+          3 risultati
+        </div>
+      </div>
+
+      <div id="recommendations" class="recommendations"></div>
+
+    </section>
+
+  </main>
+
+  <footer>
+    <p>Findly · Demo prototype · Nessun dato reale utilizzato</p>
+  </footer>
+
+  <script src="script.js"></script>
 
 </body>
 </html>
