@@ -3,127 +3,255 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Findly — Trova quello giusto</title>
+
+  <title>Findly — Trova il meglio</title>
+
+  <meta
+    name="description"
+    content="Findly trova e confronta ciò che stai cercando."
+  >
+
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
   <header class="navbar">
-    <div class="logo">find<span>ly</span></div>
-    <div class="demo-badge">DEMO</div>
+
+    <div class="logo">
+      find<span>ly</span>
+    </div>
+
+    <div class="demo-badge">
+      V3
+    </div>
+
   </header>
+
 
   <main>
 
     <section class="hero">
-      <p class="eyebrow">SMART DISCOVERY</p>
 
-      <h1>Dimmi cosa cerchi.<br><span>Findly lo trova.</span></h1>
+      <p class="eyebrow">
+        SMART DISCOVERY
+      </p>
+
+      <h1>
+        Dimmi cosa cerchi.<br>
+        <span>Findly trova il meglio.</span>
+      </h1>
 
       <p class="subtitle">
-        Descrivi quello che vuoi, indica il tuo budget e lascia che
-        Findly selezioni le opzioni più adatte a te.
+        Prodotti, film, viaggi, auto, musica e molto altro.
+        Tu descrivi quello che vuoi. Findly cerca le opzioni migliori.
       </p>
+
     </section>
+
 
     <section class="search-card">
 
       <div class="field">
-        <label>Cosa stai cercando?</label>
+
+        <label for="request">
+          Cosa stai cercando?
+        </label>
 
         <textarea
           id="request"
-          placeholder="Es. Cerco delle cuffie wireless per ascoltare musica, con un buon rapporto qualità/prezzo..."
+          placeholder="Es. Cerco delle cuffie wireless con un buon rapporto qualità/prezzo..."
         ></textarea>
+
       </div>
+
 
       <div class="grid">
 
         <div class="field">
-          <label>Categoria</label>
+
+          <label for="category">
+            Categoria
+          </label>
 
           <select id="category">
-            <option value="auto">Auto</option>
-            <option value="tech">Tecnologia</option>
-            <option value="fashion">Moda</option>
-            <option value="sport">Sport</option>
-            <option value="home">Casa</option>
-            <option value="travel">Viaggi</option>
-            <option value="other">Altro</option>
+
+            <option value="auto">
+              🚗 Auto
+            </option>
+
+            <option value="tech" selected>
+              💻 Tecnologia
+            </option>
+
+            <option value="fashion">
+              👕 Moda
+            </option>
+
+            <option value="sport">
+              ⚽ Sport
+            </option>
+
+            <option value="home">
+              🏠 Casa
+            </option>
+
+            <option value="travel">
+              ✈️ Viaggi
+            </option>
+
+            <option value="other">
+              ✨ Altro
+            </option>
+
           </select>
+
         </div>
 
+
         <div class="field">
-          <label>Budget</label>
+
+          <label for="budget">
+            Budget
+          </label>
 
           <select id="budget">
-            <option value="low">Fino a €100</option>
-            <option value="medium">€100 – €300</option>
-            <option value="high">€300 – €700</option>
-            <option value="premium">Oltre €700</option>
+
+            <option value="low">
+              Fino a €100
+            </option>
+
+            <option value="medium">
+              €100 – €300
+            </option>
+
+            <option value="high">
+              €300 – €700
+            </option>
+
+            <option value="premium">
+              Oltre €700
+            </option>
+
           </select>
+
         </div>
 
       </div>
 
+
       <div class="field">
-        <label>Qual è la tua priorità?</label>
+
+        <label>
+          Qual è la tua priorità?
+        </label>
 
         <div class="priorities">
 
-          <button class="priority active" data-value="price">
+          <button
+            type="button"
+            class="priority active"
+            data-value="price"
+          >
             <span>€</span>
             Prezzo
           </button>
 
-          <button class="priority" data-value="quality">
+
+          <button
+            type="button"
+            class="priority"
+            data-value="quality"
+          >
             <span>★</span>
             Qualità
           </button>
 
-          <button class="priority" data-value="value">
+
+          <button
+            type="button"
+            class="priority"
+            data-value="value"
+          >
             <span>◆</span>
             Qualità/prezzo
           </button>
 
-          <button class="priority" data-value="speed">
+
+          <button
+            type="button"
+            class="priority"
+            data-value="speed"
+          >
             <span>⚡</span>
             Velocità
           </button>
 
         </div>
+
       </div>
 
-      <button id="findButton" class="find-button">
+
+      <button
+        id="findButton"
+        class="find-button"
+        type="button"
+      >
+
         Trova per me
+
         <span>→</span>
+
       </button>
 
     </section>
 
-    <section id="results" class="results hidden">
+
+    <section
+      id="results"
+      class="results hidden"
+    >
 
       <div class="results-header">
+
         <div>
-          <p class="eyebrow">FINDLY MATCH</p>
-          <h2>Abbiamo trovato queste opzioni.</h2>
+
+          <p class="eyebrow">
+            FINDLY MATCH
+          </p>
+
+          <h2>
+            Abbiamo trovato queste opzioni.
+          </h2>
+
         </div>
+
 
         <div class="match-count">
-          3 risultati
+          0 risultati
         </div>
+
       </div>
 
-      <div id="recommendations" class="recommendations"></div>
+
+      <div
+        id="recommendations"
+        class="recommendations"
+      ></div>
 
     </section>
 
   </main>
 
+
   <footer>
-    <p>Findly · Demo prototype · Nessun dato reale utilizzato</p>
+
+    <p>
+      Findly · Smart Discovery
+    </p>
+
   </footer>
+
 
   <script src="script.js"></script>
 
