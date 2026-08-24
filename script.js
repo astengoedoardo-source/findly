@@ -1,9 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-  /* =====================================================
-     ELEMENTI PRINCIPALI
-  ===================================================== */
-
   const sideMenu = document.getElementById("sideMenu");
   const menuOverlay = document.getElementById("menuOverlay");
   const openMenu = document.getElementById("openMenu");
@@ -37,7 +33,8 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("matchCount");
 
   let currentCategory = null;
-  let currentLanguage = "it";
+  let currentLanguage =
+    localStorage.getItem("findly-language") || "it";
 
 
   /* =====================================================
@@ -45,13 +42,13 @@ document.addEventListener("DOMContentLoaded", () => {
   ===================================================== */
 
   function openSideMenu() {
-    sideMenu.classList.add("open");
-    menuOverlay.classList.add("open");
+    sideMenu?.classList.add("open");
+    menuOverlay?.classList.add("open");
   }
 
   function closeSideMenu() {
-    sideMenu.classList.remove("open");
-    menuOverlay.classList.remove("open");
+    sideMenu?.classList.remove("open");
+    menuOverlay?.classList.remove("open");
   }
 
   openMenu?.addEventListener("click", openSideMenu);
@@ -74,7 +71,6 @@ document.addEventListener("DOMContentLoaded", () => {
     settings: document.getElementById("settingsSection")
   };
 
-
   function showSection(name) {
 
     Object.values(sections).forEach(section => {
@@ -85,14 +81,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document
       .querySelectorAll(".menu-item")
-      .forEach(item => item.classList.remove("active"));
-
-    const active =
-      document.querySelector(
-        `.menu-item[data-section="${name}"]`
+      .forEach(item =>
+        item.classList.remove("active")
       );
 
-    active?.classList.add("active");
+    document
+      .querySelector(
+        `.menu-item[data-section="${name}"]`
+      )
+      ?.classList.add("active");
 
     closeSideMenu();
 
@@ -101,7 +98,6 @@ document.addEventListener("DOMContentLoaded", () => {
       behavior: "smooth"
     });
   }
-
 
   document
     .querySelectorAll(".menu-item")
@@ -142,7 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
     books: {
       title: "Che libro stai cercando?",
       description:
-        "Puoi descrivere anche solo il tipo di libro che hai in mente.",
+        "Descrivimi anche solo il tipo di libro che hai in mente.",
       fields: [
         ["tipo", "Tipo di libro", "Es. romanzo, thriller..."],
         ["tema", "Cosa ti interessa?", "Es. soldi, amore, psicologia..."],
@@ -178,7 +174,7 @@ document.addEventListener("DOMContentLoaded", () => {
     travel: {
       title: "Che viaggio vuoi fare?",
       description:
-        "Troviamo destinazioni, voli, hotel e alternative in base alle tue esigenze.",
+        "Troviamo destinazioni, voli, hotel e alternative.",
       fields: [
         ["destinazione", "Dove vuoi andare?", "Es. Maldive, Parigi..."],
         ["periodo", "Quando?", "Es. agosto, Natale..."],
@@ -232,10 +228,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
       card.addEventListener("click", () => {
 
-        const category =
-          card.dataset.category;
-
-        createDynamicSearch(category);
+        createDynamicSearch(
+          card.dataset.category
+        );
 
       });
 
@@ -269,13 +264,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
       wrapper.innerHTML = `
         <label for="field-${field[0]}">
-          ${field[1]}
+          ${escapeHTML(field[1])}
         </label>
 
         <input
           id="field-${field[0]}"
           data-field="${field[0]}"
-          placeholder="${field[2]}"
+          placeholder="${escapeAttribute(field[2])}"
         >
       `;
 
@@ -293,10 +288,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 
-  /* =====================================================
-     RACCOLTA CAMPI
-  ===================================================== */
-
   function collectDynamicFields() {
 
     const data = {};
@@ -313,13 +304,8 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
     return data;
-
   }
 
-
-  /* =====================================================
-     INVIO RICERCA
-  ===================================================== */
 
   dynamicSearchButton?.addEventListener(
     "click",
@@ -331,17 +317,14 @@ document.addEventListener("DOMContentLoaded", () => {
       const description =
         Object.entries(fields)
           .filter(([_, value]) => value)
-          .map(([key, value]) =>
-            `${key}: ${value}`
+          .map(
+            ([key, value]) =>
+              `${key}: ${value}`
           )
           .join(", ");
 
-      const categoryName =
-        categoryData[currentCategory]?.title ||
-        "ricerca";
-
       const query =
-        `${categoryName}. ${description}`;
+        `${categoryData[currentCategory]?.title || "Ricerca"}. ${description}`;
 
       addUserMessage(query);
 
@@ -356,8 +339,53 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   /* =====================================================
-     SUGGERIMENTI RAPIDI
+     RICERCA PRINCIPALE
   ===================================================== */
+
+  function sendRequest() {
+
+    const text =
+      requestInput?.value.trim();
+
+    if (!text) return;
+
+    addUserMessage(text);
+
+    requestInput.value = "";
+
+    runFindlySearch(
+      text,
+      detectCategory(text),
+      {}
+    );
+
+  }
+
+
+  findButton?.addEventListener(
+    "click",
+    sendRequest
+  );
+
+
+  requestInput?.addEventListener(
+    "keydown",
+    event => {
+
+      if (
+        event.key === "Enter" &&
+        !event.shiftKey
+      ) {
+
+        event.preventDefault();
+
+        sendRequest();
+
+      }
+
+    }
+  );
+
 
   document
     .querySelectorAll(".suggestion")
@@ -411,7 +439,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     conversation.scrollTop =
       conversation.scrollHeight;
-
   }
 
 
@@ -432,13 +459,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
       <div class="message-content">
 
-        <strong>
-          Findly
-        </strong>
+        <strong>Findly</strong>
 
-        <p>
-          ${escapeHTML(text)}
-        </p>
+        <p>${escapeHTML(text)}</p>
 
       </div>
     `;
@@ -447,57 +470,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     conversation.scrollTop =
       conversation.scrollHeight;
-
   }
-
-
-  function sendRequest() {
-
-    const text =
-      requestInput.value.trim();
-
-    if (!text) return;
-
-    addUserMessage(text);
-
-    requestInput.value = "";
-
-    runFindlySearch(
-      text,
-      detectCategory(text),
-      {}
-    );
-
-  }
-
-
-  findButton?.addEventListener(
-    "click",
-    sendRequest
-  );
-
-
-  requestInput?.addEventListener(
-    "keydown",
-    event => {
-
-      if (
-        event.key === "Enter" &&
-        !event.shiftKey
-      ) {
-
-        event.preventDefault();
-
-        sendRequest();
-
-      }
-
-    }
-  );
 
 
   /* =====================================================
-     RICONOSCIMENTO CATEGORIA
+     CATEGORIA
   ===================================================== */
 
   function detectCategory(text) {
@@ -506,77 +483,39 @@ document.addEventListener("DOMContentLoaded", () => {
       text.toLowerCase();
 
     if (
-      t.includes("film") ||
-      t.includes("serie") ||
-      t.includes("netflix") ||
-      t.includes("prime video") ||
-      t.includes("attore")
-    ) {
-      return "movies";
-    }
+      /film|serie|netflix|prime video|paramount|attore|cinema/.test(t)
+    ) return "movies";
 
     if (
-      t.includes("libro") ||
-      t.includes("romanzo") ||
-      t.includes("leggere")
-    ) {
-      return "books";
-    }
+      /libro|romanzo|leggere|lettura/.test(t)
+    ) return "books";
 
     if (
-      t.includes("maglietta") ||
-      t.includes("jeans") ||
-      t.includes("scarpe") ||
-      t.includes("ralph lauren") ||
-      t.includes("vestiti")
-    ) {
-      return "fashion";
-    }
+      /maglietta|jeans|scarpe|vestiti|abbigliamento|ralph lauren/.test(t)
+    ) return "fashion";
 
     if (
-      t.includes("iphone") ||
-      t.includes("computer") ||
-      t.includes("cuffie") ||
-      t.includes("telefono")
-    ) {
-      return "tech";
-    }
+      /iphone|computer|cuffie|telefono|tablet|laptop/.test(t)
+    ) return "tech";
 
     if (
-      t.includes("viaggio") ||
-      t.includes("volo") ||
-      t.includes("hotel") ||
-      t.includes("maldive") ||
-      t.includes("parigi")
-    ) {
-      return "travel";
-    }
+      /viaggio|volo|hotel|maldive|parigi|vacanza|aereo/.test(t)
+    ) return "travel";
 
     if (
-      t.includes("ristorante") ||
-      t.includes("mangiare") ||
-      t.includes("pizza") ||
-      t.includes("sushi")
-    ) {
-      return "food";
-    }
+      /ristorante|mangiare|pizza|sushi|cena|pranzo/.test(t)
+    ) return "food";
 
     if (
-      t.includes("calcetto") ||
-      t.includes("palestra") ||
-      t.includes("tennis") ||
-      t.includes("sport")
-    ) {
-      return "sport";
-    }
+      /calcetto|palestra|tennis|sport|campo|basket|calcio/.test(t)
+    ) return "sport";
 
     return "other";
-
   }
 
 
   /* =====================================================
-     RICERCA FINDLY
+     WORKER
   ===================================================== */
 
   async function runFindlySearch(
@@ -587,30 +526,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     showLoading();
 
-    results.classList.remove("hidden");
+    results?.classList.remove("hidden");
 
-    results.scrollIntoView({
+    results?.scrollIntoView({
       behavior: "smooth",
       block: "start"
     });
-
-
-    /*
-      QUI ENTRERÀ IL WORKER.
-
-      Per ora proviamo a chiamare il Worker.
-      Quando lo collegheremo definitivamente,
-      il Worker restituirà:
-
-      - risposta AI
-      - top 10
-      - prezzi
-      - disponibilità
-      - piattaforme
-      - recensioni
-      - fonti
-      - link
-    */
 
     try {
 
@@ -632,21 +553,23 @@ document.addEventListener("DOMContentLoaded", () => {
               language:
                 currentLanguage
             })
-
           }
         );
 
-
       if (!response.ok) {
+
+        const errorText =
+          await response.text();
+
         throw new Error(
+          errorText ||
           "Worker non disponibile"
         );
-      }
 
+      }
 
       const data =
         await response.json();
-
 
       renderResults(data);
 
@@ -654,17 +577,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     catch (error) {
 
-      /*
-        DEMO FALLBACK
-
-        Se il Worker non è ancora collegato,
-        Findly continua a mostrare la UI.
-      */
-
-      renderDemoResults(
-        query,
-        category
+      console.error(
+        "Findly error:",
+        error
       );
+
+      aiAnswerText.textContent =
+        currentLanguage === "en"
+          ? "I couldn't complete the search right now. Please try again."
+          : "Non sono riuscito a completare la ricerca. Riprova.";
+
+      matchCount.textContent =
+        "Errore";
+
+      topPicks?.classList.add("hidden");
+      availability?.classList.add("hidden");
 
     }
 
@@ -677,64 +604,98 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function showLoading() {
 
-    aiAnswer.classList.remove("hidden");
+    aiAnswer?.classList.remove("hidden");
 
-    aiAnswerText.innerHTML = `
-      Sto cercando le migliori opzioni,
-      confrontando informazioni e cercando
-      di capire quale scelta abbia più senso
-      per te...
-    `;
+    aiAnswerText.textContent =
+      currentLanguage === "en"
+        ? "I'm searching, comparing sources and finding the best options for you..."
+        : "Sto cercando, confrontando le fonti e trovando le opzioni migliori per te...";
 
-    topPicks.classList.add("hidden");
+    topPicks?.classList.add("hidden");
 
-    availability.classList.add("hidden");
+    availability?.classList.add("hidden");
 
-    recommendations.innerHTML = "";
+    if (recommendations) {
+      recommendations.innerHTML = "";
+    }
 
-    matchCount.textContent =
-      "Ricerca in corso...";
+    if (matchCount) {
+      matchCount.textContent =
+        currentLanguage === "en"
+          ? "Searching..."
+          : "Ricerca in corso...";
+    }
 
   }
 
 
   /* =====================================================
-     RISULTATI REALI
+     RISULTATI
   ===================================================== */
 
   function renderResults(data) {
 
-    aiAnswer.classList.remove("hidden");
+    aiAnswer?.classList.remove("hidden");
 
-    aiAnswerText.innerHTML =
-      escapeHTML(
-        data.answer ||
-        "Ho analizzato le opzioni migliori per te."
+    aiAnswerText.textContent =
+      data.answer ||
+      (
+        currentLanguage === "en"
+          ? "Here are the best options I found."
+          : "Ecco le migliori opzioni che ho trovato."
       );
 
 
     const picks =
-      data.topPicks ||
-      data.results ||
-      [];
+      Array.isArray(data.topPicks)
+        ? data.topPicks
+        : Array.isArray(data.results)
+          ? data.results
+          : [];
 
 
     renderTopPicks(picks);
 
     renderAvailability(
-      data.availability ||
-      []
+      Array.isArray(data.availability)
+        ? data.availability
+        : []
     );
 
     renderRecommendations(
-      data.sources ||
-      data.recommendations ||
-      []
+      Array.isArray(data.sources)
+        ? data.sources
+        : []
     );
 
 
-    matchCount.textContent =
-      `${picks.length} risultati`;
+    if (matchCount) {
+
+      matchCount.textContent =
+        `${picks.length} ${
+          currentLanguage === "en"
+            ? "results"
+            : "risultati"
+        }`;
+
+    }
+
+
+    /*
+      Se Tavily ha trovato immagini,
+      le mostriamo nelle card.
+    */
+
+    if (
+      Array.isArray(data.images) &&
+      data.images.length
+    ) {
+
+      attachImagesToCards(
+        data.images
+      );
+
+    }
 
   }
 
@@ -745,20 +706,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderTopPicks(items) {
 
+    if (!topPicksGrid) return;
+
+    topPicksGrid.innerHTML = "";
+
     if (!items.length) {
 
-      topPicks.classList.add(
-        "hidden"
-      );
+      topPicks?.classList.add("hidden");
 
       return;
     }
 
-    topPicks.classList.remove(
-      "hidden"
-    );
+    topPicks?.classList.remove("hidden");
 
-    topPicksGrid.innerHTML = "";
+
+    /*
+      MOSTRIAMO TUTTI I RISULTATI UTILI,
+      MASSIMO 10.
+    */
 
     items
       .slice(0, 10)
@@ -770,11 +735,56 @@ document.addEventListener("DOMContentLoaded", () => {
         card.className =
           "pick-card";
 
+
+        const title =
+          item.title ||
+          item.name ||
+          "Risultato";
+
+
+        const reason =
+          item.reason ||
+          item.description ||
+          "Consigliato da Findly.";
+
+
+        const url =
+          item.url ||
+          item.link ||
+          item.source ||
+          "";
+
+
+        const image =
+          item.image ||
+          item.image_url ||
+          item.thumbnail ||
+          "";
+
+
         card.innerHTML = `
 
           <div class="pick-image">
-            ${item.emoji || "✦"}
+
+            ${
+              image
+                ? `
+                  <img
+                    src="${escapeAttribute(image)}"
+                    alt="${escapeAttribute(title)}"
+                    loading="lazy"
+                    onerror="this.style.display='none'"
+                  >
+                `
+                : `
+                  <span>
+                    ${item.emoji || "✦"}
+                  </span>
+                `
+            }
+
           </div>
+
 
           <div class="pick-content">
 
@@ -783,25 +793,40 @@ document.addEventListener("DOMContentLoaded", () => {
             </span>
 
             <h3>
-              ${escapeHTML(
-                item.title || "Risultato"
-              )}
+              ${escapeHTML(title)}
             </h3>
 
             <p>
-              ${escapeHTML(
-                item.reason ||
-                item.description ||
-                "Consigliato da Findly."
-              )}
+              ${escapeHTML(reason)}
             </p>
+
 
             ${
               item.score
                 ? `
                   <span class="pick-score">
-                    ★ ${item.score}
+                    ★ ${escapeHTML(item.score)}
                   </span>
+                `
+                : ""
+            }
+
+
+            ${
+              url
+                ? `
+                  <a
+                    class="result-link pick-link"
+                    href="${escapeAttribute(url)}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    ${
+                      currentLanguage === "en"
+                        ? "Discover →"
+                        : "Scopri →"
+                    }
+                  </a>
                 `
                 : ""
             }
@@ -809,9 +834,76 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         `;
 
+
         topPicksGrid.appendChild(card);
 
       });
+
+  }
+
+
+  /* =====================================================
+     IMMAGINI
+  ===================================================== */
+
+  function attachImagesToCards(images) {
+
+    const cards =
+      Array.from(
+        document.querySelectorAll(
+          "#topPicksGrid .pick-card"
+        )
+      );
+
+
+    cards.forEach(
+      (card, index) => {
+
+        const image =
+          images[index];
+
+        if (!image) return;
+
+        const imageContainer =
+          card.querySelector(
+            ".pick-image"
+          );
+
+        if (!imageContainer) return;
+
+        const existing =
+          imageContainer.querySelector(
+            "img"
+          );
+
+        if (existing) return;
+
+        const img =
+          document.createElement(
+            "img"
+          );
+
+        img.src =
+          typeof image === "string"
+            ? image
+            : image.url || "";
+
+        img.alt =
+          "Findly result";
+
+        img.loading =
+          "lazy";
+
+        img.onerror =
+          () => {
+            img.remove();
+          };
+
+        imageContainer
+          .prepend(img);
+
+      }
+    );
 
   }
 
@@ -822,20 +914,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderAvailability(items) {
 
+    if (!availabilityGrid) return;
+
+    availabilityGrid.innerHTML = "";
+
     if (!items.length) {
 
-      availability.classList.add(
+      availability?.classList.add(
         "hidden"
       );
 
       return;
     }
 
-    availability.classList.remove(
+    availability?.classList.remove(
       "hidden"
     );
 
-    availabilityGrid.innerHTML = "";
 
     items.forEach(item => {
 
@@ -845,6 +940,13 @@ document.addEventListener("DOMContentLoaded", () => {
       card.className =
         "availability-card";
 
+
+      const url =
+        item.url ||
+        item.source ||
+        "";
+
+
       card.innerHTML = `
 
         <div class="availability-logo">
@@ -853,7 +955,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         <strong>
           ${escapeHTML(
-            item.platform || "Piattaforma"
+            item.platform ||
+            "Piattaforma"
           )}
         </strong>
 
@@ -871,6 +974,25 @@ document.addEventListener("DOMContentLoaded", () => {
           )}
         </div>
 
+        ${
+          url
+            ? `
+              <a
+                class="result-link"
+                href="${escapeAttribute(url)}"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                ${
+                  currentLanguage === "en"
+                    ? "Open →"
+                    : "Apri →"
+                }
+              </a>
+            `
+            : ""
+        }
+
       `;
 
       availabilityGrid.appendChild(card);
@@ -886,9 +1008,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderRecommendations(items) {
 
+    if (!recommendations) return;
+
     recommendations.innerHTML = "";
 
     items.forEach(item => {
+
+      if (!item.url) return;
 
       const card =
         document.createElement("article");
@@ -919,218 +1045,24 @@ document.addEventListener("DOMContentLoaded", () => {
           )}
         </p>
 
-        ${
-          item.url
-            ? `
-              <a
-                class="result-link"
-                href="${escapeAttribute(
-                  item.url
-                )}"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Vai alla fonte →
-              </a>
-            `
-            : ""
-        }
+        <a
+          class="result-link"
+          href="${escapeAttribute(item.url)}"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          ${
+            currentLanguage === "en"
+              ? "Open source →"
+              : "Apri fonte →"
+          }
+        </a>
 
       `;
 
       recommendations.appendChild(card);
 
     });
-
-  }
-
-
-  /* =====================================================
-     DEMO RESULTS
-  ===================================================== */
-
-  function renderDemoResults(
-    query,
-    category
-  ) {
-
-    matchCount.textContent =
-      "10 risultati";
-
-    aiAnswer.classList.remove(
-      "hidden"
-    );
-
-
-    let answer = "";
-
-
-    if (category === "movies") {
-
-      answer =
-        "Ho capito che stai cercando un film. " +
-        "In una ricerca completa Findly confronterà " +
-        "recensioni, genere, valutazioni e disponibilità " +
-        "sulle piattaforme per consigliarti i migliori " +
-        "e spiegarti perché.";
-
-    }
-
-    else if (category === "travel") {
-
-      answer =
-        "Ho capito che stai cercando un viaggio. " +
-        "Findly confronterà destinazioni, voli, hotel, " +
-        "prezzi e recensioni per aiutarti a scegliere " +
-        "l'opzione con il miglior rapporto qualità-prezzo.";
-
-    }
-
-    else {
-
-      answer =
-        "Ho capito cosa stai cercando. " +
-        "Findly analizzerà le alternative disponibili " +
-        "e non si limiterà a mostrarti dei semplici link: " +
-        "ti aiuterà anche a capire quale scegliere.";
-
-    }
-
-
-    aiAnswerText.textContent =
-      answer;
-
-
-    const demoItems = [
-
-      {
-        title: "Scelta consigliata",
-        emoji:
-          category === "movies"
-            ? "🎬"
-            : category === "travel"
-              ? "✈️"
-              : "✦",
-        reason:
-          "Questa sarebbe l'opzione che Findly considera più adatta alla tua richiesta.",
-        score: "9.4/10"
-      },
-
-      {
-        title: "Seconda scelta",
-        emoji: "⭐",
-        reason:
-          "Ottima alternativa se vuoi dare priorità a caratteristiche diverse.",
-        score: "9.1/10"
-      },
-
-      {
-        title: "Terza scelta",
-        emoji: "🔥",
-        reason:
-          "Una scelta interessante con un ottimo rapporto tra qualità e prezzo.",
-        score: "8.8/10"
-      }
-
-    ];
-
-
-    renderTopPicks(
-      demoItems
-    );
-
-
-    availability.classList.remove(
-      "hidden"
-    );
-
-    availabilityGrid.innerHTML = `
-
-      <div class="availability-card">
-
-        <div class="availability-logo">
-          ▶️
-        </div>
-
-        <strong>
-          Disponibilità
-        </strong>
-
-        <span>
-          I dati reali verranno recuperati dal Worker.
-        </span>
-
-        <div class="availability-price">
-          In aggiornamento
-        </div>
-
-      </div>
-
-      <div class="availability-card">
-
-        <div class="availability-logo">
-          💶
-        </div>
-
-        <strong>
-          Prezzo
-        </strong>
-
-        <span>
-          Findly confronterà le offerte.
-        </span>
-
-        <div class="availability-price">
-          In aggiornamento
-        </div>
-
-      </div>
-
-      <div class="availability-card">
-
-        <div class="availability-logo">
-          ★
-        </div>
-
-        <strong>
-          Recensioni
-        </strong>
-
-        <span>
-          Findly analizzerà le fonti.
-        </span>
-
-        <div class="availability-price">
-          In aggiornamento
-        </div>
-
-      </div>
-
-    `;
-
-
-    recommendations.innerHTML = `
-
-      <article class="result-card">
-
-        <span class="result-source">
-          FINDLY
-        </span>
-
-        <h3>
-          Analisi intelligente
-        </h3>
-
-        <p>
-          Questa è ancora una demo.
-          Quando collegheremo il Worker,
-          questa sezione mostrerà le fonti reali
-          utilizzate per costruire la raccomandazione.
-        </p>
-
-      </article>
-
-    `;
 
   }
 
@@ -1157,84 +1089,86 @@ document.addEventListener("DOMContentLoaded", () => {
       const one =
         document.getElementById(
           "compareOne"
-        ).value.trim();
+        )?.value.trim();
 
       const two =
         document.getElementById(
           "compareTwo"
-        ).value.trim();
+        )?.value.trim();
 
       const context =
         document.getElementById(
           "comparisonContext"
-        ).value.trim();
+        )?.value.trim();
 
 
       if (!one || !two) {
 
-        comparisonResult.classList.remove(
+        comparisonResult?.classList.remove(
           "hidden"
         );
 
-        comparisonResult.innerHTML = `
-          <div class="ai-answer">
-            Inserisci entrambe le alternative
-            che vuoi confrontare.
-          </div>
-        `;
+        if (comparisonResult) {
+          comparisonResult.innerHTML = `
+            <div class="ai-answer">
+              ${
+                currentLanguage === "en"
+                  ? "Enter both alternatives."
+                  : "Inserisci entrambe le alternative."
+              }
+            </div>
+          `;
+        }
 
         return;
       }
 
 
-      comparisonResult.classList.remove(
+      comparisonResult?.classList.remove(
         "hidden"
       );
 
 
-      comparisonResult.innerHTML = `
-        <div class="ai-answer">
+      if (comparisonResult) {
 
-          <div class="ai-answer-header">
+        comparisonResult.innerHTML = `
+          <div class="ai-answer">
 
-            <div class="ai-icon">
-              ✦
+            <div class="ai-answer-header">
+
+              <div class="ai-icon">
+                ✦
+              </div>
+
+              <div>
+                <strong>
+                  Findly Suggest
+                </strong>
+
+                <span>
+                  ${
+                    currentLanguage === "en"
+                      ? "Comparing..."
+                      : "Confronto in corso..."
+                  }
+                </span>
+              </div>
+
             </div>
 
-            <div>
-              <strong>
-                Findly Suggest
-              </strong>
-
-              <span>
-                Confronto in corso
-              </span>
+            <div class="ai-answer-text">
+              ${
+                currentLanguage === "en"
+                  ? "I'm comparing the two options using reviews and available information..."
+                  : "Sto confrontando le due opzioni usando recensioni e informazioni disponibili..."
+              }
             </div>
 
           </div>
+        `;
 
-          <div class="ai-answer-text">
+      }
 
-            Sto confrontando
-            <strong>${escapeHTML(one)}</strong>
-            e
-            <strong>${escapeHTML(two)}</strong>
-            ${
-              context
-                ? `in base a: ${escapeHTML(context)}`
-                : ""
-            }.
-
-          </div>
-
-        </div>
-      `;
-
-
-      /*
-        In futuro il confronto verrà inviato
-        allo stesso Worker.
-      */
 
       try {
 
@@ -1256,13 +1190,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 language:
                   currentLanguage
               })
-
             }
           );
 
 
         if (!response.ok) {
-          throw new Error();
+          throw new Error(
+            "Comparison failed"
+          );
         }
 
 
@@ -1270,93 +1205,80 @@ document.addEventListener("DOMContentLoaded", () => {
           await response.json();
 
 
-        comparisonResult.innerHTML = `
-          <div class="ai-answer">
+        if (comparisonResult) {
 
-            <div class="ai-answer-header">
+          comparisonResult.innerHTML = `
+            <div class="ai-answer">
 
-              <div class="ai-icon">
-                ✦
+              <div class="ai-answer-header">
+
+                <div class="ai-icon">
+                  ✦
+                </div>
+
+                <div>
+                  <strong>
+                    Findly Suggest
+                  </strong>
+
+                  <span>
+                    ${
+                      currentLanguage === "en"
+                        ? "Recommendation"
+                        : "Consiglio"
+                    }
+                  </span>
+                </div>
+
               </div>
 
-              <div>
-                <strong>
-                  Findly Suggest
-                </strong>
+              <div class="ai-answer-text">
 
-                <span>
-                  La mia scelta
-                </span>
+                ${escapeHTML(
+                  data.answer ||
+                  (
+                    currentLanguage === "en"
+                      ? "Comparison completed."
+                      : "Confronto completato."
+                  )
+                )}
+
               </div>
 
             </div>
+          `;
 
-            <div class="ai-answer-text">
-              ${escapeHTML(
-                data.answer ||
-                "Confronto completato."
-              )}
-            </div>
-
-          </div>
-        `;
+        }
 
       }
 
-      catch {
+      catch (error) {
 
-        /*
-          Demo fallback
-        */
+        console.error(
+          error
+        );
 
-        comparisonResult.innerHTML = `
-          <div class="ai-answer">
+        if (comparisonResult) {
 
-            <div class="ai-answer-header">
+          comparisonResult.innerHTML = `
+            <div class="ai-answer">
 
-              <div class="ai-icon">
-                ✦
-              </div>
-
-              <div>
-                <strong>
-                  Findly Suggest
-                </strong>
-
-                <span>
-                  Anteprima
-                </span>
-              </div>
-
-            </div>
-
-            <div class="ai-answer-text">
-
-              Tra
               <strong>
-                ${escapeHTML(one)}
+                Findly Suggest
               </strong>
-              e
-              <strong>
-                ${escapeHTML(two)}
-              </strong>,
-              Findly analizzerà recensioni,
-              caratteristiche, prezzo,
-              qualità e ciò che hai indicato
-              come importante per te.
 
-              <br><br>
-
-              Non ti dirà semplicemente
-              “questo ha 4,5 stelle”:
-              proverà a spiegarti
-              <strong>perché scegliere uno
-              rispetto all'altro.</strong>
+              <p>
+                ${
+                  currentLanguage === "en"
+                    ? "The comparison could not be completed right now."
+                    : "Non è stato possibile completare il confronto."
+                }
+              </p>
 
             </div>
+          `;
 
-          </div>
-        `;
+        }
 
       }
 
@@ -1373,6 +1295,7 @@ document.addEventListener("DOMContentLoaded", () => {
       "localButton"
     );
 
+
   localButton?.addEventListener(
     "click",
     () => {
@@ -1383,16 +1306,14 @@ document.addEventListener("DOMContentLoaded", () => {
         );
 
       const text =
-        input.value.trim();
-
+        input?.value.trim();
 
       if (!text) {
 
-        input.focus();
+        input?.focus();
 
         return;
       }
-
 
       showSection("home");
 
@@ -1537,7 +1458,10 @@ document.addEventListener("DOMContentLoaded", () => {
       "findly-font-size"
     );
 
-  if (savedFontSize) {
+  if (
+    savedFontSize &&
+    fontSizeSelect
+  ) {
 
     fontSizeSelect.value =
       savedFontSize;
@@ -1556,7 +1480,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const translations = {
 
     it: {
-
       home: "Home",
       suggest: "Findly Suggest",
       local: "Findly Locale",
@@ -1565,26 +1488,29 @@ document.addEventListener("DOMContentLoaded", () => {
       history: "Cronologia",
       profile: "Profilo",
       settings: "Impostazioni"
-
     },
 
     en: {
-
       home: "Home",
       suggest: "Findly Suggest",
-      local: "Findly Local",
+      local: "Findly Locale",
       discover: "Discover",
       favorites: "Favorites",
       history: "History",
       profile: "Profile",
       settings: "Settings"
-
     }
 
   };
 
 
   function applyLanguage(lang) {
+
+    if (
+      !translations[lang]
+    ) {
+      lang = "it";
+    }
 
     currentLanguage =
       lang;
@@ -1593,28 +1519,9 @@ document.addEventListener("DOMContentLoaded", () => {
       translations[lang];
 
 
-    document
-      .querySelector(
-        '[data-section="home"]'
-      )
-      ?.lastChild;
-
-
-    const menuMap = {
-      home: 0,
-      suggest: 1,
-      local: 2,
-      discover: 3,
-      favorites: 4,
-      history: 5,
-      profile: 6,
-      settings: 7
-    };
-
-
-    Object.entries(menuMap)
+    Object.entries(t)
       .forEach(
-        ([section, index]) => {
+        ([section, text]) => {
 
           const item =
             document.querySelector(
@@ -1634,10 +1541,8 @@ document.addEventListener("DOMContentLoaded", () => {
             );
 
           if (textNode) {
-
             textNode.textContent =
-              ` ${t[section]}`;
-
+              ` ${text}`;
           }
 
         }
@@ -1645,17 +1550,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     document
-      .querySelectorAll(
-        ".language"
-      )
+      .querySelectorAll(".language")
       .forEach(button => {
 
         button.classList.toggle(
           "active",
-          button.dataset.lang === lang
+          button.dataset.lang ===
+            lang
         );
 
       });
+
+
+    const settingsLanguage =
+      document.getElementById(
+        "settingsLanguage"
+      );
+
+    if (settingsLanguage) {
+      settingsLanguage.value =
+        lang;
+    }
 
 
     localStorage.setItem(
@@ -1667,9 +1582,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   document
-    .querySelectorAll(
-      ".language"
-    )
+    .querySelectorAll(".language")
     .forEach(button => {
 
       button.addEventListener(
@@ -1704,22 +1617,8 @@ document.addEventListener("DOMContentLoaded", () => {
   );
 
 
-  const savedLanguage =
-    localStorage.getItem(
-      "findly-language"
-    ) || "it";
-
-
-  if (settingsLanguage) {
-
-    settingsLanguage.value =
-      savedLanguage;
-
-  }
-
-
   applyLanguage(
-    savedLanguage
+    currentLanguage
   );
 
 
@@ -1736,26 +1635,31 @@ document.addEventListener("DOMContentLoaded", () => {
   if (discoverGrid) {
 
     const discoverItems = [
+
       [
         "🎬",
         "Film che potresti amare",
         "Scopri qualcosa in base ai tuoi gusti."
       ],
+
       [
         "✈️",
         "Posti da visitare",
         "Trova destinazioni che potrebbero sorprenderti."
       ],
+
       [
         "📚",
         "Libri da leggere",
         "Idee basate su ciò che ti interessa."
       ],
+
       [
         "🍝",
         "Posti dove mangiare",
         "Scopri locali interessanti vicino a te."
       ]
+
     ];
 
 
@@ -1769,22 +1673,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
       card.innerHTML = `
 
-        <div style="font-size:30px;margin-bottom:auto">
+        <div style="
+          font-size:30px;
+          margin-bottom:auto
+        ">
           ${item[0]}
         </div>
 
         <strong>
-          ${item[1]}
+          ${escapeHTML(item[1])}
         </strong>
 
-        <span
-          style="
-            color:var(--muted);
-            font-size:12px;
-            margin-top:5px;
-          "
-        >
-          ${item[2]}
+        <span style="
+          color:var(--muted);
+          font-size:12px;
+          margin-top:5px;
+        ">
+          ${escapeHTML(item[2])}
         </span>
 
       `;
@@ -1825,7 +1730,7 @@ document.addEventListener("DOMContentLoaded", () => {
       container.innerHTML = `
         <div class="result-card">
           <p>
-            ${emptyText}
+            ${escapeHTML(emptyText)}
           </p>
         </div>
       `;
@@ -1835,13 +1740,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     container.innerHTML =
-      data.map(item => `
-        <div class="result-card">
-          <h3>
-            ${escapeHTML(item)}
-          </h3>
-        </div>
-      `).join("");
+      data
+        .map(item => `
+          <div class="result-card">
+            <h3>
+              ${escapeHTML(item)}
+            </h3>
+          </div>
+        `)
+        .join("");
 
   }
 
@@ -1861,17 +1768,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   /* =====================================================
-     UTILITIES
+     UTILITY
   ===================================================== */
 
   function escapeHTML(value) {
 
     return String(value)
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
+      .replaceAll(
+        "&",
+        "&amp;"
+      )
+      .replaceAll(
+        "<",
+        "&lt;"
+      )
+      .replaceAll(
+        ">",
+        "&gt;"
+      )
+      .replaceAll(
+        '"',
+        "&quot;"
+      )
+      .replaceAll(
+        "'",
+        "&#039;"
+      );
 
   }
 
@@ -1879,10 +1801,22 @@ document.addEventListener("DOMContentLoaded", () => {
   function escapeAttribute(value) {
 
     return String(value)
-      .replaceAll("&", "&amp;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;");
+      .replaceAll(
+        "&",
+        "&amp;"
+      )
+      .replaceAll(
+        '"',
+        "&quot;"
+      )
+      .replaceAll(
+        "<",
+        "&lt;"
+      )
+      .replaceAll(
+        ">",
+        "&gt;"
+      );
 
   }
 
