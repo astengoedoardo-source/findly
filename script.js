@@ -4,7 +4,8 @@ const priorities = document.querySelectorAll(".priority");
 const findButton = document.getElementById("findButton");
 const results = document.getElementById("results");
 const recommendations = document.getElementById("recommendations");
-
+const categorySelect = document.getElementById("category");
+const budgetSelect = document.getElementById("budget");
 let selectedPriority = "price";
 
 priorities.forEach(button => {
