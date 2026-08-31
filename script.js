@@ -1,9 +1,8 @@
-
 /* =========================================================
    FINDLY V8 — FRONTEND
 ========================================================= */
 
-const WORKER_URL = "https://YOUR-WORKER-URL.workers.dev";
+const WORKER_URL = "https://shrill-firefly-79b6.astengoedoardo.workers.dev";
 
 let currentCategory = "other";
 let currentLanguage = "it";
