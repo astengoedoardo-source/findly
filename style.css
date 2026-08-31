@@ -1,6 +1,6 @@
 /* =========================================================
    FINDLY V8 — STYLE
-========================================================= */
+   ========================================================= */
 
 * {
   box-sizing: border-box;
@@ -44,12 +44,22 @@ body {
   background: #ffffff;
   color: var(--black);
   min-height: 100vh;
+
+  transition:
+    background .25s ease,
+    color .25s ease;
+}
+
+button,
+input,
+select {
+  font-family: inherit;
 }
 
 
 /* =========================================================
    INTRO
-========================================================= */
+   ========================================================= */
 
 .intro-screen {
   position: fixed;
@@ -103,7 +113,6 @@ body {
   height: 190px;
 
   position: relative;
-
   margin: 0 auto 30px;
 }
 
@@ -126,12 +135,11 @@ body {
       #bcbcbc
     );
 
-  border:
-    10px solid #ffffff;
+  border: 10px solid #ffffff;
 
   box-shadow:
     0 20px 55px
-    rgba(0, 0, 0, .22);
+    rgba(0,0,0,.22);
 }
 
 .lens-handle {
@@ -144,15 +152,14 @@ body {
 
   border-radius: 20px;
 
-  transform:
-    rotate(45deg);
+  transform: rotate(45deg);
 
   right: 0;
   bottom: 25px;
 
   box-shadow:
     0 10px 30px
-    rgba(0, 0, 0, .22);
+    rgba(0,0,0,.22);
 }
 
 .intro-logo {
@@ -167,13 +174,12 @@ body {
   color: #444;
 
   font-size: 14px;
-  letter-spacing: .2px;
 }
 
 
 /* =========================================================
    APP
-========================================================= */
+   ========================================================= */
 
 .hidden {
   display: none !important;
@@ -186,7 +192,7 @@ body {
 
 /* =========================================================
    HEADER
-========================================================= */
+   ========================================================= */
 
 .header {
   height: 72px;
@@ -201,7 +207,7 @@ body {
     1px solid var(--border);
 
   background:
-    rgba(255, 255, 255, .92);
+    rgba(255,255,255,.92);
 
   backdrop-filter:
     blur(20px);
@@ -214,6 +220,7 @@ body {
 .logo {
   position: absolute;
   left: 50%;
+
   transform:
     translateX(-50%);
 
@@ -251,14 +258,13 @@ body {
 .icon-button:hover,
 .profile-button:hover {
   background: #f0f0f0;
-  transform:
-    translateY(-1px);
+  transform: translateY(-1px);
 }
 
 
 /* =========================================================
    SIDE MENU
-========================================================= */
+   ========================================================= */
 
 .side-menu {
   position: fixed;
@@ -285,7 +291,7 @@ body {
 
   box-shadow:
     15px 0 50px
-    rgba(0, 0, 0, .08);
+    rgba(0,0,0,.08);
 }
 
 .side-menu.open {
@@ -298,7 +304,7 @@ body {
   inset: 0;
 
   background:
-    rgba(0, 0, 0, .35);
+    rgba(0,0,0,.35);
 
   z-index: 400;
 
@@ -395,10 +401,10 @@ body {
 
 /* =========================================================
    MAIN
-========================================================= */
+   ========================================================= */
 
 .main {
-  width: min(100%, 1180px);
+  width: min(100%,1180px);
 
   margin: 0 auto;
 
@@ -417,7 +423,7 @@ body {
 
 /* =========================================================
    HERO
-========================================================= */
+   ========================================================= */
 
 .hero {
   max-width: 850px;
@@ -442,7 +448,7 @@ body {
 
 .hero h1 {
   font-size:
-    clamp(48px, 8vw, 88px);
+    clamp(48px,8vw,88px);
 
   line-height: .92;
 
@@ -470,7 +476,7 @@ body {
 
 /* =========================================================
    SEARCH
-========================================================= */
+   ========================================================= */
 
 .search-card {
   max-width: 850px;
@@ -507,7 +513,7 @@ body {
 
   box-shadow:
     0 10px 35px
-    rgba(0, 0, 0, .06);
+    rgba(0,0,0,.06);
 
   transition: .2s ease;
 }
@@ -517,7 +523,7 @@ body {
 
   box-shadow:
     0 15px 40px
-    rgba(0, 0, 0, .1);
+    rgba(0,0,0,.1);
 }
 
 .search-icon {
@@ -572,7 +578,7 @@ body {
 
 /* =========================================================
    SECTIONS
-========================================================= */
+   ========================================================= */
 
 .section-title {
   font-size: 10px;
@@ -592,13 +598,13 @@ body {
 
 /* =========================================================
    MODES
-========================================================= */
+   ========================================================= */
 
 .mode-grid {
   display: grid;
 
   grid-template-columns:
-    repeat(3, 1fr);
+    repeat(3,1fr);
 
   gap: 13px;
 }
@@ -636,7 +642,7 @@ body {
 
   box-shadow:
     0 15px 35px
-    rgba(0, 0, 0, .08);
+    rgba(0,0,0,.08);
 }
 
 .mode-icon {
@@ -681,13 +687,13 @@ body {
 
 /* =========================================================
    CATEGORIES
-========================================================= */
+   ========================================================= */
 
 .category-grid {
   display: grid;
 
   grid-template-columns:
-    repeat(5, 1fr);
+    repeat(5,1fr);
 
   gap: 12px;
 }
@@ -720,7 +726,7 @@ body {
 
   box-shadow:
     0 15px 30px
-    rgba(0, 0, 0, .1);
+    rgba(0,0,0,.1);
 }
 
 .category-card span {
@@ -774,7 +780,7 @@ body {
 
 /* =========================================================
    METHOD PREVIEW
-========================================================= */
+   ========================================================= */
 
 .method-preview {
   margin-top: 90px;
@@ -848,8 +854,8 @@ body {
 
 
 /* =========================================================
-   OTHER PAGES
-========================================================= */
+   PAGES
+   ========================================================= */
 
 .page-header {
   display: flex;
@@ -892,7 +898,7 @@ body {
 
 /* =========================================================
    FREE
-========================================================= */
+   ========================================================= */
 
 .large-search {
   max-width: 800px;
@@ -974,7 +980,7 @@ body {
 
 /* =========================================================
    GUIDED
-========================================================= */
+   ========================================================= */
 
 .guided-card {
   max-width: 700px;
@@ -988,7 +994,7 @@ body {
 
   box-shadow:
     0 15px 45px
-    rgba(0, 0, 0, .05);
+    rgba(0,0,0,.05);
 }
 
 .guided-card label {
@@ -1030,8 +1036,9 @@ body {
 }
 
 .primary-button,
-.secondary-button {
-  height: 55px;
+.secondary-button,
+.danger-button {
+  min-height: 55px;
 
   padding:
     0 25px;
@@ -1057,6 +1064,8 @@ body {
 }
 
 .secondary-button {
+  margin-top: 10px;
+
   background: white;
   color: #111;
 
@@ -1071,7 +1080,7 @@ body {
 
 /* =========================================================
    COMPARE
-========================================================= */
+   ========================================================= */
 
 .compare-grid {
   display: grid;
@@ -1150,7 +1159,6 @@ body {
   margin-top: 35px;
 
   background: #111;
-
   color: white;
 
   border-radius: 25px;
@@ -1197,7 +1205,7 @@ body {
 
 /* =========================================================
    METHOD
-========================================================= */
+   ========================================================= */
 
 .method-hero {
   font-size: 42px;
@@ -1258,8 +1266,8 @@ body {
 
 
 /* =========================================================
-   PROFILE
-========================================================= */
+   PROFILE / AUTH
+   ========================================================= */
 
 .profile-card {
   max-width: 450px;
@@ -1307,92 +1315,143 @@ body {
   margin-bottom: 25px;
 }
 
-.profile-actions {
-  display: flex;
-
-  flex-direction: column;
-
-  gap: 10px;
-}
-
-
-/* =========================================================
-   SETTINGS
-========================================================= */
-
-.settings-card {
-  max-width: 800px;
+.auth-card {
+  max-width: 450px;
 
   border:
     1px solid var(--border);
 
   border-radius: 25px;
 
-  overflow: hidden;
+  padding: 30px;
+}
+
+.auth-tabs {
+  display: grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap: 8px;
+
+  margin-bottom: 20px;
+}
+
+.auth-tab {
+  height: 45px;
+
+  border:
+    1px solid var(--border);
+
+  background: white;
+
+  border-radius: 12px;
+
+  cursor: pointer;
+
+  font-weight: 700;
+}
+
+.auth-tab.active {
+  background: #111;
+  color: white;
+}
+
+.auth-input {
+  width: 100%;
+
+  height: 52px;
+
+  border:
+    1px solid #ddd;
+
+  border-radius: 13px;
+
+  padding:
+    0 15px;
+
+  margin-bottom: 12px;
+
+  outline: none;
+
+  font-size: 14px;
+}
+
+.auth-message {
+  margin-top: 15px;
+
+  color: #777;
+
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   SETTINGS
+   ========================================================= */
+
+.settings-list {
+  max-width: 850px;
+
+  border-top:
+    1px solid var(--border);
 }
 
 .setting-row {
-  min-height: 90px;
-
-  padding:
-    22px 25px;
-
   display: flex;
 
+  align-items: center;
   justify-content: space-between;
 
-  align-items: center;
-
   gap: 25px;
+
+  padding:
+    25px 0;
 
   border-bottom:
     1px solid var(--border);
 }
 
-.setting-row:last-child {
-  border-bottom: none;
-}
-
 .setting-row strong {
-  display: block;
-
   font-size: 15px;
-
-  margin-bottom: 6px;
 }
 
 .setting-row p {
   color: #888;
 
   font-size: 12px;
+
+  margin-top: 6px;
 }
 
 .setting-row select {
-  height: 42px;
+  height: 44px;
+
+  min-width: 150px;
 
   border:
     1px solid var(--border);
 
-  border-radius: 10px;
-
-  padding:
-    0 12px;
+  border-radius: 12px;
 
   background: white;
 
-  font-size: 13px;
+  padding:
+    0 12px;
 }
 
 
-/* SWITCH */
+/* =========================================================
+   SWITCH
+   ========================================================= */
 
 .switch {
   position: relative;
 
-  width: 48px;
+  width: 50px;
   height: 28px;
 
-  flex-shrink: 0;
+  display: inline-block;
 }
 
 .switch input {
@@ -1401,9 +1460,8 @@ body {
   height: 0;
 }
 
-.switch span {
+.slider {
   position: absolute;
-
   inset: 0;
 
   background: #ddd;
@@ -1412,10 +1470,10 @@ body {
 
   cursor: pointer;
 
-  transition: .2s ease;
+  transition: .2s;
 }
 
-.switch span::after {
+.slider:before {
   content: "";
 
   position: absolute;
@@ -1430,25 +1488,36 @@ body {
 
   border-radius: 50%;
 
-  transition: .2s ease;
+  transition: .2s;
 
   box-shadow:
     0 2px 5px rgba(0,0,0,.15);
 }
 
-.switch input:checked + span {
+.switch input:checked + .slider {
   background: #111;
 }
 
-.switch input:checked + span::after {
+.switch input:checked + .slider:before {
   transform:
-    translateX(20px);
+    translateX(22px);
+}
+
+.danger-button {
+  min-height: 44px;
+
+  background: white;
+
+  color: #777;
+
+  border:
+    1px solid #ddd;
 }
 
 
 /* =========================================================
    RESULTS
-========================================================= */
+   ========================================================= */
 
 .results-header {
   display: flex;
@@ -1627,8 +1696,74 @@ body {
 
 
 /* =========================================================
+   AVAILABILITY
+   ========================================================= */
+
+.availability-card {
+  display: flex;
+
+  align-items: center;
+
+  gap: 15px;
+
+  max-width: 800px;
+
+  padding: 15px;
+
+  margin-bottom: 9px;
+
+  border:
+    1px solid var(--border);
+
+  border-radius: 15px;
+
+  text-decoration: none;
+
+  color: #111;
+}
+
+.availability-logo {
+  width: 42px;
+  height: 42px;
+
+  border-radius: 12px;
+
+  background: #f2f2f2;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  font-size: 14px;
+
+  font-weight: 900;
+}
+
+.availability-card div:nth-child(2) {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.availability-card span {
+  color: #999;
+
+  font-size: 11px;
+}
+
+.availability-arrow {
+  margin-left: auto;
+
+  color: #999;
+}
+
+
+/* =========================================================
    SOURCES
-========================================================= */
+   ========================================================= */
 
 .sources-section {
   margin-top: 60px;
@@ -1638,7 +1773,7 @@ body {
   display: grid;
 
   grid-template-columns:
-    repeat(2, 1fr);
+    repeat(2,1fr);
 
   gap: 10px;
 }
@@ -1679,7 +1814,7 @@ body {
 
 /* =========================================================
    LOADING / ERROR
-========================================================= */
+   ========================================================= */
 
 .loading {
   min-height: 300px;
@@ -1736,133 +1871,130 @@ body {
 
 
 /* =========================================================
-   MODALS
-========================================================= */
+   DARK THEME
+   ========================================================= */
 
-.modal {
-  position: fixed;
+.dark-theme {
+  background: #080808;
+  color: #fff;
+}
 
-  inset: 0;
-
-  z-index: 2000;
-
+.dark-theme .header {
   background:
-    rgba(0,0,0,.45);
+    rgba(8,8,8,.92);
 
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-
-  padding: 20px;
-
-  backdrop-filter:
-    blur(8px);
+  border-color: #222;
 }
 
-.modal-card {
-  width: 100%;
-
-  max-width: 430px;
-
-  background: white;
-
-  border-radius: 25px;
-
-  padding: 35px;
-
-  position: relative;
-
-  box-shadow:
-    0 25px 70px
-    rgba(0,0,0,.2);
+.dark-theme .side-menu,
+.dark-theme .profile-card,
+.dark-theme .auth-card,
+.dark-theme .guided-card,
+.dark-theme .compare-box,
+.dark-theme .result-card,
+.dark-theme .source-item,
+.dark-theme .setting-row select,
+.dark-theme .large-search,
+.dark-theme .context-input,
+.dark-theme .back-button,
+.dark-theme .icon-button,
+.dark-theme .profile-button,
+.dark-theme .category-card,
+.dark-theme .mode-card,
+.dark-theme .auth-tab,
+.dark-theme .secondary-button {
+  background: #111;
+  color: #fff;
+  border-color: #292929;
 }
 
-.modal-close {
-  position: absolute;
-
-  right: 18px;
-  top: 15px;
-
-  border: none;
-
-  background: none;
-
-  font-size: 28px;
-
-  cursor: pointer;
-
-  color: #777;
+.dark-theme input,
+.dark-theme select {
+  color: #fff;
 }
 
-.modal-card h2 {
-  font-size: 30px;
-
-  letter-spacing: -1.5px;
-
-  margin-bottom: 22px;
+.dark-theme .menu-item:hover,
+.dark-theme .menu-category:hover {
+  background: #1d1d1d;
 }
 
-.modal-card form {
-  display: grid;
-
-  gap: 12px;
+.dark-theme .menu-item.active {
+  background: #fff;
+  color: #111;
 }
 
-.modal-card input {
-  width: 100%;
-
-  height: 52px;
-
-  border:
-    1px solid #ddd;
-
-  border-radius: 12px;
-
-  padding:
-    0 15px;
-
-  outline: none;
-
-  font-size: 14px;
+.dark-theme .hero h1 span,
+.dark-theme .method-hero strong {
+  color: #aaa;
 }
 
-.modal-card input:focus {
-  border-color: #999;
+.dark-theme .hero p,
+.dark-theme .page-header p,
+.dark-theme .result-reason,
+.dark-theme .summary {
+  color: #999;
 }
 
-.modal-switch {
-  border: none;
-
-  background: none;
-
-  margin-top: 18px;
-
-  color: #777;
-
-  cursor: pointer;
-
-  font-size: 12px;
+.dark-theme .search-box,
+.dark-theme .large-search {
+  border-color: #333;
 }
 
-.auth-message {
-  margin-top: 15px;
+.dark-theme .search-box input,
+.dark-theme .large-search input,
+.dark-theme .guided-card input,
+.dark-theme .guided-card select,
+.dark-theme .compare-box input,
+.dark-theme .context-input,
+.dark-theme .auth-input {
+  background: transparent;
+  color: #fff;
+}
 
-  color: #777;
+.dark-theme .result-icon,
+.dark-theme .mode-icon,
+.dark-theme .profile-avatar,
+.dark-theme .availability-logo {
+  background: #222;
+}
 
-  font-size: 12px;
+.dark-theme .result-link,
+.dark-theme .source-item,
+.dark-theme .availability-card {
+  color: #fff;
+}
+
+.dark-theme .pros span,
+.dark-theme .cons span {
+  background: #222;
+}
+
+.dark-theme .slider {
+  background: #444;
+}
+
+.dark-theme .switch input:checked + .slider {
+  background: #fff;
+}
+
+.dark-theme .switch input:checked + .slider:before {
+  background: #111;
+}
+
+.dark-theme .primary-button {
+  background: #fff;
+  color: #111;
 }
 
 
 /* =========================================================
    RESPONSIVE
-========================================================= */
+   ========================================================= */
 
-@media (max-width: 800px) {
+@media (max-width:800px) {
 
   .header {
-    padding:
-      0 17px;
+    padding: 0 17px;
   }
 
   .main {
@@ -1872,7 +2004,6 @@ body {
 
   .hero h1 {
     font-size: 55px;
-
     letter-spacing: -3px;
   }
 
@@ -1886,24 +2017,21 @@ body {
 
   .search-button {
     height: 46px;
-
     padding:
       0 19px;
   }
 
   .mode-grid {
-    grid-template-columns:
-      1fr;
+    grid-template-columns: 1fr;
   }
 
   .category-grid {
     grid-template-columns:
-      repeat(2, 1fr);
+      repeat(2,1fr);
   }
 
   .method-preview {
-    grid-template-columns:
-      1fr;
+    grid-template-columns: 1fr;
 
     padding: 30px;
 
@@ -1919,8 +2047,7 @@ body {
   }
 
   .compare-grid {
-    grid-template-columns:
-      1fr;
+    grid-template-columns: 1fr;
   }
 
   .compare-vs {
@@ -1936,8 +2063,7 @@ body {
   }
 
   .sources-list {
-    grid-template-columns:
-      1fr;
+    grid-template-columns: 1fr;
   }
 
   .side-menu {
@@ -1952,7 +2078,7 @@ body {
 }
 
 
-@media (max-width: 480px) {
+@media (max-width:480px) {
 
   .logo {
     font-size: 15px;
@@ -1993,8 +2119,26 @@ body {
     margin-top: 60px;
   }
 
-  .modal-card {
-    padding: 28px 22px;
+  .result-main {
+    gap: 12px;
+  }
+
+  .result-card {
+    padding: 18px;
+  }
+
+  .result-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 24px;
+  }
+
+  .setting-row {
+    flex-direction: column;
+  }
+
+  .setting-row select {
+    width: 100%;
   }
 
 }
