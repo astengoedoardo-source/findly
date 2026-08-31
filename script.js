@@ -1,524 +1,58 @@
 /* =========================================================
-   FINDLY V8 — FRONTEND
+   FINDLY V8 — SCRIPT
 ========================================================= */
 
 const WORKER_URL =
   "https://shrill-firefly-79b6.astengoedoardo.workers.dev";
 
 let currentCategory = "other";
-let currentLanguage =
-  localStorage.getItem("findlyLanguage") || "it";
-
-let authMode = "register";
-
-
-/* =========================================================
-   TRANSLATIONS
-========================================================= */
-
-const translations = {
-
-  it: {
-    introSubtitle: "Lo trova.",
-    menu: "MENU",
-    home: "Home",
-    freeSearch: "Ricerca libera",
-    guidedSearch: "Ricerca guidata",
-    compare: "Confronta",
-    method: "Metodo Findly",
-    categories: "CATEGORIE",
-    account: "ACCOUNT",
-    profile: "Profilo",
-    settings: "Impostazioni",
-
-    catTech: "Tecnologia",
-    catFashion: "Moda",
-    catMovies: "Film & Serie",
-    catBooks: "Libri",
-    catMusic: "Musica",
-    catTravel: "Viaggi",
-    catFood: "Cibo",
-    catSport: "Sport",
-    catCars: "Auto",
-    catHome: "Casa",
-
-    heroKicker: "NON CERCARE. TROVA.",
-    heroBest: "il meglio",
-    heroText:
-      "Dimmi cosa cerchi. Findly analizza più fonti, confronta opinioni e ti aiuta a scegliere.",
-    whatLookingFor: "COSA STAI CERCANDO?",
-    searchPlaceholder: "Cosa vuoi trovare?",
-    find: "Trova →",
-    searchHint:
-      "Cerca prodotti, luoghi, film, auto, viaggi, libri e molto altro.",
-    chooseMode: "SCEGLI COME CERCARE",
-    exploreCategories: "ESPLORA LE CATEGORIE",
-
-    freeSearchDesc:
-      "Scrivi semplicemente quello che vuoi trovare.",
-    guidedSearchDesc:
-      "Dai a Findly categoria e preferenze per una ricerca più precisa.",
-    compareDesc:
-      "Metti due alternative una contro l'altra.",
-
-    methodLabel: "IL METODO FINDLY",
-    methodPreviewTitle:
-      "Non scegliamo dalla prima recensione.",
-    methodPreviewText:
-      "Findly cerca più fonti e cerca i punti in comune tra recensioni, opinioni, esperienze e informazioni disponibili. L'obiettivo è capire il quadro generale.",
-    discoverMethod: "Scopri il metodo →",
-
-    freeSearchTitle: "Dimmi cosa cerchi.",
-    freeSearchSubtitle: "Non servono formule precise.",
-    freePlaceholder:
-      "Es. migliori cuffie sotto 150€",
-    examples: "Prova:",
-
-    guidedTitle:
-      "Più dettagli. Risultato migliore.",
-    category: "CATEGORIA",
-    guidedPlaceholder: "Es. cuffie wireless",
-    priority: "COSA CONTA DI PIÙ?",
-    preferencePlaceholder:
-      "Es. qualità, prezzo, affidabilità...",
-
-    compareTitle: "Quale scelgo?",
-    compareSubtitle:
-      "Lascia che Findly analizzi entrambe.",
-    optionA: "OPZIONE A",
-    optionB: "OPZIONE B",
-    optionPlaceholder: "Alternativa",
-    comparePriorityPlaceholder:
-      "Cosa conta di più? Es. prezzo, qualità...",
-    compareButton: "Confronta →",
-
-    methodTitle: "Il modo in cui scegliamo.",
-    methodHero:
-      "Una recensione può essere un'opinione. Centinaia di opinioni iniziano a raccontare una storia.",
-    step1Title: "Cerchiamo",
-    step1Text:
-      "Findly interroga più fonti online rilevanti per la tua richiesta.",
-    step2Title: "Incrociamo",
-    step2Text:
-      "Non prendiamo una singola recensione come verità assoluta.",
-    step3Title: "Troviamo i pattern",
-    step3Text:
-      "Cerchiamo pregi e difetti che ricorrono in più fonti indipendenti.",
-    step4Title: "Ti aiutiamo a scegliere",
-    step4Text:
-      "Alla fine non devi leggere cento pagine: Findly sintetizza ciò che emerge.",
-
-    sources: "FONTI ANALIZZATE",
-
-    profileTitle: "Il tuo Findly.",
-    register: "Registrati",
-    login: "Accedi",
-    editProfile: "Modifica profilo",
-    logout: "Esci",
-    save: "Salva",
-    name: "Nome",
-    email: "Email",
-
-    settingsTitle: "Personalizza Findly.",
-    language: "Lingua",
-    languageDesc:
-      "Scegli la lingua dell'interfaccia.",
-    notifications: "Notifiche",
-    notificationsDesc:
-      "Attiva o disattiva le notifiche di Findly.",
-    savePreferences: "Salva preferenze",
-    savePreferencesDesc:
-      "Ricorda lingua e impostazioni su questo dispositivo."
-  },
-
-
-  en: {
-    introSubtitle: "Find it.",
-    menu: "MENU",
-    home: "Home",
-    freeSearch: "Free search",
-    guidedSearch: "Guided search",
-    compare: "Compare",
-    method: "Findly method",
-    categories: "CATEGORIES",
-    account: "ACCOUNT",
-    profile: "Profile",
-    settings: "Settings",
-
-    catTech: "Technology",
-    catFashion: "Fashion",
-    catMovies: "Film & Series",
-    catBooks: "Books",
-    catMusic: "Music",
-    catTravel: "Travel",
-    catFood: "Food",
-    catSport: "Sports",
-    catCars: "Cars",
-    catHome: "Home",
-
-    heroKicker: "DON'T SEARCH. FIND.",
-    heroBest: "the best",
-    heroText:
-      "Tell me what you're looking for. Findly analyzes multiple sources, compares opinions and helps you choose.",
-    whatLookingFor: "WHAT ARE YOU LOOKING FOR?",
-    searchPlaceholder: "What do you want to find?",
-    find: "Find →",
-    searchHint:
-      "Search for products, places, movies, cars, trips, books and more.",
-    chooseMode: "CHOOSE HOW TO SEARCH",
-    exploreCategories: "EXPLORE CATEGORIES",
-
-    freeSearchDesc:
-      "Simply write what you want to find.",
-    guidedSearchDesc:
-      "Give Findly a category and your preferences for a more precise search.",
-    compareDesc:
-      "Put two alternatives against each other.",
-
-    methodLabel: "THE FINDLY METHOD",
-    methodPreviewTitle:
-      "We don't choose from the first review.",
-    methodPreviewText:
-      "Findly searches multiple sources and looks for common patterns across reviews, opinions, experiences and available information.",
-    discoverMethod: "Discover the method →",
-
-    freeSearchTitle: "Tell me what you're looking for.",
-    freeSearchSubtitle: "No precise formula required.",
-    freePlaceholder:
-      "E.g. best headphones under €150",
-    examples: "Try:",
-
-    guidedTitle:
-      "More details. Better result.",
-    category: "CATEGORY",
-    guidedPlaceholder: "E.g. wireless headphones",
-    priority: "WHAT MATTERS MOST?",
-    preferencePlaceholder:
-      "E.g. quality, price, reliability...",
-
-    compareTitle: "Which one should I choose?",
-    compareSubtitle:
-      "Let Findly analyze both.",
-    optionA: "OPTION A",
-    optionB: "OPTION B",
-    optionPlaceholder: "Alternative",
-    comparePriorityPlaceholder:
-      "What matters most? E.g. price, quality...",
-    compareButton: "Compare →",
-
-    methodTitle: "How we choose.",
-    methodHero:
-      "One review can be an opinion. Hundreds of opinions start telling a story.",
-    step1Title: "Search",
-    step1Text:
-      "Findly searches multiple online sources relevant to your request.",
-    step2Title: "Cross-check",
-    step2Text:
-      "We don't treat a single review as absolute truth.",
-    step3Title: "Find patterns",
-    step3Text:
-      "We look for strengths and weaknesses repeated across independent sources.",
-    step4Title: "Help you choose",
-    step4Text:
-      "You don't have to read a hundred pages: Findly summarizes what emerges.",
-
-    sources: "SOURCES ANALYZED",
-
-    profileTitle: "Your Findly.",
-    register: "Sign up",
-    login: "Log in",
-    editProfile: "Edit profile",
-    logout: "Log out",
-    save: "Save",
-    name: "Name",
-    email: "Email",
-
-    settingsTitle: "Customize Findly.",
-    language: "Language",
-    languageDesc:
-      "Choose the interface language.",
-    notifications: "Notifications",
-    notificationsDesc:
-      "Turn Findly notifications on or off.",
-    savePreferences: "Save preferences",
-    savePreferencesDesc:
-      "Remember language and settings on this device."
-  },
-
-
-  es: {
-    introSubtitle: "Encuéntralo.",
-    menu: "MENÚ",
-    home: "Inicio",
-    freeSearch: "Búsqueda libre",
-    guidedSearch: "Búsqueda guiada",
-    compare: "Comparar",
-    method: "Método Findly",
-    categories: "CATEGORÍAS",
-    account: "CUENTA",
-    profile: "Perfil",
-    settings: "Ajustes",
-
-    catTech: "Tecnología",
-    catFashion: "Moda",
-    catMovies: "Películas y series",
-    catBooks: "Libros",
-    catMusic: "Música",
-    catTravel: "Viajes",
-    catFood: "Comida",
-    catSport: "Deportes",
-    catCars: "Coches",
-    catHome: "Casa",
-
-    heroKicker: "NO BUSQUES. ENCUENTRA.",
-    heroBest: "lo mejor",
-    heroText:
-      "Dime qué buscas. Findly analiza varias fuentes, compara opiniones y te ayuda a elegir.",
-    whatLookingFor: "¿QUÉ ESTÁS BUSCANDO?",
-    searchPlaceholder: "¿Qué quieres encontrar?",
-    find: "Encontrar →",
-    searchHint:
-      "Busca productos, lugares, películas, coches, viajes, libros y mucho más.",
-    chooseMode: "ELIGE CÓMO BUSCAR",
-    exploreCategories: "EXPLORA LAS CATEGORÍAS",
-
-    freeSearchDesc:
-      "Escribe simplemente lo que quieres encontrar.",
-    guidedSearchDesc:
-      "Indica una categoría y tus preferencias para una búsqueda más precisa.",
-    compareDesc:
-      "Pon dos alternativas una frente a la otra.",
-
-    methodLabel: "EL MÉTODO FINDLY",
-    methodPreviewTitle:
-      "No elegimos según la primera reseña.",
-    methodPreviewText:
-      "Findly busca varias fuentes y encuentra patrones comunes entre reseñas, opiniones, experiencias e información disponible.",
-    discoverMethod: "Descubre el método →",
-
-    freeSearchTitle: "Dime qué estás buscando.",
-    freeSearchSubtitle: "No necesitas una fórmula precisa.",
-    freePlaceholder:
-      "Ej. mejores auriculares por menos de 150€",
-    examples: "Prueba:",
-
-    guidedTitle:
-      "Más detalles. Mejor resultado.",
-    category: "CATEGORÍA",
-    guidedPlaceholder: "Ej. auriculares inalámbricos",
-    priority: "¿QUÉ ES LO MÁS IMPORTANTE?",
-    preferencePlaceholder:
-      "Ej. calidad, precio, fiabilidad...",
-
-    compareTitle: "¿Cuál elijo?",
-    compareSubtitle:
-      "Deja que Findly analice ambos.",
-    optionA: "OPCIÓN A",
-    optionB: "OPCIÓN B",
-    optionPlaceholder: "Alternativa",
-    comparePriorityPlaceholder:
-      "¿Qué importa más? Ej. precio, calidad...",
-    compareButton: "Comparar →",
-
-    methodTitle: "La forma en que elegimos.",
-    methodHero:
-      "Una reseña puede ser una opinión. Cientos de opiniones empiezan a contar una historia.",
-    step1Title: "Buscamos",
-    step1Text:
-      "Findly consulta varias fuentes online relevantes para tu solicitud.",
-    step2Title: "Contrastamos",
-    step2Text:
-      "No consideramos una sola reseña como verdad absoluta.",
-    step3Title: "Encontramos patrones",
-    step3Text:
-      "Buscamos puntos fuertes y débiles repetidos en varias fuentes independientes.",
-    step4Title: "Te ayudamos a elegir",
-    step4Text:
-      "No tienes que leer cien páginas: Findly resume lo que aparece.",
-
-    sources: "FUENTES ANALIZADAS",
-
-    profileTitle: "Tu Findly.",
-    register: "Registrarse",
-    login: "Iniciar sesión",
-    editProfile: "Editar perfil",
-    logout: "Cerrar sesión",
-    save: "Guardar",
-    name: "Nombre",
-    email: "Email",
-
-    settingsTitle: "Personaliza Findly.",
-    language: "Idioma",
-    languageDesc:
-      "Elige el idioma de la interfaz.",
-    notifications: "Notificaciones",
-    notificationsDesc:
-      "Activa o desactiva las notificaciones de Findly.",
-    savePreferences: "Guardar preferencias",
-    savePreferencesDesc:
-      "Recuerda el idioma y los ajustes en este dispositivo."
-  },
-
-
-  fr: {
-    introSubtitle: "Trouvez-le.",
-    menu: "MENU",
-    home: "Accueil",
-    freeSearch: "Recherche libre",
-    guidedSearch: "Recherche guidée",
-    compare: "Comparer",
-    method: "Méthode Findly",
-    categories: "CATÉGORIES",
-    account: "COMPTE",
-    profile: "Profil",
-    settings: "Paramètres",
-
-    catTech: "Technologie",
-    catFashion: "Mode",
-    catMovies: "Films & Séries",
-    catBooks: "Livres",
-    catMusic: "Musique",
-    catTravel: "Voyages",
-    catFood: "Cuisine",
-    catSport: "Sport",
-    catCars: "Voitures",
-    catHome: "Maison",
-
-    heroKicker: "NE CHERCHEZ PAS. TROUVEZ.",
-    heroBest: "le meilleur",
-    heroText:
-      "Dites-moi ce que vous cherchez. Findly analyse plusieurs sources, compare les avis et vous aide à choisir.",
-    whatLookingFor: "QUE CHERCHEZ-VOUS ?",
-    searchPlaceholder: "Que voulez-vous trouver ?",
-    find: "Trouver →",
-    searchHint:
-      "Recherchez des produits, lieux, films, voitures, voyages, livres et bien plus.",
-    chooseMode: "CHOISISSEZ COMMENT CHERCHER",
-    exploreCategories: "EXPLORER LES CATÉGORIES",
-
-    freeSearchDesc:
-      "Écrivez simplement ce que vous voulez trouver.",
-    guidedSearchDesc:
-      "Indiquez une catégorie et vos préférences pour une recherche plus précise.",
-    compareDesc:
-      "Mettez deux alternatives face à face.",
-
-    methodLabel: "LA MÉTHODE FINDLY",
-    methodPreviewTitle:
-      "Nous ne choisissons pas selon le premier avis.",
-    methodPreviewText:
-      "Findly recherche plusieurs sources et identifie les tendances communes dans les avis, opinions, expériences et informations disponibles.",
-    discoverMethod: "Découvrir la méthode →",
-
-    freeSearchTitle: "Dites-moi ce que vous cherchez.",
-    freeSearchSubtitle: "Aucune formule précise nécessaire.",
-    freePlaceholder:
-      "Ex. meilleurs écouteurs à moins de 150€",
-    examples: "Essayez :",
-
-    guidedTitle:
-      "Plus de détails. Meilleur résultat.",
-    category: "CATÉGORIE",
-    guidedPlaceholder: "Ex. écouteurs sans fil",
-    priority: "QU'EST-CE QUI COMPTE LE PLUS ?",
-    preferencePlaceholder:
-      "Ex. qualité, prix, fiabilité...",
-
-    compareTitle: "Lequel choisir ?",
-    compareSubtitle:
-      "Laissez Findly analyser les deux.",
-    optionA: "OPTION A",
-    optionB: "OPTION B",
-    optionPlaceholder: "Alternative",
-    comparePriorityPlaceholder:
-      "Qu'est-ce qui compte le plus ? Ex. prix, qualité...",
-    compareButton: "Comparer →",
-
-    methodTitle: "Notre façon de choisir.",
-    methodHero:
-      "Un avis peut être une opinion. Des centaines d'avis commencent à raconter une histoire.",
-    step1Title: "Nous cherchons",
-    step1Text:
-      "Findly consulte plusieurs sources en ligne pertinentes pour votre demande.",
-    step2Title: "Nous croisons",
-    step2Text:
-      "Nous ne considérons pas un seul avis comme une vérité absolue.",
-    step3Title: "Nous trouvons les tendances",
-    step3Text:
-      "Nous recherchons les qualités et défauts répétés dans plusieurs sources indépendantes.",
-    step4Title: "Nous vous aidons à choisir",
-    step4Text:
-      "Pas besoin de lire cent pages : Findly synthétise ce qui ressort.",
-
-    sources: "SOURCES ANALYSÉES",
-
-    profileTitle: "Votre Findly.",
-    register: "S'inscrire",
-    login: "Se connecter",
-    editProfile: "Modifier le profil",
-    logout: "Se déconnecter",
-    save: "Enregistrer",
-    name: "Nom",
-    email: "Email",
-
-    settingsTitle: "Personnalisez Findly.",
-    language: "Langue",
-    languageDesc:
-      "Choisissez la langue de l'interface.",
-    notifications: "Notifications",
-    notificationsDesc:
-      "Activez ou désactivez les notifications Findly.",
-    savePreferences: "Enregistrer les préférences",
-    savePreferencesDesc:
-      "Mémorisez la langue et les paramètres sur cet appareil."
-  }
-
-};
+let currentLanguage = "it";
 
 
 /* =========================================================
    START
 ========================================================= */
 
-document.addEventListener(
-  "DOMContentLoaded",
-  () => {
+document.addEventListener("DOMContentLoaded", () => {
 
-    applyLanguage(currentLanguage);
-    loadSettings();
-    updateProfileUI();
+  const intro =
+    document.getElementById("introScreen");
 
-    const intro =
-      document.getElementById("introScreen");
+  const app =
+    document.getElementById("app");
 
-    const app =
-      document.getElementById("app");
+  setTimeout(() => {
+
+    if (intro) {
+      intro.classList.add("intro-hide");
+    }
 
     setTimeout(() => {
 
-      intro.classList.add("intro-hide");
-
-      setTimeout(() => {
-
+      if (intro) {
         intro.style.display = "none";
+      }
+
+      if (app) {
         app.classList.remove("hidden");
+      }
 
-      }, 700);
+    }, 700);
 
-    }, 1700);
+  }, 1700);
 
-    setupNavigation();
-    setupSearch();
-    setupCategories();
-    setupGuided();
-    setupCompare();
-    setupExamples();
-    setupAuth();
-    setupProfile();
-    setupSettings();
 
-  }
-);
+  setupNavigation();
+  setupSearch();
+  setupCategories();
+  setupGuided();
+  setupCompare();
+  setupExamples();
+  setupLanguage();
+  setupProfile();
+  setupSettings();
+  setupAuth();
+});
 
 
 /* =========================================================
@@ -536,66 +70,79 @@ function setupNavigation() {
   const overlay =
     document.getElementById("menuOverlay");
 
-  menuButton.onclick =
-    openMenu;
+  if (menuButton) {
+    menuButton.onclick = openMenu;
+  }
 
-  closeMenu.onclick =
-    closeSideMenu;
+  if (closeMenu) {
+    closeMenu.onclick = closeSideMenu;
+  }
 
-  overlay.onclick =
-    closeSideMenu;
-
+  if (overlay) {
+    overlay.onclick = closeSideMenu;
+  }
 
   document
     .querySelectorAll("[data-page]")
     .forEach(button => {
 
-      button.addEventListener(
-        "click",
-        () => {
+      button.addEventListener("click", () => {
 
-          const page =
-            button.dataset.page;
+        const page =
+          button.dataset.page;
 
-          showPage(page);
-          closeSideMenu();
+        showPage(page);
+        closeSideMenu();
 
-        }
-      );
+      });
 
     });
 
+  const homeLogo =
+    document.getElementById("homeLogo");
 
-  document
-    .getElementById("homeLogo")
-    .onclick = () =>
-      showPage("home");
+  if (homeLogo) {
+    homeLogo.onclick =
+      () => showPage("home");
+  }
 
 }
 
 
 function openMenu() {
 
-  document
-    .getElementById("sideMenu")
-    .classList.add("open");
+  const menu =
+    document.getElementById("sideMenu");
 
-  document
-    .getElementById("menuOverlay")
-    .classList.add("show");
+  const overlay =
+    document.getElementById("menuOverlay");
+
+  if (menu) {
+    menu.classList.add("open");
+  }
+
+  if (overlay) {
+    overlay.classList.add("show");
+  }
 
 }
 
 
 function closeSideMenu() {
 
-  document
-    .getElementById("sideMenu")
-    .classList.remove("open");
+  const menu =
+    document.getElementById("sideMenu");
 
-  document
-    .getElementById("menuOverlay")
-    .classList.remove("show");
+  const overlay =
+    document.getElementById("menuOverlay");
+
+  if (menu) {
+    menu.classList.remove("open");
+  }
+
+  if (overlay) {
+    overlay.classList.remove("show");
+  }
 
 }
 
@@ -611,7 +158,6 @@ function showPage(page) {
       );
 
     });
-
 
   const target =
     document.getElementById(
@@ -630,7 +176,6 @@ function showPage(page) {
     });
 
   }
-
 
   document
     .querySelectorAll(".menu-item")
@@ -663,8 +208,6 @@ function setupCategories() {
           currentCategory =
             button.dataset.category;
 
-          showPage("guided");
-
           const select =
             document.getElementById(
               "guidedCategory"
@@ -675,6 +218,8 @@ function setupCategories() {
               currentCategory;
           }
 
+          showPage("guided");
+
         }
       );
 
@@ -684,49 +229,64 @@ function setupCategories() {
 
 
 /* =========================================================
-   SEARCH
+   HOME SEARCH
 ========================================================= */
 
 function setupSearch() {
 
   const input =
-    document.getElementById("searchInput");
+    document.getElementById(
+      "searchInput"
+    );
 
   const button =
-    document.getElementById("searchButton");
+    document.getElementById(
+      "searchButton"
+    );
 
-  button.addEventListener(
-    "click",
-    () => {
+  if (button) {
 
-      const query =
-        input.value.trim();
+    button.addEventListener(
+      "click",
+      () => {
 
-      if (!query) {
-        input.focus();
-        return;
+        const query =
+          input?.value.trim();
+
+        if (!query) {
+
+          input?.focus();
+          return;
+
+        }
+
+        search(
+          query,
+          currentCategory,
+          {}
+        );
+
       }
+    );
 
-      search(
-        query,
-        currentCategory,
-        {}
-      );
+  }
 
-    }
-  );
+  if (input) {
 
+    input.addEventListener(
+      "keydown",
+      event => {
 
-  input.addEventListener(
-    "keydown",
-    event => {
+        if (event.key === "Enter") {
 
-      if (event.key === "Enter") {
-        button.click();
+          button?.click();
+
+        }
+
       }
+    );
 
-    }
-  );
+  }
 
 
   const freeInput =
@@ -739,93 +299,110 @@ function setupSearch() {
       "freeSearchButton"
     );
 
-  freeButton.addEventListener(
-    "click",
-    () => {
+  if (freeButton) {
 
-      const query =
-        freeInput.value.trim();
-
-      if (!query) {
-        freeInput.focus();
-        return;
-      }
-
-      search(
-        query,
-        "other",
-        {}
-      );
-
-    }
-  );
-
-
-  freeInput.addEventListener(
-    "keydown",
-    event => {
-
-      if (event.key === "Enter") {
-        freeButton.click();
-      }
-
-    }
-  );
-
-}
-
-
-/* =========================================================
-   GUIDED
-========================================================= */
-
-function setupGuided() {
-
-  document
-    .getElementById(
-      "guidedSearchButton"
-    )
-    .addEventListener(
+    freeButton.addEventListener(
       "click",
       () => {
 
-        const category =
-          document.getElementById(
-            "guidedCategory"
-          ).value;
-
         const query =
-          document.getElementById(
-            "guidedQuery"
-          ).value.trim();
-
-        const preference =
-          document.getElementById(
-            "guidedPreference"
-          ).value.trim();
+          freeInput?.value.trim();
 
         if (!query) {
 
-          document
-            .getElementById(
-              "guidedQuery"
-            )
-            .focus();
-
+          freeInput?.focus();
           return;
 
         }
 
         search(
           query,
-          category,
-          {
-            preference
-          }
+          "other",
+          {}
         );
 
       }
     );
+
+  }
+
+  if (freeInput) {
+
+    freeInput.addEventListener(
+      "keydown",
+      event => {
+
+        if (event.key === "Enter") {
+
+          freeButton?.click();
+
+        }
+
+      }
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   GUIDED SEARCH
+========================================================= */
+
+function setupGuided() {
+
+  const button =
+    document.getElementById(
+      "guidedSearchButton"
+    );
+
+  if (!button) return;
+
+  button.addEventListener(
+    "click",
+    () => {
+
+      const category =
+        document.getElementById(
+          "guidedCategory"
+        )?.value || "other";
+
+      const query =
+        document.getElementById(
+          "guidedQuery"
+        )?.value.trim();
+
+      const preference =
+        document.getElementById(
+          "guidedPreference"
+        )?.value.trim() || "";
+
+      if (!query) {
+
+        document
+          .getElementById(
+            "guidedQuery"
+          )
+          ?.focus();
+
+        return;
+
+      }
+
+      currentCategory =
+        category;
+
+      search(
+        query,
+        category,
+        {
+          preference
+        }
+      );
+
+    }
+  );
 
 }
 
@@ -836,12 +413,17 @@ function setupGuided() {
 
 function setupCompare() {
 
-  document
-    .getElementById("compareButton")
-    .addEventListener(
+  const button =
+    document.getElementById(
+      "compareButton"
+    );
+
+  if (button) {
+    button.addEventListener(
       "click",
       compare
     );
+  }
 
 }
 
@@ -853,21 +435,21 @@ async function compare() {
       .getElementById(
         "compareFirst"
       )
-      .value.trim();
+      ?.value.trim();
 
   const second =
     document
       .getElementById(
         "compareSecond"
       )
-      .value.trim();
+      ?.value.trim();
 
   const context =
     document
       .getElementById(
         "compareContext"
       )
-      .value.trim();
+      ?.value.trim();
 
   if (!first || !second) {
     return;
@@ -883,16 +465,13 @@ async function compare() {
       "compareResult"
     );
 
-  button.disabled = true;
-  button.textContent =
-    currentLanguage === "it"
-      ? "Analizzo..."
-      : currentLanguage === "en"
+  if (button) {
+    button.disabled = true;
+    button.textContent =
+      currentLanguage === "en"
         ? "Analyzing..."
-        : currentLanguage === "es"
-          ? "Analizando..."
-          : "Analyse...";
-
+        : "Analizzo...";
+  }
 
   try {
 
@@ -901,10 +480,12 @@ async function compare() {
         `${WORKER_URL}/api/compare`,
         {
           method: "POST",
+
           headers: {
             "Content-Type":
               "application/json"
           },
+
           body: JSON.stringify({
             first,
             second,
@@ -919,80 +500,89 @@ async function compare() {
       await response.json();
 
     if (!data.ok) {
+
       throw new Error(
-        data.error || "Errore"
+        data.error ||
+        "Errore"
       );
+
     }
 
+    if (result) {
 
-    result.innerHTML = `
+      result.innerHTML = `
 
-      <div class="compare-result-card">
+        <div class="compare-result-card">
 
-        <div class="winner-label">
-          ${escapeHTML(
-            currentLanguage === "it"
-              ? "FINDLY SCEGLIE"
-              : currentLanguage === "en"
+          <div class="winner-label">
+            ${
+              currentLanguage === "en"
                 ? "FINDLY CHOOSES"
-                : currentLanguage === "es"
-                  ? "FINDLY ELIGE"
-                  : "FINDLY CHOISIT"
-          )}
+                : "FINDLY SCEGLIE"
+            }
+          </div>
+
+          <h3>
+            ${
+              data.winner === "option_a"
+                ? escapeHTML(first)
+                : escapeHTML(second)
+            }
+          </h3>
+
+          <p>
+            ${escapeHTML(
+              data.answer || ""
+            )}
+          </p>
+
+          <div class="reason-list">
+
+            ${
+              (data.reasons || [])
+                .map(
+                  reason =>
+                    `<div>✓ ${escapeHTML(
+                      reason
+                    )}</div>`
+                )
+                .join("")
+            }
+
+          </div>
+
         </div>
 
-        <h3>
-          ${
-            data.winner === "option_a"
-              ? escapeHTML(first)
-              : escapeHTML(second)
-          }
-        </h3>
+      `;
 
-        <p>
-          ${escapeHTML(
-            data.answer || ""
-          )}
-        </p>
-
-        <div class="reason-list">
-
-          ${
-            (data.reasons || [])
-              .map(
-                reason =>
-                  `<div>✓ ${escapeHTML(
-                    reason
-                  )}</div>`
-              )
-              .join("")
-          }
-
-        </div>
-
-      </div>
-
-    `;
+    }
 
   } catch (error) {
 
-    result.innerHTML = `
-      <div class="error-card">
-        ${escapeHTML(
-          error.message
-        )}
-      </div>
-    `;
+    if (result) {
+
+      result.innerHTML = `
+        <div class="error-card">
+          ${escapeHTML(
+            error.message
+          )}
+        </div>
+      `;
+
+    }
 
   } finally {
 
-    button.disabled = false;
+    if (button) {
 
-    button.textContent =
-      translations[
-        currentLanguage
-      ]?.compareButton ||
-      "Confronta →";
+      button.disabled = false;
+
+      button.textContent =
+        currentLanguage === "en"
+          ? "Compare →"
+          : "Confronta →";
+
+    }
 
   }
 
@@ -1026,20 +616,38 @@ async function search(
       "resultsList"
     );
 
-  title.textContent =
-    searchingText();
+  if (title) {
 
-  answer.innerHTML = "";
+    title.textContent =
+      currentLanguage === "en"
+        ? "Finding the best for you..."
+        : "Sto cercando il meglio per te...";
 
-  list.innerHTML = `
-    <div class="loading">
-      <div class="loader"></div>
-      <span>${escapeHTML(
-        loadingText()
-      )}</span>
-    </div>
-  `;
+  }
 
+  if (answer) {
+    answer.innerHTML = "";
+  }
+
+  if (list) {
+
+    list.innerHTML = `
+      <div class="loading">
+
+        <div class="loader"></div>
+
+        <span>
+          ${
+            currentLanguage === "en"
+              ? "Analyzing multiple sources..."
+              : "Analizzo più fonti..."
+          }
+        </span>
+
+      </div>
+    `;
+
+  }
 
   try {
 
@@ -1048,10 +656,12 @@ async function search(
         `${WORKER_URL}/api/search`,
         {
           method: "POST",
+
           headers: {
             "Content-Type":
               "application/json"
           },
+
           body: JSON.stringify({
             query,
             category,
@@ -1062,36 +672,46 @@ async function search(
         }
       );
 
-
     const data =
       await response.json();
-
 
     if (!data.ok) {
 
       throw new Error(
         data.error ||
-        "Errore nella ricerca"
+        (
+          currentLanguage === "en"
+            ? "Search error"
+            : "Errore nella ricerca"
+        )
       );
 
     }
 
-
     renderResults(data);
-
 
   } catch (error) {
 
-    title.textContent =
-      errorTitle();
+    if (title) {
 
-    list.innerHTML = `
-      <div class="error-card">
-        ${escapeHTML(
-          error.message
-        )}
-      </div>
-    `;
+      title.textContent =
+        currentLanguage === "en"
+          ? "Something went wrong."
+          : "Qualcosa è andato storto.";
+
+    }
+
+    if (list) {
+
+      list.innerHTML = `
+        <div class="error-card">
+          ${escapeHTML(
+            error.message
+          )}
+        </div>
+      `;
+
+    }
 
   }
 
@@ -1104,100 +724,115 @@ async function search(
 
 function renderResults(data) {
 
-  document
-    .getElementById(
+  const title =
+    document.getElementById(
       "resultsTitle"
-    )
-    .textContent =
-      resultTitle();
-
+    );
 
   const answer =
     document.getElementById(
       "resultsAnswer"
     );
 
-
-  answer.innerHTML = `
-
-    <div class="answer-label">
-      FINDLY
-    </div>
-
-    <p>
-      ${escapeHTML(
-        data.answer || ""
-      )}
-    </p>
-
-    ${
-      data.summary
-        ? `
-          <div class="summary">
-            ${escapeHTML(
-              data.summary
-            )}
-          </div>
-        `
-        : ""
-    }
-
-  `;
-
-
   const list =
     document.getElementById(
       "resultsList"
     );
-
-
-  list.innerHTML =
-    (data.topPicks || [])
-      .map(
-        (item, index) =>
-          createResultCard(
-            item,
-            index
-          )
-      )
-      .join("");
-
 
   const sources =
     document.getElementById(
       "sourcesList"
     );
 
+  if (title) {
 
-  sources.innerHTML =
-    (data.sources || [])
-      .map(
-        source => `
-          <a
-            class="source-item"
-            href="${escapeAttribute(
-              source.url
-            )}"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+    title.textContent =
+      currentLanguage === "en"
+        ? "The best I found"
+        : "Il meglio che ho trovato";
 
-            <div>
+  }
+
+  if (answer) {
+
+    answer.innerHTML = `
+
+      <div class="answer-label">
+        FINDLY
+      </div>
+
+      <p>
+        ${escapeHTML(
+          data.answer || ""
+        )}
+      </p>
+
+      ${
+        data.summary
+          ? `
+            <div class="summary">
               ${escapeHTML(
-                source.source
+                data.summary
               )}
             </div>
+          `
+          : ""
+      }
 
-            <strong>
-              ${escapeHTML(
-                source.title
-              )}
-            </strong>
+    `;
 
-          </a>
-        `
-      )
-      .join("");
+  }
+
+  if (list) {
+
+    list.innerHTML =
+      (data.topPicks || [])
+        .map(
+          (item, index) =>
+            createResultCard(
+              item,
+              index
+            )
+        )
+        .join("");
+
+  }
+
+  if (sources) {
+
+    sources.innerHTML =
+      (data.sources || [])
+        .map(
+          source => `
+
+            <a
+              class="source-item"
+              href="${escapeAttribute(
+                source.url
+              )}"
+              target="_blank"
+              rel="noopener"
+            >
+
+              <div>
+                ${escapeHTML(
+                  source.source
+                )}
+              </div>
+
+              <strong>
+                ${escapeHTML(
+                  source.title
+                )}
+              </strong>
+
+            </a>
+
+          `
+        )
+        .join("");
+
+  }
 
 }
 
@@ -1207,12 +842,24 @@ function createResultCard(
   index
 ) {
 
+  const pros =
+    Array.isArray(item.pros)
+      ? item.pros
+      : [];
+
+  const cons =
+    Array.isArray(item.cons)
+      ? item.cons
+      : [];
+
   return `
 
     <article class="result-card">
 
       <div class="result-rank">
-        ${String(index + 1).padStart(2, "0")}
+        ${String(
+          index + 1
+        ).padStart(2, "0")}
       </div>
 
       <div class="result-main">
@@ -1240,8 +887,9 @@ function createResultCard(
           <div class="pros-cons">
 
             <div class="pros">
+
               ${
-                (item.pros || [])
+                pros
                   .slice(0, 2)
                   .map(
                     pro =>
@@ -1251,11 +899,13 @@ function createResultCard(
                   )
                   .join("")
               }
+
             </div>
 
             <div class="cons">
+
               ${
-                (item.cons || [])
+                cons
                   .slice(0, 2)
                   .map(
                     con =>
@@ -1265,6 +915,7 @@ function createResultCard(
                   )
                   .join("")
               }
+
             </div>
 
           </div>
@@ -1278,17 +929,13 @@ function createResultCard(
                     item.url
                   )}"
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="noopener"
                 >
-                  ${escapeHTML(
-                    currentLanguage === "it"
-                      ? "Vedi fonte →"
-                      : currentLanguage === "en"
-                        ? "View source →"
-                        : currentLanguage === "es"
-                          ? "Ver fuente →"
-                          : "Voir la source →"
-                  )}
+                  ${
+                    currentLanguage === "en"
+                      ? "View source →"
+                      : "Vedi fonte →"
+                  }
                 </a>
               `
               : ""
@@ -1324,6 +971,8 @@ function setupExamples() {
               "freeSearchInput"
             );
 
+          if (!input) return;
+
           input.value =
             button.dataset.example;
 
@@ -1341,307 +990,508 @@ function setupExamples() {
    LANGUAGE
 ========================================================= */
 
-function applyLanguage(language) {
+function setupLanguage() {
 
-  if (!translations[language]) {
-    language = "it";
-  }
-
-  currentLanguage = language;
-
-  document.documentElement.lang =
-    language;
-
-  document
-    .querySelectorAll("[data-i18n]")
-    .forEach(element => {
-
-      const key =
-        element.dataset.i18n;
-
-      const value =
-        translations[language]?.[key];
-
-      if (value !== undefined) {
-        element.textContent = value;
-      }
-
-    });
-
-
-  document
-    .querySelectorAll(
-      "[data-i18n-placeholder]"
-    )
-    .forEach(element => {
-
-      const key =
-        element.dataset.i18nPlaceholder;
-
-      const value =
-        translations[language]?.[key];
-
-      if (value !== undefined) {
-        element.placeholder = value;
-      }
-
-    });
-
-
-  const languageSelect =
-    document.getElementById(
-      "languageSelect"
-    );
-
-  if (languageSelect) {
-    languageSelect.value =
-      language;
-  }
-
-}
-
-
-function setupSettings() {
-
-  const languageSelect =
-    document.getElementById(
-      "languageSelect"
-    );
-
-  const notifications =
-    document.getElementById(
-      "notificationsToggle"
-    );
-
-  const preferences =
-    document.getElementById(
-      "preferencesToggle"
-    );
-
-
-  languageSelect.addEventListener(
-    "change",
-    event => {
-
-      currentLanguage =
-        event.target.value;
-
-      if (
-        preferences.checked
-      ) {
-        localStorage.setItem(
-          "findlyLanguage",
-          currentLanguage
-        );
-      }
-
-      applyLanguage(
-        currentLanguage
-      );
-
-    }
-  );
-
-
-  notifications.addEventListener(
-    "change",
-    event => {
-
-      localStorage.setItem(
-        "findlyNotifications",
-        String(event.target.checked)
-      );
-
-    }
-  );
-
-
-  preferences.addEventListener(
-    "change",
-    event => {
-
-      if (event.target.checked) {
-
-        localStorage.setItem(
-          "findlyLanguage",
-          currentLanguage
-        );
-
-        localStorage.setItem(
-          "findlyPreferences",
-          "true"
-        );
-
-      } else {
-
-        localStorage.removeItem(
-          "findlyLanguage"
-        );
-
-        localStorage.setItem(
-          "findlyPreferences",
-          "false"
-        );
-
-      }
-
-    }
-  );
-
-}
-
-
-function loadSettings() {
-
-  const language =
+  const saved =
     localStorage.getItem(
       "findlyLanguage"
     );
 
   if (
-    language &&
-    translations[language]
+    ["it", "en", "es", "fr"]
+      .includes(saved)
   ) {
+
     currentLanguage =
-      language;
+      saved;
+
   }
 
+  document
+    .querySelectorAll(
+      "[data-language]"
+    )
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          const language =
+            button.dataset.language;
+
+          if (
+            !["it", "en", "es", "fr"]
+              .includes(language)
+          ) {
+            return;
+          }
+
+          currentLanguage =
+            language;
+
+          localStorage.setItem(
+            "findlyLanguage",
+            language
+          );
+
+          applyLanguage();
+
+        }
+      );
+
+    });
+
+  applyLanguage();
+
+}
+
+
+function applyLanguage() {
+
+  document
+    .querySelectorAll(
+      "[data-i18n]"
+    )
+    .forEach(element => {
+
+      const key =
+        element.dataset.i18n;
+
+      const translation =
+        translations[
+          currentLanguage
+        ]?.[key];
+
+      if (
+        translation !== undefined
+      ) {
+
+        if (
+          element.tagName ===
+          "INPUT" ||
+          element.tagName ===
+          "TEXTAREA"
+        ) {
+
+          element.placeholder =
+            translation;
+
+        } else {
+
+          element.textContent =
+            translation;
+
+        }
+
+      }
+
+    });
+
+  document
+    .querySelectorAll(
+      "[data-language]"
+    )
+    .forEach(button => {
+
+      button.classList.toggle(
+        "active",
+        button.dataset.language ===
+        currentLanguage
+      );
+
+    });
+
+}
+
+
+/* =========================================================
+   TRANSLATIONS
+========================================================= */
+
+const translations = {
+
+  it: {
+
+    search: "Cerca",
+    compare: "Confronta",
+    guided: "Ricerca guidata",
+    free: "Ricerca libera",
+    method: "Metodo Findly",
+    profile: "Profilo",
+    settings: "Impostazioni",
+    login: "Accedi",
+    register: "Registrati",
+    logout: "Esci",
+
+    searchPlaceholder:
+      "Cosa stai cercando?",
+
+    guidedPlaceholder:
+      "Cosa vuoi trovare?",
+
+    preferencePlaceholder:
+      "Hai preferenze particolari?",
+
+    compareContext:
+      "Cosa conta di più per te?",
+
+    homeTitle:
+      "Trova il meglio.",
+
+    homeSubtitle:
+      "Findly confronta più fonti e opinioni per aiutarti a scegliere.",
+
+    save:
+      "Salva",
+
+    notifications:
+      "Notifiche",
+
+    preferences:
+      "Preferenze",
+
+    editProfile:
+      "Modifica profilo"
+
+  },
+
+  en: {
+
+    search: "Search",
+    compare: "Compare",
+    guided: "Guided search",
+    free: "Free search",
+    method: "Findly method",
+    profile: "Profile",
+    settings: "Settings",
+    login: "Log in",
+    register: "Sign up",
+    logout: "Log out",
+
+    searchPlaceholder:
+      "What are you looking for?",
+
+    guidedPlaceholder:
+      "What do you want to find?",
+
+    preferencePlaceholder:
+      "Any specific preferences?",
+
+    compareContext:
+      "What matters most to you?",
+
+    homeTitle:
+      "Find the best.",
+
+    homeSubtitle:
+      "Findly compares multiple sources and opinions to help you choose.",
+
+    save:
+      "Save",
+
+    notifications:
+      "Notifications",
+
+    preferences:
+      "Preferences",
+
+    editProfile:
+      "Edit profile"
+
+  },
+
+  es: {
+
+    search: "Buscar",
+    compare: "Comparar",
+    guided: "Búsqueda guiada",
+    free: "Búsqueda libre",
+    method: "Método Findly",
+    profile: "Perfil",
+    settings: "Ajustes",
+    login: "Iniciar sesión",
+    register: "Registrarse",
+    logout: "Cerrar sesión",
+
+    searchPlaceholder:
+      "¿Qué estás buscando?",
+
+    guidedPlaceholder:
+      "¿Qué quieres encontrar?",
+
+    preferencePlaceholder:
+      "¿Tienes preferencias?",
+
+    compareContext:
+      "¿Qué es lo más importante para ti?",
+
+    homeTitle:
+      "Encuentra lo mejor.",
+
+    homeSubtitle:
+      "Findly compara varias fuentes y opiniones para ayudarte a elegir.",
+
+    save:
+      "Guardar",
+
+    notifications:
+      "Notificaciones",
+
+    preferences:
+      "Preferencias",
+
+    editProfile:
+      "Editar perfil"
+
+  },
+
+  fr: {
+
+    search: "Rechercher",
+    compare: "Comparer",
+    guided: "Recherche guidée",
+    free: "Recherche libre",
+    method: "Méthode Findly",
+    profile: "Profil",
+    settings: "Paramètres",
+    login: "Connexion",
+    register: "Créer un compte",
+    logout: "Déconnexion",
+
+    searchPlaceholder:
+      "Que recherchez-vous ?",
+
+    guidedPlaceholder:
+      "Que voulez-vous trouver ?",
+
+    preferencePlaceholder:
+      "Avez-vous des préférences ?",
+
+    compareContext:
+      "Qu'est-ce qui compte le plus pour vous ?",
+
+    homeTitle:
+      "Trouvez le meilleur.",
+
+    homeSubtitle:
+      "Findly compare plusieurs sources et opinions pour vous aider à choisir.",
+
+    save:
+      "Enregistrer",
+
+    notifications:
+      "Notifications",
+
+    preferences:
+      "Préférences",
+
+    editProfile:
+      "Modifier le profil"
+
+  }
+
+};
+
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+function setupProfile() {
+
+  const savedProfile =
+    localStorage.getItem(
+      "findlyProfile"
+    );
+
+  if (savedProfile) {
+
+    try {
+
+      const profile =
+        JSON.parse(
+          savedProfile
+        );
+
+      updateProfileUI(
+        profile
+      );
+
+    } catch {}
+
+  }
+
+  document
+    .querySelectorAll(
+      "[data-profile-save]"
+    )
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        saveProfile
+      );
+
+    });
+
+}
+
+
+function saveProfile() {
+
+  const name =
+    document
+      .getElementById(
+        "profileName"
+      )
+      ?.value.trim() || "";
+
+  const email =
+    document
+      .getElementById(
+        "profileEmail"
+      )
+      ?.value.trim() || "";
+
+  const profile = {
+    name,
+    email
+  };
+
+  localStorage.setItem(
+    "findlyProfile",
+    JSON.stringify(profile)
+  );
+
+  updateProfileUI(
+    profile
+  );
+
+}
+
+
+function updateProfileUI(
+  profile
+) {
+
+  document
+    .querySelectorAll(
+      "[data-profile-name]"
+    )
+    .forEach(element => {
+
+      element.textContent =
+        profile.name ||
+        "Findly User";
+
+    });
+
+  document
+    .querySelectorAll(
+      "[data-profile-email]"
+    )
+    .forEach(element => {
+
+      element.textContent =
+        profile.email ||
+        "";
+
+    });
+
+}
+
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+function setupSettings() {
 
   const notifications =
     document.getElementById(
       "notificationsToggle"
     );
 
-  const preferences =
-    document.getElementById(
-      "preferencesToggle"
-    );
-
   if (notifications) {
 
-    notifications.checked =
+    const saved =
       localStorage.getItem(
         "findlyNotifications"
-      ) === "true";
+      );
 
-  }
+    notifications.checked =
+      saved !== "false";
 
-  if (preferences) {
+    notifications.addEventListener(
+      "change",
+      () => {
 
-    preferences.checked =
-      localStorage.getItem(
-        "findlyPreferences"
-      ) !== "false";
+        localStorage.setItem(
+          "findlyNotifications",
+          notifications.checked
+        );
 
-  }
-
-}
-
-
-/* =========================================================
-   LOCAL ACCOUNT
-========================================================= */
-
-function getStoredUser() {
-
-  try {
-
-    return JSON.parse(
-      localStorage.getItem(
-        "findlyUser"
-      )
-    );
-
-  } catch {
-
-    return null;
-
-  }
-
-}
-
-
-function saveUser(user) {
-
-  localStorage.setItem(
-    "findlyUser",
-    JSON.stringify(user)
-  );
-
-}
-
-
-function updateProfileUI() {
-
-  const user =
-    getStoredUser();
-
-  const name =
-    document.getElementById(
-      "profileName"
-    );
-
-  const email =
-    document.getElementById(
-      "profileEmail"
-    );
-
-  const loggedOut =
-    document.getElementById(
-      "loggedOutActions"
-    );
-
-  const loggedIn =
-    document.getElementById(
-      "loggedInActions"
-    );
-
-
-  if (user) {
-
-    name.textContent =
-      user.name || "User";
-
-    email.textContent =
-      user.email || "";
-
-    loggedOut.classList.add(
-      "hidden"
-    );
-
-    loggedIn.classList.remove(
-      "hidden"
-    );
-
-  } else {
-
-    name.textContent =
-      currentLanguage === "it"
-        ? "Ospite"
-        : currentLanguage === "en"
-          ? "Guest"
-          : currentLanguage === "es"
-            ? "Invitado"
-            : "Invité";
-
-    email.textContent =
-      currentLanguage === "it"
-        ? "Non hai ancora effettuato l'accesso."
-        : currentLanguage === "en"
-          ? "You are not logged in."
-          : currentLanguage === "es"
-            ? "Aún no has iniciado sesión."
-            : "Vous n'êtes pas connecté.";
-
-    loggedOut.classList.remove(
-      "hidden"
-    );
-
-    loggedIn.classList.add(
-      "hidden"
+      }
     );
 
   }
+
+
+  document
+    .querySelectorAll(
+      "[data-preference]"
+    )
+    .forEach(input => {
+
+      const key =
+        input.dataset.preference;
+
+      const saved =
+        localStorage.getItem(
+          "findlyPref_" + key
+        );
+
+      if (
+        saved !== null
+      ) {
+
+        if (
+          input.type ===
+          "checkbox"
+        ) {
+
+          input.checked =
+            saved === "true";
+
+        } else {
+
+          input.value =
+            saved;
+
+        }
+
+      }
+
+      input.addEventListener(
+        "change",
+        () => {
+
+          const value =
+            input.type ===
+            "checkbox"
+              ? input.checked
+              : input.value;
+
+          localStorage.setItem(
+            "findlyPref_" + key,
+            value
+          );
+
+        }
+      );
+
+    });
 
 }
 
@@ -1653,442 +1503,211 @@ function updateProfileUI() {
 function setupAuth() {
 
   document
-    .getElementById(
-      "registerButton"
+    .querySelectorAll(
+      "[data-auth-action]"
     )
-    .addEventListener(
-      "click",
-      () => openAuth("register")
-    );
+    .forEach(button => {
 
+      button.addEventListener(
+        "click",
+        () => {
 
-  document
-    .getElementById(
-      "loginButton"
-    )
-    .addEventListener(
-      "click",
-      () => openAuth("login")
-    );
+          const action =
+            button.dataset.authAction;
 
+          if (
+            action === "register"
+          ) {
 
-  document
-    .getElementById(
-      "closeAuthModal"
-    )
-    .addEventListener(
-      "click",
-      closeAuth
-    );
+            registerUser();
 
+          }
 
-  document
-    .getElementById(
-      "authSwitch"
-    )
-    .addEventListener(
-      "click",
-      () => {
+          if (
+            action === "login"
+          ) {
 
-        openAuth(
-          authMode === "register"
-            ? "login"
-            : "register"
-        );
+            loginUser();
 
-      }
-    );
+          }
 
+          if (
+            action === "logout"
+          ) {
 
-  document
-    .getElementById(
-      "authForm"
-    )
-    .addEventListener(
-      "submit",
-      handleAuthSubmit
-    );
+            logoutUser();
+
+          }
+
+        }
+      );
+
+    });
+
+  refreshAuthUI();
 
 }
 
 
-function openAuth(mode) {
-
-  authMode = mode;
-
-  const modal =
-    document.getElementById(
-      "authModal"
-    );
-
-  const name =
-    document.getElementById(
-      "authName"
-    );
-
-  const title =
-    document.getElementById(
-      "authTitle"
-    );
-
-  const submit =
-    document.getElementById(
-      "authSubmit"
-    );
-
-  const switchButton =
-    document.getElementById(
-      "authSwitch"
-    );
-
-
-  const isRegister =
-    mode === "register";
-
-
-  name.classList.toggle(
-    "hidden",
-    !isRegister
-  );
-
-  name.required =
-    isRegister;
-
-
-  title.textContent =
-    isRegister
-      ? translations[currentLanguage].register
-      : translations[currentLanguage].login;
-
-
-  submit.textContent =
-    title.textContent;
-
-
-  switchButton.textContent =
-    isRegister
-      ? currentLanguage === "it"
-        ? "Hai già un account? Accedi"
-        : currentLanguage === "en"
-          ? "Already have an account? Log in"
-          : currentLanguage === "es"
-            ? "¿Ya tienes una cuenta? Inicia sesión"
-            : "Vous avez déjà un compte ? Connectez-vous"
-      : currentLanguage === "it"
-        ? "Non hai un account? Registrati"
-        : currentLanguage === "en"
-          ? "Don't have an account? Sign up"
-          : currentLanguage === "es"
-            ? "¿No tienes una cuenta? Regístrate"
-            : "Pas de compte ? Inscrivez-vous";
-
-
-  document
-    .getElementById(
-      "authMessage"
-    )
-    .textContent = "";
-
-
-  modal.classList.remove(
-    "hidden"
-  );
-
-}
-
-
-function closeAuth() {
-
-  document
-    .getElementById(
-      "authModal"
-    )
-    .classList.add(
-      "hidden"
-    );
-
-}
-
-
-function handleAuthSubmit(event) {
-
-  event.preventDefault();
+function registerUser() {
 
   const name =
     document
       .getElementById(
         "authName"
       )
-      .value.trim();
+      ?.value.trim();
 
   const email =
     document
       .getElementById(
         "authEmail"
       )
-      .value.trim()
-      .toLowerCase();
+      ?.value.trim();
 
   const password =
     document
       .getElementById(
         "authPassword"
       )
-      .value;
-
+      ?.value;
 
   if (
+    !name ||
     !email ||
-    !password ||
-    (
-      authMode === "register" &&
-      !name
-    )
+    !password
   ) {
     return;
   }
 
+  const user = {
+    name,
+    email
+  };
+
+  localStorage.setItem(
+    "findlyUser",
+    JSON.stringify(user)
+  );
+
+  localStorage.setItem(
+    "findlyLoggedIn",
+    "true"
+  );
+
+  updateProfileUI(
+    user
+  );
+
+  refreshAuthUI();
+
+}
+
+
+function loginUser() {
+
+  const email =
+    document
+      .getElementById(
+        "authEmail"
+      )
+      ?.value.trim();
+
+  if (!email) {
+    return;
+  }
 
   const existing =
-    getStoredUser();
+    localStorage.getItem(
+      "findlyUser"
+    );
+
+  let user = null;
+
+  if (existing) {
+
+    try {
+
+      user =
+        JSON.parse(existing);
+
+    } catch {}
+
+  }
+
+  if (!user) {
+
+    user = {
+      name:
+        email.split("@")[0],
+      email
+    };
+
+    localStorage.setItem(
+      "findlyUser",
+      JSON.stringify(user)
+    );
+
+  }
+
+  localStorage.setItem(
+    "findlyLoggedIn",
+    "true"
+  );
+
+  updateProfileUI(
+    user
+  );
+
+  refreshAuthUI();
+
+}
 
 
-  if (
-    authMode === "register"
-  ) {
+function logoutUser() {
 
-    saveUser({
-      name,
-      email,
-      password
+  localStorage.setItem(
+    "findlyLoggedIn",
+    "false"
+  );
+
+  refreshAuthUI();
+
+}
+
+
+function refreshAuthUI() {
+
+  const loggedIn =
+    localStorage.getItem(
+      "findlyLoggedIn"
+    ) === "true";
+
+  document
+    .querySelectorAll(
+      "[data-auth-logged]"
+    )
+    .forEach(element => {
+
+      element.style.display =
+        loggedIn
+          ? ""
+          : "none";
+
     });
 
-    closeAuth();
-    updateProfileUI();
-
-    showPage("profile");
-
-    return;
-  }
-
-
-  if (
-    !existing ||
-    existing.email !== email ||
-    existing.password !== password
-  ) {
-
-    document
-      .getElementById(
-        "authMessage"
-      )
-      .textContent =
-      currentLanguage === "it"
-        ? "Email o password non corretti."
-        : currentLanguage === "en"
-          ? "Incorrect email or password."
-          : currentLanguage === "es"
-            ? "Email o contraseña incorrectos."
-            : "Email ou mot de passe incorrect.";
-
-    return;
-
-  }
-
-
-  closeAuth();
-  updateProfileUI();
-  showPage("profile");
-
-}
-
-
-/* =========================================================
-   PROFILE
-========================================================= */
-
-function setupProfile() {
-
   document
-    .getElementById(
-      "logoutButton"
+    .querySelectorAll(
+      "[data-auth-guest]"
     )
-    .addEventListener(
-      "click",
-      () => {
+    .forEach(element => {
 
-        localStorage.removeItem(
-          "findlyUser"
-        );
+      element.style.display =
+        loggedIn
+          ? "none"
+          : "";
 
-        updateProfileUI();
-
-      }
-    );
-
-
-  document
-    .getElementById(
-      "editProfileButton"
-    )
-    .addEventListener(
-      "click",
-      openProfileEditor
-    );
-
-
-  document
-    .getElementById(
-      "closeProfileModal"
-    )
-    .addEventListener(
-      "click",
-      closeProfileEditor
-    );
-
-
-  document
-    .getElementById(
-      "profileForm"
-    )
-    .addEventListener(
-      "submit",
-      saveProfile
-    );
-
-}
-
-
-function openProfileEditor() {
-
-  const user =
-    getStoredUser();
-
-  if (!user) return;
-
-
-  document
-    .getElementById(
-      "editName"
-    )
-    .value =
-    user.name || "";
-
-
-  document
-    .getElementById(
-      "editEmail"
-    )
-    .value =
-    user.email || "";
-
-
-  document
-    .getElementById(
-      "profileModal"
-    )
-    .classList.remove(
-      "hidden"
-    );
-
-}
-
-
-function closeProfileEditor() {
-
-  document
-    .getElementById(
-      "profileModal"
-    )
-    .classList.add(
-      "hidden"
-    );
-
-}
-
-
-function saveProfile(event) {
-
-  event.preventDefault();
-
-  const user =
-    getStoredUser();
-
-  if (!user) return;
-
-
-  user.name =
-    document
-      .getElementById(
-        "editName"
-      )
-      .value.trim();
-
-  user.email =
-    document
-      .getElementById(
-        "editEmail"
-      )
-      .value.trim()
-      .toLowerCase();
-
-
-  saveUser(user);
-
-  closeProfileEditor();
-  updateProfileUI();
-
-}
-
-
-/* =========================================================
-   TEXT HELPERS
-========================================================= */
-
-function searchingText() {
-
-  return {
-    it: "Sto cercando il meglio per te...",
-    en: "Finding the best for you...",
-    es: "Buscando lo mejor para ti...",
-    fr: "Je cherche le meilleur pour vous..."
-  }[currentLanguage];
-
-}
-
-
-function loadingText() {
-
-  return {
-    it: "Analizzo più fonti...",
-    en: "Analyzing multiple sources...",
-    es: "Analizando varias fuentes...",
-    fr: "Analyse de plusieurs sources..."
-  }[currentLanguage];
-
-}
-
-
-function resultTitle() {
-
-  return {
-    it: "Il meglio che ho trovato",
-    en: "The best I found",
-    es: "Lo mejor que he encontrado",
-    fr: "Le meilleur que j'ai trouvé"
-  }[currentLanguage];
-
-}
-
-
-function errorTitle() {
-
-  return {
-    it: "Qualcosa è andato storto.",
-    en: "Something went wrong.",
-    es: "Algo salió mal.",
-    fr: "Quelque chose s'est mal passé."
-  }[currentLanguage];
+    });
 
 }
 
@@ -2099,12 +1718,29 @@ function errorTitle() {
 
 function escapeHTML(value) {
 
-  return String(value || "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
+  return String(
+    value || ""
+  )
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
 
 }
 
@@ -2112,5 +1748,9 @@ function escapeHTML(value) {
 function escapeAttribute(value) {
 
   return escapeHTML(value)
-    .replaceAll("`", "&#096;");
+    .replaceAll(
+      "`",
+      "&#096;"
+    );
+
 }
