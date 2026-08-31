@@ -2,7 +2,8 @@
    FINDLY V8 — FRONTEND
 ========================================================= */
 
-const WORKER_URL = "https://shrill-firefly-79b6.astengoedoardo.workers.dev";
+const WORKER_URL =
+  "https://shrill-firefly-79b6.astengoedoardo.workers.dev";
 
 let currentCategory = "other";
 let currentLanguage = "it";
@@ -22,7 +23,9 @@ document.addEventListener(
       );
 
     const app =
-      document.getElementById("app");
+      document.getElementById(
+        "app"
+      );
 
 
     setTimeout(() => {
@@ -33,8 +36,12 @@ document.addEventListener(
 
       setTimeout(() => {
 
-        intro.style.display = "none";
-        app.classList.remove("hidden");
+        intro.style.display =
+          "none";
+
+        app.classList.remove(
+          "hidden"
+        );
 
       }, 700);
 
@@ -79,14 +86,28 @@ function setupNavigation() {
     );
 
 
-  menuButton.onclick =
-    () => openMenu();
+  if (menuButton) {
 
-  closeMenu.onclick =
-    () => closeSideMenu();
+    menuButton.onclick =
+      () => openMenu();
 
-  overlay.onclick =
-    () => closeSideMenu();
+  }
+
+
+  if (closeMenu) {
+
+    closeMenu.onclick =
+      () => closeSideMenu();
+
+  }
+
+
+  if (overlay) {
+
+    overlay.onclick =
+      () => closeSideMenu();
+
+  }
 
 
   document
@@ -112,61 +133,83 @@ function setupNavigation() {
     });
 
 
-  document
-    .getElementById(
+  const homeLogo =
+    document.getElementById(
       "homeLogo"
-    )
-    .onclick = () => showPage("home");
+    );
+
+  if (homeLogo) {
+
+    homeLogo.onclick =
+      () => showPage("home");
+
+  }
 
 }
 
 
+/* =========================================================
+   MENU
+========================================================= */
+
 function openMenu() {
 
-  document
-    .getElementById(
+  const sideMenu =
+    document.getElementById(
       "sideMenu"
-    )
-    .classList.add(
-      "open"
     );
 
-  document
-    .getElementById(
+  const overlay =
+    document.getElementById(
       "menuOverlay"
-    )
-    .classList.add(
-      "show"
     );
+
+
+  sideMenu.classList.add(
+    "open"
+  );
+
+  overlay.classList.add(
+    "show"
+  );
 
 }
 
 
 function closeSideMenu() {
 
-  document
-    .getElementById(
+  const sideMenu =
+    document.getElementById(
       "sideMenu"
-    )
-    .classList.remove(
-      "open"
     );
 
-  document
-    .getElementById(
+  const overlay =
+    document.getElementById(
       "menuOverlay"
-    )
-    .classList.remove(
-      "show"
     );
+
+
+  sideMenu.classList.remove(
+    "open"
+  );
+
+  overlay.classList.remove(
+    "show"
+  );
 
 }
 
 
+/* =========================================================
+   PAGES
+========================================================= */
+
 function showPage(page) {
 
   document
-    .querySelectorAll(".page")
+    .querySelectorAll(
+      ".page"
+    )
     .forEach(item => {
 
       item.classList.remove(
@@ -180,6 +223,7 @@ function showPage(page) {
     document.getElementById(
       page + "Page"
     );
+
 
   if (target) {
 
@@ -230,16 +274,23 @@ function setupCategories() {
           currentCategory =
             button.dataset.category;
 
-          showPage("guided");
+
+          showPage(
+            "guided"
+          );
+
 
           const select =
             document.getElementById(
               "guidedCategory"
             );
 
+
           if (select) {
+
             select.value =
               currentCategory;
+
           }
 
         }
@@ -267,44 +318,51 @@ function setupSearch() {
     );
 
 
-  button.addEventListener(
-    "click",
-    () => {
+  if (input && button) {
 
-      const query =
-        input.value.trim();
+    button.addEventListener(
+      "click",
+      () => {
 
-      if (!query) {
-
-        input.focus();
-        return;
-
-      }
-
-      search(
-        query,
-        currentCategory,
-        {}
-      );
-
-    }
-  );
+        const query =
+          input.value.trim();
 
 
-  input.addEventListener(
-    "keydown",
-    event => {
+        if (!query) {
 
-      if (
-        event.key === "Enter"
-      ) {
+          input.focus();
 
-        button.click();
+          return;
+
+        }
+
+
+        search(
+          query,
+          currentCategory,
+          {}
+        );
 
       }
+    );
 
-    }
-  );
+
+    input.addEventListener(
+      "keydown",
+      event => {
+
+        if (
+          event.key === "Enter"
+        ) {
+
+          button.click();
+
+        }
+
+      }
+    );
+
+  }
 
 
   const freeInput =
@@ -318,85 +376,22 @@ function setupSearch() {
     );
 
 
-  freeButton.addEventListener(
-    "click",
-    () => {
+  if (
+    freeInput &&
+    freeButton
+  ) {
 
-      const query =
-        freeInput.value.trim();
-
-      if (!query) {
-
-        freeInput.focus();
-        return;
-
-      }
-
-      search(
-        query,
-        "other",
-        {}
-      );
-
-    }
-  );
-
-
-  freeInput.addEventListener(
-    "keydown",
-    event => {
-
-      if (
-        event.key === "Enter"
-      ) {
-
-        freeButton.click();
-
-      }
-
-    }
-  );
-
-}
-
-
-/* =========================================================
-   GUIDED
-========================================================= */
-
-function setupGuided() {
-
-  document
-    .getElementById(
-      "guidedSearchButton"
-    )
-    .addEventListener(
+    freeButton.addEventListener(
       "click",
       () => {
 
-        const category =
-          document.getElementById(
-            "guidedCategory"
-          ).value;
-
         const query =
-          document.getElementById(
-            "guidedQuery"
-          ).value.trim();
-
-        const preference =
-          document.getElementById(
-            "guidedPreference"
-          ).value.trim();
+          freeInput.value.trim();
 
 
         if (!query) {
 
-          document
-            .getElementById(
-              "guidedQuery"
-            )
-            .focus();
+          freeInput.focus();
 
           return;
 
@@ -405,14 +400,96 @@ function setupGuided() {
 
         search(
           query,
-          category,
-          {
-            preference
-          }
+          "other",
+          {}
         );
 
       }
     );
+
+
+    freeInput.addEventListener(
+      "keydown",
+      event => {
+
+        if (
+          event.key === "Enter"
+        ) {
+
+          freeButton.click();
+
+        }
+
+      }
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   GUIDED SEARCH
+========================================================= */
+
+function setupGuided() {
+
+  const button =
+    document.getElementById(
+      "guidedSearchButton"
+    );
+
+
+  if (!button) {
+    return;
+  }
+
+
+  button.addEventListener(
+    "click",
+    () => {
+
+      const category =
+        document.getElementById(
+          "guidedCategory"
+        ).value;
+
+
+      const query =
+        document.getElementById(
+          "guidedQuery"
+        ).value.trim();
+
+
+      const preference =
+        document.getElementById(
+          "guidedPreference"
+        ).value.trim();
+
+
+      if (!query) {
+
+        document
+          .getElementById(
+            "guidedQuery"
+          )
+          .focus();
+
+        return;
+
+      }
+
+
+      search(
+        query,
+        category,
+        {
+          preference
+        }
+      );
+
+    }
+  );
 
 }
 
@@ -423,14 +500,21 @@ function setupGuided() {
 
 function setupCompare() {
 
-  document
-    .getElementById(
+  const button =
+    document.getElementById(
       "compareButton"
-    )
-    .addEventListener(
-      "click",
-      compare
     );
+
+
+  if (!button) {
+    return;
+  }
+
+
+  button.addEventListener(
+    "click",
+    compare
+  );
 
 }
 
@@ -442,10 +526,12 @@ async function compare() {
       "compareFirst"
     ).value.trim();
 
+
   const second =
     document.getElementById(
       "compareSecond"
     ).value.trim();
+
 
   const context =
     document.getElementById(
@@ -453,8 +539,13 @@ async function compare() {
     ).value.trim();
 
 
-  if (!first || !second) {
+  if (
+    !first ||
+    !second
+  ) {
+
     return;
+
   }
 
 
@@ -463,6 +554,7 @@ async function compare() {
       "compareButton"
     );
 
+
   const result =
     document.getElementById(
       "compareResult"
@@ -470,8 +562,16 @@ async function compare() {
 
 
   button.disabled = true;
+
   button.textContent =
     "Analizzo...";
+
+
+  result.innerHTML =
+    `<div class="loading">
+      <div class="loader"></div>
+      <span>Confronto più fonti...</span>
+    </div>`;
 
 
   try {
@@ -481,17 +581,20 @@ async function compare() {
         `${WORKER_URL}/api/compare`,
         {
           method: "POST",
+
           headers: {
             "Content-Type":
               "application/json"
           },
-          body: JSON.stringify({
-            first,
-            second,
-            context,
-            language:
-              currentLanguage
-          })
+
+          body:
+            JSON.stringify({
+              first,
+              second,
+              context,
+              language:
+                currentLanguage
+            })
         }
       );
 
@@ -501,11 +604,20 @@ async function compare() {
 
 
     if (!data.ok) {
+
       throw new Error(
         data.error ||
         "Errore"
       );
+
     }
+
+
+    const winner =
+      data.winner ===
+      "option_a"
+        ? first
+        : second;
 
 
     result.innerHTML = `
@@ -517,11 +629,9 @@ async function compare() {
         </div>
 
         <h3>
-          ${
-            data.winner === "option_a"
-              ? escapeHTML(first)
-              : escapeHTML(second)
-          }
+          ${escapeHTML(
+            winner
+          )}
         </h3>
 
         <p>
@@ -533,12 +643,17 @@ async function compare() {
         <div class="reason-list">
 
           ${
-            (data.reasons || [])
+            (
+              data.reasons ||
+              []
+            )
               .map(
                 reason =>
-                  `<div>✓ ${escapeHTML(
-                    reason
-                  )}</div>`
+                  `<div>
+                    ✓ ${escapeHTML(
+                      reason
+                    )}
+                  </div>`
               )
               .join("")
           }
@@ -561,7 +676,9 @@ async function compare() {
 
   } finally {
 
-    button.disabled = false;
+    button.disabled =
+      false;
+
     button.textContent =
       "Confronta →";
 
@@ -580,7 +697,9 @@ async function search(
   fields
 ) {
 
-  showPage("results");
+  showPage(
+    "results"
+  );
 
 
   const title =
@@ -588,10 +707,12 @@ async function search(
       "resultsTitle"
     );
 
+
   const answer =
     document.getElementById(
       "resultsAnswer"
     );
+
 
   const list =
     document.getElementById(
@@ -602,12 +723,21 @@ async function search(
   title.textContent =
     "Sto cercando il meglio per te...";
 
+
   answer.innerHTML = "";
-  list.innerHTML =
-    `<div class="loading">
+
+
+  list.innerHTML = `
+    <div class="loading">
+
       <div class="loader"></div>
-      <span>Analizzo più fonti...</span>
-    </div>`;
+
+      <span>
+        Analizzo più fonti...
+      </span>
+
+    </div>
+  `;
 
 
   try {
@@ -617,17 +747,20 @@ async function search(
         `${WORKER_URL}/api/search`,
         {
           method: "POST",
+
           headers: {
             "Content-Type":
               "application/json"
           },
-          body: JSON.stringify({
-            query,
-            category,
-            fields,
-            language:
-              currentLanguage
-          })
+
+          body:
+            JSON.stringify({
+              query,
+              category,
+              fields,
+              language:
+                currentLanguage
+            })
         }
       );
 
@@ -656,6 +789,7 @@ async function search(
     title.textContent =
       "Qualcosa è andato storto.";
 
+
     list.innerHTML = `
       <div class="error-card">
         ${escapeHTML(
@@ -675,12 +809,14 @@ async function search(
 
 function renderResults(data) {
 
-  document
-    .getElementById(
+  const title =
+    document.getElementById(
       "resultsTitle"
-    )
-    .textContent =
-      "Il meglio che ho trovato";
+    );
+
+
+  title.textContent =
+    "Il meglio che ho trovato";
 
 
   const answer =
@@ -723,7 +859,10 @@ function renderResults(data) {
 
 
   list.innerHTML =
-    (data.topPicks || [])
+    (
+      data.topPicks ||
+      []
+    )
       .map(
         (item, index) =>
           createResultCard(
@@ -741,16 +880,20 @@ function renderResults(data) {
 
 
   sources.innerHTML =
-    (data.sources || [])
+    (
+      data.sources ||
+      []
+    )
       .map(
         source => `
+
           <a
             class="source-item"
             href="${escapeAttribute(
               source.url
             )}"
             target="_blank"
-            rel="noopener"
+            rel="noopener noreferrer"
           >
 
             <div>
@@ -766,12 +909,17 @@ function renderResults(data) {
             </strong>
 
           </a>
+
         `
       )
       .join("");
 
 }
 
+
+/* =========================================================
+   RESULT CARD
+========================================================= */
 
 function createResultCard(
   item,
@@ -783,44 +931,65 @@ function createResultCard(
     <article class="result-card">
 
       <div class="result-rank">
-        ${String(index + 1).padStart(2, "0")}
+        ${String(
+          index + 1
+        ).padStart(2, "0")}
       </div>
+
 
       <div class="result-main">
 
         <div class="result-icon">
+
           ${escapeHTML(
-            item.emoji || "✦"
+            item.emoji ||
+            "✦"
           )}
+
         </div>
+
 
         <div class="result-info">
 
           <h3>
             ${escapeHTML(
-              item.title || ""
+              item.title ||
+              ""
             )}
           </h3>
 
+
           <p class="result-reason">
+
             ${escapeHTML(
-              item.reason || ""
+              item.reason ||
+              ""
             )}
+
           </p>
 
 
           <div class="pros-cons">
 
+
             <div class="pros">
 
               ${
-                (item.pros || [])
-                  .slice(0, 2)
+                (
+                  item.pros ||
+                  []
+                )
+                  .slice(
+                    0,
+                    2
+                  )
                   .map(
                     pro =>
-                      `<span>✓ ${escapeHTML(
-                        pro
-                      )}</span>`
+                      `<span>
+                        ✓ ${escapeHTML(
+                          pro
+                        )}
+                      </span>`
                   )
                   .join("")
               }
@@ -831,18 +1000,27 @@ function createResultCard(
             <div class="cons">
 
               ${
-                (item.cons || [])
-                  .slice(0, 2)
+                (
+                  item.cons ||
+                  []
+                )
+                  .slice(
+                    0,
+                    2
+                  )
                   .map(
                     con =>
-                      `<span>− ${escapeHTML(
-                        con
-                      )}</span>`
+                      `<span>
+                        − ${escapeHTML(
+                          con
+                        )}
+                      </span>`
                   )
                   .join("")
               }
 
             </div>
+
 
           </div>
 
@@ -856,13 +1034,14 @@ function createResultCard(
                     item.url
                   )}"
                   target="_blank"
-                  rel="noopener"
+                  rel="noopener noreferrer"
                 >
                   Vedi fonte →
                 </a>
               `
               : ""
           }
+
 
         </div>
 
@@ -896,8 +1075,15 @@ function setupExamples() {
               "freeSearchInput"
             );
 
+
+          if (!input) {
+            return;
+          }
+
+
           input.value =
             button.dataset.example;
+
 
           input.focus();
 
@@ -913,20 +1099,47 @@ function setupExamples() {
    SECURITY
 ========================================================= */
 
-function escapeHTML(value) {
+function escapeHTML(
+  value
+) {
 
-  return String(value || "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
+  return String(
+    value || ""
+  )
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
 
 }
 
 
-function escapeAttribute(value) {
+function escapeAttribute(
+  value
+) {
 
-  return escapeHTML(value)
-    .replaceAll("`", "&#096;");
+  return escapeHTML(
+    value
+  )
+    .replaceAll(
+      "`",
+      "&#096;"
+    );
+
 }
