@@ -2113,4 +2113,3 @@ function escapeAttribute(value) {
 
   return escapeHTML(value)
     .replaceAll("`", "&#096;");
-}
