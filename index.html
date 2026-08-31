@@ -2,18 +2,17 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0"
   >
 
+  <title>Findly — Trova il meglio per te</title>
+
   <meta
     name="description"
-    content="Findly — trova quello che cerchi, confrontando il meglio del web."
+    content="Findly trova il meglio per te analizzando più fonti e recensioni."
   >
-
-  <title>Findly — Lo trova.</title>
 
   <link rel="stylesheet" href="style.css">
 </head>
@@ -21,1592 +20,915 @@
 <body>
 
   <!-- =====================================================
-       HEADER
+       INTRO
   ====================================================== -->
 
-  <header class="header">
+  <div id="introScreen" class="intro-screen">
 
-    <div class="header-inner">
+    <div class="intro-content">
 
-      <a href="#" class="brand" id="brandHome">
+      <div class="intro-lens">
+        <div class="lens-glass"></div>
+        <div class="lens-handle"></div>
+      </div>
 
-        <div class="brand-icon">
-          ⌕
-        </div>
+      <div class="intro-logo">
+        FINDLY
+      </div>
 
-        <span>Findly</span>
-
-      </a>
-
-
-      <nav class="nav">
-
-        <a href="#how">Come funziona</a>
-        <a href="#categories">Categorie</a>
-
-        <button
-          class="nav-button"
-          id="compareNavButton"
-        >
-          Confronta
-        </button>
-
-      </nav>
+      <div class="intro-subtitle">
+        Trova il meglio per te.
+      </div>
 
     </div>
 
-  </header>
+  </div>
 
 
   <!-- =====================================================
-       HERO
+       APP
   ====================================================== -->
 
-  <main>
+  <div id="app" class="app hidden">
 
-    <section class="hero">
+    <!-- HEADER -->
 
-      <div class="hero-content">
+    <header class="header">
 
-        <div class="eyebrow">
-          <span class="eyebrow-dot"></span>
-          INTELLIGENT SEARCH
+      <button
+        id="menuButton"
+        class="icon-button"
+        aria-label="Apri menu"
+      >
+        ☰
+      </button>
+
+      <div
+        class="logo"
+        id="homeLogo"
+      >
+        <span class="logo-mark">⌕</span>
+        FINDLY
+      </div>
+
+      <button
+        id="profileButton"
+        class="profile-button"
+        aria-label="Profilo"
+      >
+        <span>○</span>
+      </button>
+
+    </header>
+
+
+    <!-- SIDE MENU -->
+
+    <aside
+      id="sideMenu"
+      class="side-menu"
+    >
+
+      <div class="menu-top">
+
+        <div class="menu-logo">
+          FINDLY
         </div>
 
-        <h1>
-          Trova.<br>
-          <span>Confronta.</span><br>
-          Scegli.
-        </h1>
+        <button
+          id="closeMenu"
+          class="close-menu"
+        >
+          ×
+        </button>
 
-        <p class="hero-description">
-          Findly analizza il web, mette insieme opinioni,
-          recensioni e informazioni da più fonti e ti aiuta
-          a trovare ciò che fa davvero per te.
-        </p>
+      </div>
 
 
-        <!-- SEARCH BOX -->
+      <div class="menu-section">
 
-        <div class="search-container">
+        <div class="menu-label">
+          ESPLORA
+        </div>
+
+        <button
+          class="menu-item active"
+          data-page="home"
+        >
+          <span>⌕</span>
+          Trova il meglio
+        </button>
+
+        <button
+          class="menu-item"
+          data-page="free"
+        >
+          <span>✦</span>
+          Ricerca libera
+        </button>
+
+        <button
+          class="menu-item"
+          data-page="guided"
+        >
+          <span>◈</span>
+          Ricerca guidata
+        </button>
+
+        <button
+          class="menu-item"
+          data-page="compare"
+        >
+          <span>⇄</span>
+          Non so quale scegliere
+        </button>
+
+      </div>
+
+
+      <div class="menu-section">
+
+        <div class="menu-label">
+          CATEGORIE
+        </div>
+
+        <button class="menu-category" data-category="tech">
+          <span class="cat-icon tech">📱</span>
+          Tecnologia
+        </button>
+
+        <button class="menu-category" data-category="fashion">
+          <span class="cat-icon fashion">👕</span>
+          Moda
+        </button>
+
+        <button class="menu-category" data-category="movies">
+          <span class="cat-icon movies">🎬</span>
+          Film & Serie
+        </button>
+
+        <button class="menu-category" data-category="books">
+          <span class="cat-icon books">📚</span>
+          Libri
+        </button>
+
+        <button class="menu-category" data-category="music">
+          <span class="cat-icon music">🎵</span>
+          Musica
+        </button>
+
+        <button class="menu-category" data-category="travel">
+          <span class="cat-icon travel">✈️</span>
+          Viaggi
+        </button>
+
+        <button class="menu-category" data-category="food">
+          <span class="cat-icon food">🍝</span>
+          Cibo & Ristoranti
+        </button>
+
+        <button class="menu-category" data-category="sport">
+          <span class="cat-icon sport">⚽</span>
+          Sport
+        </button>
+
+        <button class="menu-category" data-category="cars">
+          <span class="cat-icon cars">🚗</span>
+          Auto
+        </button>
+
+        <button class="menu-category" data-category="home">
+          <span class="cat-icon home">🏠</span>
+          Casa
+        </button>
+
+      </div>
+
+
+      <div class="menu-section">
+
+        <div class="menu-label">
+          FINDLY
+        </div>
+
+        <button
+          class="menu-item"
+          data-page="method"
+        >
+          <span>◎</span>
+          Il metodo
+        </button>
+
+        <button
+          class="menu-item"
+          data-page="language"
+        >
+          <span>文</span>
+          Lingua
+          <span class="menu-value">IT</span>
+        </button>
+
+        <button
+          class="menu-item"
+          data-page="profile"
+        >
+          <span>○</span>
+          Profilo
+        </button>
+
+      </div>
+
+    </aside>
+
+    <div
+      id="menuOverlay"
+      class="menu-overlay"
+    ></div>
+
+
+    <!-- MAIN -->
+
+    <main class="main">
+
+
+      <!-- HOME -->
+
+      <section
+        id="homePage"
+        class="page active-page"
+      >
+
+        <div class="hero">
+
+          <div class="hero-kicker">
+            FINDLY
+          </div>
+
+          <h1>
+            Trova il<br>
+            <span>meglio per te.</span>
+          </h1>
+
+          <p>
+            Non una singola recensione.
+            <strong>Il quadro completo.</strong>
+          </p>
+
+        </div>
+
+
+        <!-- SEARCH -->
+
+        <div class="search-card">
+
+          <div class="search-label">
+            COSA STAI CERCANDO?
+          </div>
 
           <div class="search-box">
 
-            <div class="search-icon">
+            <span class="search-icon">
               ⌕
-            </div>
+            </span>
 
             <input
               id="searchInput"
               type="text"
+              placeholder="es. le migliori cuffie sotto 100€"
               autocomplete="off"
-              placeholder="Cosa stai cercando?"
             >
 
             <button
               id="searchButton"
               class="search-button"
-              type="button"
             >
-              Cerca
+              Trova
             </button>
 
           </div>
-
 
           <div class="search-hint">
-            Prova:
-            <button
-              class="suggestion"
-              data-query="le migliori cuffie wireless sotto 100€"
-            >
-              cuffie wireless sotto 100€
-            </button>
-
-            <button
-              class="suggestion"
-              data-query="un film thriller da vedere stasera"
-            >
-              un film thriller
-            </button>
-
-            <button
-              class="suggestion"
-              data-query="ristorante di pesce con ottime recensioni"
-            >
-              ristorante di pesce
-            </button>
+            Cerca qualsiasi cosa, oppure scegli una categoria.
           </div>
 
         </div>
 
 
-        <div
-          id="searchStatus"
-          class="search-status"
-          aria-live="polite"
-        ></div>
+        <!-- MODES -->
 
-      </div>
-
-    </section>
-
-
-    <!-- =====================================================
-         CATEGORIES
-    ====================================================== -->
-
-    <section
-      class="categories-section"
-      id="categories"
-    >
-
-      <div class="section-heading">
-
-        <div>
-          <span class="section-label">
-            ESPLORA
-          </span>
-
-          <h2>
-            Cosa vuoi trovare?
-          </h2>
+        <div class="section-title">
+          COME VUOI CERCARE?
         </div>
 
-        <p>
-          Non importa cosa stai cercando.
-          Findly parte dalla tua esigenza.
-        </p>
-
-      </div>
-
-
-      <div class="categories-grid">
-
-        <button
-          class="category-card active"
-          data-category="other"
-        >
-          <span class="category-icon">✦</span>
-          <span class="category-name">Tutto</span>
-          <span class="category-arrow">↗</span>
-        </button>
-
-
-        <button
-          class="category-card"
-          data-category="tech"
-        >
-          <span class="category-icon">⌁</span>
-          <span class="category-name">Tecnologia</span>
-          <span class="category-arrow">↗</span>
-        </button>
-
-
-        <button
-          class="category-card"
-          data-category="fashion"
-        >
-          <span class="category-icon">◈</span>
-          <span class="category-name">Moda</span>
-          <span class="category-arrow">↗</span>
-        </button>
-
-
-        <button
-          class="category-card"
-          data-category="movies"
-        >
-          <span class="category-icon">▶</span>
-          <span class="category-name">Film & Serie</span>
-          <span class="category-arrow">↗</span>
-        </button>
-
-
-        <button
-          class="category-card"
-          data-category="books"
-        >
-          <span class="category-icon">▤</span>
-          <span class="category-name">Libri</span>
-          <span class="category-arrow">↗</span>
-        </button>
-
-
-        <button
-          class="category-card"
-          data-category="travel"
-        >
-          <span class="category-icon">✈</span>
-          <span class="category-name">Viaggi</span>
-          <span class="category-arrow">↗</span>
-        </button>
-
-
-        <button
-          class="category-card"
-          data-category="food"
-        >
-          <span class="category-icon">⌁</span>
-          <span class="category-name">Ristoranti</span>
-          <span class="category-arrow">↗</span>
-        </button>
-
-
-        <button
-          class="category-card"
-          data-category="sport"
-        >
-          <span class="category-icon">○</span>
-          <span class="category-name">Sport</span>
-          <span class="category-arrow">↗</span>
-        </button>
-
-      </div>
-
-    </section>
-
-
-    <!-- =====================================================
-         FILTERS
-    ====================================================== -->
-
-    <section
-      class="filters-section"
-      id="filtersSection"
-    >
-
-      <div class="filters-header">
-
-        <div>
-          <span class="section-label">
-            PERSONALIZZA
-          </span>
-
-          <h2>
-            Cosa conta per te?
-          </h2>
-        </div>
-
-        <button
-          id="clearFilters"
-          class="clear-filters"
-          type="button"
-        >
-          Cancella filtri
-        </button>
-
-      </div>
-
-
-      <div
-        class="filters-grid"
-        id="filtersGrid"
-      >
-
-        <label class="filter-field">
-
-          <span>
-            Budget massimo
-          </span>
-
-          <input
-            id="budget"
-            type="text"
-            placeholder="es. 500€"
-          >
-
-        </label>
-
-
-        <label class="filter-field">
-
-          <span>
-            Priorità
-          </span>
-
-          <select id="priority">
-
-            <option value="">
-              Nessuna preferenza
-            </option>
-
-            <option value="qualità">
-              Qualità
-            </option>
-
-            <option value="prezzo">
-              Prezzo
-            </option>
-
-            <option value="rapporto qualità/prezzo">
-              Rapporto qualità/prezzo
-            </option>
-
-            <option value="recensioni">
-              Recensioni
-            </option>
-
-            <option value="affidabilità">
-              Affidabilità
-            </option>
-
-          </select>
-
-        </label>
-
-
-        <label class="filter-field">
-
-          <span>
-            Preferenza
-          </span>
-
-          <input
-            id="preference"
-            type="text"
-            placeholder="es. elegante, economico..."
-          >
-
-        </label>
-
-      </div>
-
-    </section>
-
-
-    <!-- =====================================================
-         LOADING
-    ====================================================== -->
-
-    <section
-      id="loadingSection"
-      class="loading-section hidden"
-    >
-
-      <div class="loader"></div>
-
-      <h2>
-        Findly sta cercando...
-      </h2>
-
-      <p>
-        Stiamo confrontando più fonti per trovare
-        le opzioni migliori.
-      </p>
-
-    </section>
-
-
-    <!-- =====================================================
-         RESULTS
-    ====================================================== -->
-
-    <section
-      id="resultsSection"
-      class="results-section hidden"
-    >
-
-      <div class="results-header">
-
-        <div>
-
-          <span class="section-label">
-            RISULTATI FINDLY
-          </span>
-
-          <h2 id="resultsTitle">
-            Abbiamo trovato qualcosa.
-          </h2>
-
-        </div>
-
-        <div
-          id="resultCount"
-          class="result-count"
-        ></div>
-
-      </div>
-
-
-      <!-- AI ANSWER -->
-
-      <div
-        id="aiAnswer"
-        class="ai-answer hidden"
-      ></div>
-
-
-      <!-- IMAGES -->
-
-      <div
-        id="imageGallery"
-        class="image-gallery"
-      ></div>
-
-
-      <!-- RESULT CARDS -->
-
-      <div
-        id="resultsGrid"
-        class="results-grid"
-      ></div>
-
-
-      <!-- SOURCES -->
-
-      <div
-        id="sourcesSection"
-        class="sources-section hidden"
-      >
-
-        <div class="sources-heading">
-
-          <span class="section-label">
-            FONTI
-          </span>
-
-          <h3>
-            Da dove arrivano queste informazioni?
-          </h3>
-
-        </div>
-
-        <div
-          id="sourcesList"
-          class="sources-list"
-        ></div>
-
-      </div>
-
-    </section>
-
-
-    <!-- =====================================================
-         COMPARE
-    ====================================================== -->
-
-    <section
-      id="compareSection"
-      class="compare-section"
-    >
-
-      <div class="compare-inner">
-
-        <div class="compare-heading">
-
-          <span class="section-label">
-            FINDLY SUGGEST
-          </span>
-
-          <h2>
-            Non sai quale scegliere?
-          </h2>
-
-          <p>
-            Metti due alternative a confronto.
-            Findly analizzerà il quadro complessivo.
-          </p>
-
-        </div>
-
-
-        <div class="compare-form">
-
-          <input
-            id="compareFirst"
-            type="text"
-            placeholder="Prima alternativa"
-          >
-
-          <div class="versus">
-            VS
-          </div>
-
-          <input
-            id="compareSecond"
-            type="text"
-            placeholder="Seconda alternativa"
-          >
-
-          <input
-            id="compareContext"
-            type="text"
-            placeholder="Cosa conta di più per te? (facoltativo)"
-          >
+        <div class="mode-grid">
 
           <button
-            id="compareButton"
-            type="button"
+            class="mode-card"
+            data-page="free"
           >
-            Confronta
+            <div class="mode-icon">
+              ✦
+            </div>
+
+            <div>
+              <h3>Ricerca libera</h3>
+              <p>
+                Scrivi quello che vuoi.
+              </p>
+            </div>
+
+            <span class="arrow">→</span>
+          </button>
+
+
+          <button
+            class="mode-card"
+            data-page="guided"
+          >
+            <div class="mode-icon">
+              ◈
+            </div>
+
+            <div>
+              <h3>Ricerca guidata</h3>
+              <p>
+                Scegli categoria e preferenze.
+              </p>
+            </div>
+
+            <span class="arrow">→</span>
+          </button>
+
+
+          <button
+            class="mode-card"
+            data-page="compare"
+          >
+            <div class="mode-icon">
+              ⇄
+            </div>
+
+            <div>
+              <h3>Non so quale scegliere</h3>
+              <p>
+                Metti a confronto due alternative.
+              </p>
+            </div>
+
+            <span class="arrow">→</span>
           </button>
 
         </div>
 
 
-        <div
-          id="compareLoading"
-          class="compare-loading hidden"
-        >
-          Analisi in corso...
+        <!-- CATEGORIES -->
+
+        <div class="section-title category-title">
+          ESPLORA LE CATEGORIE
+        </div>
+
+        <div class="category-grid">
+
+          <button class="category-card tech" data-category="tech">
+            <span>📱</span>
+            <strong>Tecnologia</strong>
+          </button>
+
+          <button class="category-card fashion" data-category="fashion">
+            <span>👕</span>
+            <strong>Moda</strong>
+          </button>
+
+          <button class="category-card movies" data-category="movies">
+            <span>🎬</span>
+            <strong>Film & Serie</strong>
+          </button>
+
+          <button class="category-card books" data-category="books">
+            <span>📚</span>
+            <strong>Libri</strong>
+          </button>
+
+          <button class="category-card music" data-category="music">
+            <span>🎵</span>
+            <strong>Musica</strong>
+          </button>
+
+          <button class="category-card travel" data-category="travel">
+            <span>✈️</span>
+            <strong>Viaggi</strong>
+          </button>
+
+          <button class="category-card food" data-category="food">
+            <span>🍝</span>
+            <strong>Cibo</strong>
+          </button>
+
+          <button class="category-card sport" data-category="sport">
+            <span>⚽</span>
+            <strong>Sport</strong>
+          </button>
+
+          <button class="category-card cars" data-category="cars">
+            <span>🚗</span>
+            <strong>Auto</strong>
+          </button>
+
+          <button class="category-card home" data-category="home">
+            <span>🏠</span>
+            <strong>Casa</strong>
+          </button>
+
         </div>
 
 
-        <div
-          id="compareResult"
-          class="compare-result hidden"
-        ></div>
+        <!-- METHOD PREVIEW -->
 
-      </div>
+        <section class="method-preview">
 
-    </section>
-
-
-    <!-- =====================================================
-         HOW IT WORKS
-    ====================================================== -->
-
-    <section
-      class="how-section"
-      id="how"
-    >
-
-      <div class="section-heading">
-
-        <div>
-          <span class="section-label">
-            IL METODO
-          </span>
-
-          <h2>
-            Non una recensione.<br>
-            Tutte le recensioni.
-          </h2>
-        </div>
-
-        <p>
-          Findly cerca di capire cosa pensa davvero
-          il web di ciò che stai cercando.
-        </p>
-
-      </div>
-
-
-      <div class="steps">
-
-        <div class="step">
-
-          <span class="step-number">
+          <div class="method-number">
             01
-          </span>
-
-          <h3>
-            Tu chiedi
-          </h3>
-
-          <p>
-            Scrivi semplicemente ciò che stai cercando,
-            proprio come lo diresti a una persona.
-          </p>
-
-        </div>
-
-
-        <div class="step">
-
-          <span class="step-number">
-            02
-          </span>
-
-          <h3>
-            Findly cerca
-          </h3>
-
-          <p>
-            Analizziamo più fonti e raccogliamo
-            recensioni, opinioni e informazioni.
-          </p>
-
-        </div>
-
-
-        <div class="step">
-
-          <span class="step-number">
-            03
-          </span>
-
-          <h3>
-            Tu scegli
-          </h3>
-
-          <p>
-            Mettiamo insieme i dati per aiutarti
-            a capire quale opzione ha più senso per te.
-          </p>
-
-        </div>
-
-      </div>
-
-    </section>
-
-  </main>
-
-
-  <!-- =====================================================
-       FOOTER
-  ====================================================== -->
-
-  <footer class="footer">
-
-    <div class="footer-inner">
-
-      <div class="footer-brand">
-
-        <div class="brand-icon">
-          ⌕
-        </div>
-
-        <strong>Findly</strong>
-
-      </div>
-
-      <p>
-        Trova quello che fa per te.
-      </p>
-
-      <span>
-        © 2026 Findly
-      </span>
-
-    </div>
-
-  </footer>
-
-
-  <!-- =====================================================
-       JAVASCRIPT
-  ====================================================== -->
-
-  <script>
-
-    /* =====================================================
-       CONFIG
-    ====================================================== */
-
-    const WORKER_URL =
-      "https://findly-api.findly-api.workers.dev";
-
-
-    /* =====================================================
-       STATE
-    ====================================================== */
-
-    let selectedCategory = "other";
-
-
-    /* =====================================================
-       ELEMENTS
-    ====================================================== */
-
-    const searchInput =
-      document.getElementById("searchInput");
-
-    const searchButton =
-      document.getElementById("searchButton");
-
-    const searchStatus =
-      document.getElementById("searchStatus");
-
-    const loadingSection =
-      document.getElementById("loadingSection");
-
-    const resultsSection =
-      document.getElementById("resultsSection");
-
-    const resultsGrid =
-      document.getElementById("resultsGrid");
-
-    const resultsTitle =
-      document.getElementById("resultsTitle");
-
-    const resultCount =
-      document.getElementById("resultCount");
-
-    const aiAnswer =
-      document.getElementById("aiAnswer");
-
-    const imageGallery =
-      document.getElementById("imageGallery");
-
-    const sourcesSection =
-      document.getElementById("sourcesSection");
-
-    const sourcesList =
-      document.getElementById("sourcesList");
-
-
-    /* =====================================================
-       CATEGORY
-    ====================================================== */
-
-    document
-      .querySelectorAll(".category-card")
-      .forEach(card => {
-
-        card.addEventListener(
-          "click",
-          () => {
-
-            document
-              .querySelectorAll(".category-card")
-              .forEach(item =>
-                item.classList.remove("active")
-              );
-
-            card.classList.add("active");
-
-            selectedCategory =
-              card.dataset.category;
-
-            document
-              .getElementById("filtersSection")
-              .scrollIntoView({
-                behavior: "smooth",
-                block: "center"
-              });
-
-          }
-        );
-
-      });
-
-
-    /* =====================================================
-       SUGGESTIONS
-    ====================================================== */
-
-    document
-      .querySelectorAll(".suggestion")
-      .forEach(button => {
-
-        button.addEventListener(
-          "click",
-          () => {
-
-            searchInput.value =
-              button.dataset.query;
-
-            searchInput.focus();
-
-          }
-        );
-
-      });
-
-
-    /* =====================================================
-       SEARCH
-    ====================================================== */
-
-    searchButton.addEventListener(
-      "click",
-      search
-    );
-
-
-    searchInput.addEventListener(
-      "keydown",
-      event => {
-
-        if (event.key === "Enter") {
-          search();
-        }
-
-      }
-    );
-
-
-    async function search() {
-
-      const query =
-        searchInput.value.trim();
-
-      if (!query) {
-
-        searchStatus.textContent =
-          "Scrivi cosa vuoi trovare.";
-
-        searchInput.focus();
-
-        return;
-
-      }
-
-
-      searchStatus.textContent = "";
-
-      resultsSection.classList.add("hidden");
-
-      loadingSection.classList.remove("hidden");
-
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-      });
-
-
-      const fields = {
-
-        budget:
-          document
-            .getElementById("budget")
-            .value
-            .trim(),
-
-        priority:
-          document
-            .getElementById("priority")
-            .value,
-
-        preference:
-          document
-            .getElementById("preference")
-            .value
-            .trim()
-
-      };
-
-
-      try {
-
-        const response =
-          await fetch(
-            `${WORKER_URL}/api/search`,
-            {
-              method: "POST",
-
-              headers: {
-                "Content-Type":
-                  "application/json"
-              },
-
-              body:
-                JSON.stringify({
-
-                  query,
-
-                  category:
-                    selectedCategory,
-
-                  fields,
-
-                  language:
-                    "it"
-
-                })
-
-            }
-          );
-
-
-        const data =
-          await response.json();
-
-
-        if (!response.ok || !data.ok) {
-
-          throw new Error(
-            data.error ||
-            "Errore durante la ricerca."
-          );
-
-        }
-
-
-        renderResults(data);
-
-
-      } catch (error) {
-
-        loadingSection.classList.add("hidden");
-
-        searchStatus.textContent =
-          error.message ||
-          "Si è verificato un errore.";
-
-      }
-
-    }
-
-
-    /* =====================================================
-       RENDER RESULTS
-    ====================================================== */
-
-    function renderResults(data) {
-
-      loadingSection.classList.add("hidden");
-
-      resultsSection.classList.remove("hidden");
-
-
-      resultsTitle.textContent =
-        data.query
-          ? `Risultati per “${data.query}”`
-          : "Risultati Findly";
-
-
-      resultCount.textContent =
-        `${data.topPicks?.length || 0} risultati`;
-
-
-      /* ANSWER */
-
-      if (data.answer) {
-
-        aiAnswer.classList.remove("hidden");
-
-        aiAnswer.innerHTML = `
-
-          <div class="ai-label">
-            ✦ FINDLY AI
           </div>
 
-          <p>
-            ${escapeHTML(data.answer)}
-          </p>
-
-          ${
-            data.summary
-              ? `
-                <div class="ai-summary">
-                  ${escapeHTML(data.summary)}
-                </div>
-              `
-              : ""
-          }
-
-        `;
-
-      } else {
-
-        aiAnswer.classList.add("hidden");
-
-      }
-
-
-      /* IMAGES */
-
-      imageGallery.innerHTML = "";
-
-      const images =
-        Array.isArray(data.images)
-          ? data.images.slice(0, 6)
-          : [];
-
-
-      images.forEach(image => {
-
-        if (!image?.url) return;
-
-        const wrapper =
-          document.createElement("a");
-
-        wrapper.href =
-          image.url;
-
-        wrapper.target =
-          "_blank";
-
-        wrapper.rel =
-          "noopener noreferrer";
-
-        wrapper.className =
-          "result-image";
-
-
-        wrapper.innerHTML = `
-
-          <img
-            src="${escapeAttribute(image.url)}"
-            alt="${escapeAttribute(image.title || "Findly result")}"
-            loading="lazy"
-          >
-
-        `;
-
-
-        imageGallery.appendChild(
-          wrapper
-        );
-
-      });
-
-
-      /* CARDS */
-
-      resultsGrid.innerHTML = "";
-
-
-      const picks =
-        Array.isArray(data.topPicks)
-          ? data.topPicks
-          : [];
-
-
-      picks.forEach(
-        (pick, index) => {
-
-          resultsGrid.appendChild(
-            createResultCard(
-              pick,
-              index
-            )
-          );
-
-        }
-      );
-
-
-      /* SOURCES */
-
-      renderSources(data.sources || []);
-
-
-      resultsSection.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-      });
-
-    }
-
-
-    /* =====================================================
-       RESULT CARD
-    ====================================================== */
-
-    function createResultCard(
-      pick,
-      index
-    ) {
-
-      const card =
-        document.createElement("article");
-
-      card.className =
-        "result-card";
-
-
-      const pros =
-        Array.isArray(pick.pros)
-          ? pick.pros
-          : [];
-
-
-      const cons =
-        Array.isArray(pick.cons)
-          ? pick.cons
-          : [];
-
-
-      card.innerHTML = `
-
-        <div class="result-top">
-
-          <div class="result-icon">
-            ${escapeHTML(
-              pick.emoji || "✦"
-            )}
-          </div>
-
-          ${
-            pick.score
-              ? `
-                <div class="result-score">
-                  ${escapeHTML(
-                    pick.score
-                  )}
-                </div>
-              `
-              : ""
-          }
-
-        </div>
-
-
-        <div class="result-number">
-          ${String(index + 1).padStart(2, "0")}
-        </div>
-
-
-        <h3>
-          ${escapeHTML(
-            pick.title || "Risultato"
-          )}
-        </h3>
-
-
-        <p class="result-reason">
-          ${escapeHTML(
-            pick.reason || ""
-          )}
-        </p>
-
-
-        ${
-          pros.length
-            ? `
-              <div class="pros">
-
-                ${pros
-                  .slice(0, 3)
-                  .map(
-                    item =>
-                      `
-                        <span>
-                          + ${escapeHTML(item)}
-                        </span>
-                      `
-                  )
-                  .join("")}
-
-              </div>
-            `
-            : ""
-        }
-
-
-        ${
-          cons.length
-            ? `
-              <div class="cons">
-
-                ${cons
-                  .slice(0, 3)
-                  .map(
-                    item =>
-                      `
-                        <span>
-                          − ${escapeHTML(item)}
-                        </span>
-                      `
-                  )
-                  .join("")}
-
-              </div>
-            `
-            : ""
-        }
-
-
-        ${
-          pick.url
-            ? `
-              <a
-                class="result-link"
-                href="${escapeAttribute(pick.url)}"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Scopri di più
-                <span>↗</span>
-              </a>
-            `
-            : ""
-        }
-
-      `;
-
-
-      return card;
-
-    }
-
-
-    /* =====================================================
-       SOURCES
-    ====================================================== */
-
-    function renderSources(
-      sources
-    ) {
-
-      sourcesList.innerHTML = "";
-
-
-      if (!sources.length) {
-
-        sourcesSection.classList.add(
-          "hidden"
-        );
-
-        return;
-
-      }
-
-
-      sourcesSection.classList.remove(
-        "hidden"
-      );
-
-
-      sources
-        .slice(0, 12)
-        .forEach(source => {
-
-          const item =
-            document.createElement("a");
-
-          item.className =
-            "source-item";
-
-          item.href =
-            source.url;
-
-          item.target =
-            "_blank";
-
-          item.rel =
-            "noopener noreferrer";
-
-
-          item.innerHTML = `
-
-            <div>
-
-              <strong>
-                ${escapeHTML(
-                  source.source || "Fonte"
-                )}
-              </strong>
-
-              <span>
-                ${escapeHTML(
-                  source.title || ""
-                )}
-              </span>
-
+          <div>
+            <div class="method-label">
+              IL METODO FINDLY
             </div>
 
-            <span class="source-arrow">
-              ↗
+            <h2>
+              Non fidarti di<br>
+              una sola recensione.
+            </h2>
+
+            <p>
+              Findly raccoglie più fonti, individua
+              le opinioni che si ripetono e costruisce
+              una visione complessiva prima di consigliarti.
+            </p>
+
+            <button
+              class="text-button"
+              data-page="method"
+            >
+              Scopri come funziona →
+            </button>
+          </div>
+
+        </section>
+
+      </section>
+
+
+      <!-- FREE SEARCH -->
+
+      <section
+        id="freePage"
+        class="page"
+      >
+
+        <div class="page-header">
+          <button class="back-button" data-page="home">
+            ←
+          </button>
+
+          <div>
+            <div class="page-kicker">
+              RICERCA LIBERA
+            </div>
+
+            <h2>
+              Cerca quello che vuoi.
+            </h2>
+          </div>
+        </div>
+
+        <div class="large-search">
+
+          <input
+            id="freeSearchInput"
+            placeholder="Scrivi la tua ricerca..."
+          >
+
+          <button
+            id="freeSearchButton"
+          >
+            Trova →
+          </button>
+
+        </div>
+
+        <div class="examples">
+          <span>Prova:</span>
+          <button data-example="le migliori cuffie wireless sotto 100 euro">
+            cuffie sotto 100€
+          </button>
+
+          <button data-example="film commedia da vedere stasera">
+            film commedia
+          </button>
+
+          <button data-example="ristoranti economici ma con ottime recensioni">
+            ristoranti economici
+          </button>
+        </div>
+
+      </section>
+
+
+      <!-- GUIDED -->
+
+      <section
+        id="guidedPage"
+        class="page"
+      >
+
+        <div class="page-header">
+          <button class="back-button" data-page="home">
+            ←
+          </button>
+
+          <div>
+            <div class="page-kicker">
+              RICERCA GUIDATA
+            </div>
+
+            <h2>
+              Scegli. Filtra. Trova.
+            </h2>
+          </div>
+        </div>
+
+
+        <div class="guided-card">
+
+          <label>
+            COSA CERCHI?
+          </label>
+
+          <select id="guidedCategory">
+
+            <option value="tech">
+              📱 Tecnologia
+            </option>
+
+            <option value="fashion">
+              👕 Moda
+            </option>
+
+            <option value="movies">
+              🎬 Film & Serie
+            </option>
+
+            <option value="books">
+              📚 Libri
+            </option>
+
+            <option value="music">
+              🎵 Musica
+            </option>
+
+            <option value="travel">
+              ✈️ Viaggi
+            </option>
+
+            <option value="food">
+              🍝 Cibo & Ristoranti
+            </option>
+
+            <option value="sport">
+              ⚽ Sport
+            </option>
+
+            <option value="cars">
+              🚗 Auto
+            </option>
+
+            <option value="home">
+              🏠 Casa
+            </option>
+
+          </select>
+
+
+          <label>
+            COSA VUOI TROVARE?
+          </label>
+
+          <input
+            id="guidedQuery"
+            placeholder="es. film comici"
+          >
+
+
+          <label>
+            PREFERENZA / LIMITE
+          </label>
+
+          <input
+            id="guidedPreference"
+            placeholder="es. massimo 2€ a noleggio"
+          >
+
+
+          <button
+            id="guidedSearchButton"
+            class="primary-button"
+          >
+            Trova il meglio →
+          </button>
+
+        </div>
+
+      </section>
+
+
+      <!-- COMPARE -->
+
+      <section
+        id="comparePage"
+        class="page"
+      >
+
+        <div class="page-header">
+
+          <button class="back-button" data-page="home">
+            ←
+          </button>
+
+          <div>
+            <div class="page-kicker">
+              CONFRONTO
+            </div>
+
+            <h2>
+              Non sai quale scegliere?
+            </h2>
+
+            <p>
+              Lascia che Findly analizzi entrambe.
+            </p>
+          </div>
+
+        </div>
+
+
+        <div class="compare-grid">
+
+          <div class="compare-box">
+
+            <span>
+              OPZIONE A
             </span>
 
-          `;
+            <input
+              id="compareFirst"
+              placeholder="es. AirPods Pro"
+            >
+
+          </div>
 
 
-          sourcesList.appendChild(
-            item
-          );
-
-        });
-
-    }
+          <div class="compare-vs">
+            VS
+          </div>
 
 
-    /* =====================================================
-       COMPARE
-    ====================================================== */
+          <div class="compare-box">
 
-    document
-      .getElementById("compareButton")
-      .addEventListener(
-        "click",
-        compare
-      );
+            <span>
+              OPZIONE B
+            </span>
 
+            <input
+              id="compareSecond"
+              placeholder="es. Sony XM5"
+            >
 
-    document
-      .getElementById("compareNavButton")
-      .addEventListener(
-        "click",
-        () => {
+          </div>
 
-          document
-            .getElementById("compareSection")
-            .scrollIntoView({
-              behavior: "smooth"
-            });
-
-        }
-      );
+        </div>
 
 
-    async function compare() {
-
-      const first =
-        document
-          .getElementById("compareFirst")
-          .value
-          .trim();
-
-      const second =
-        document
-          .getElementById("compareSecond")
-          .value
-          .trim();
-
-      const context =
-        document
-          .getElementById("compareContext")
-          .value
-          .trim();
+        <input
+          id="compareContext"
+          class="context-input"
+          placeholder="Cosa conta di più per te? es. qualità/prezzo"
+        >
 
 
-      if (!first || !second) {
-
-        return;
-
-      }
-
-
-      const button =
-        document.getElementById(
-          "compareButton"
-        );
+        <button
+          id="compareButton"
+          class="primary-button"
+        >
+          Confronta →
+        </button>
 
 
-      const loading =
-        document.getElementById(
-          "compareLoading"
-        );
+        <div id="compareResult"></div>
+
+      </section>
 
 
-      const result =
-        document.getElementById(
-          "compareResult"
-        );
+      <!-- METHOD -->
+
+      <section
+        id="methodPage"
+        class="page"
+      >
+
+        <div class="page-header">
+
+          <button class="back-button" data-page="home">
+            ←
+          </button>
+
+          <div>
+            <div class="page-kicker">
+              IL METODO FINDLY
+            </div>
+
+            <h2>
+              Non scegliamo<br>
+              una recensione.
+            </h2>
+          </div>
+
+        </div>
 
 
-      button.disabled = true;
-
-      loading.classList.remove(
-        "hidden"
-      );
-
-      result.classList.add(
-        "hidden"
-      );
+        <div class="method-hero">
+          Findly cerca il <strong>quadro completo.</strong>
+        </div>
 
 
-      try {
+        <div class="steps">
 
-        const response =
-          await fetch(
-            `${WORKER_URL}/api/compare`,
-            {
-              method: "POST",
-
-              headers: {
-                "Content-Type":
-                  "application/json"
-              },
-
-              body:
-                JSON.stringify({
-
-                  first,
-
-                  second,
-
-                  context,
-
-                  language:
-                    "it"
-
-                })
-
-            }
-          );
+          <div class="method-step">
+            <span>01</span>
+            <div>
+              <h3>Troviamo le fonti</h3>
+              <p>
+                Cerchiamo più fonti sul web invece
+                di fermarci al primo risultato.
+              </p>
+            </div>
+          </div>
 
 
-        const data =
-          await response.json();
+          <div class="method-step">
+            <span>02</span>
+            <div>
+              <h3>Raccogliamo le opinioni</h3>
+              <p>
+                Recensioni, esperienze, pareri,
+                caratteristiche e informazioni utili.
+              </p>
+            </div>
+          </div>
 
 
-        if (!response.ok || !data.ok) {
-
-          throw new Error(
-            data.error ||
-            "Errore nel confronto."
-          );
-
-        }
-
-
-        const winner =
-          data.winner === "option_b"
-            ? second
-            : first;
+          <div class="method-step">
+            <span>03</span>
+            <div>
+              <h3>Cerchiamo ciò che si ripete</h3>
+              <p>
+                Se un pregio o un difetto compare
+                continuamente, diventa molto più significativo.
+              </p>
+            </div>
+          </div>
 
 
-        result.innerHTML = `
+          <div class="method-step">
+            <span>04</span>
+            <div>
+              <h3>Ti consigliamo</h3>
+              <p>
+                Alla fine Findly mette insieme le evidenze
+                e ti aiuta a scegliere ciò che ha più senso
+                per te.
+              </p>
+            </div>
+          </div>
 
-          <div class="winner-label">
-            ✦ FINDLY SCEGLIE
+        </div>
+
+      </section>
+
+
+      <!-- PROFILE -->
+
+      <section
+        id="profilePage"
+        class="page"
+      >
+
+        <div class="page-header">
+
+          <button class="back-button" data-page="home">
+            ←
+          </button>
+
+          <div>
+            <div class="page-kicker">
+              PROFILO
+            </div>
+
+            <h2>
+              Il tuo Findly.
+            </h2>
+          </div>
+
+        </div>
+
+
+        <div class="profile-card">
+
+          <div class="profile-avatar">
+            ○
           </div>
 
           <h3>
-            ${escapeHTML(winner)}
+            Accedi a Findly
           </h3>
 
           <p>
-            ${escapeHTML(
-              data.answer || ""
-            )}
+            Salva ricerche, preferenze e confronti.
           </p>
 
+          <button class="primary-button">
+            Accedi / Registrati
+          </button>
 
-          ${
-            Array.isArray(data.reasons) &&
-            data.reasons.length
-              ? `
-                <div class="compare-reasons">
+        </div>
 
-                  ${data.reasons
-                    .slice(0, 4)
-                    .map(
-                      reason =>
-                        `
-                          <div>
-                            <span>+</span>
-                            ${escapeHTML(reason)}
-                          </div>
-                        `
-                    )
-                    .join("")}
-
-                </div>
-              `
-              : ""
-          }
-
-        `;
+      </section>
 
 
-        result.classList.remove(
-          "hidden"
-        );
+      <!-- RESULTS -->
+
+      <section
+        id="resultsPage"
+        class="page"
+      >
+
+        <div class="results-header">
+
+          <button
+            class="back-button"
+            data-page="home"
+          >
+            ←
+          </button>
+
+          <div>
+
+            <div class="page-kicker">
+              RISULTATI FINDLY
+            </div>
+
+            <h2 id="resultsTitle">
+              I migliori risultati
+            </h2>
+
+          </div>
+
+        </div>
 
 
-      } catch (error) {
-
-        result.innerHTML = `
-
-          <p>
-            ${escapeHTML(
-              error.message ||
-              "Errore nel confronto."
-            )}
-          </p>
-
-        `;
-
-        result.classList.remove(
-          "hidden"
-        );
-
-      } finally {
-
-        button.disabled = false;
-
-        loading.classList.add(
-          "hidden"
-        );
-
-      }
-
-    }
+        <div
+          id="resultsAnswer"
+          class="results-answer"
+        ></div>
 
 
-    /* =====================================================
-       CLEAR FILTERS
-    ====================================================== */
-
-    document
-      .getElementById("clearFilters")
-      .addEventListener(
-        "click",
-        () => {
-
-          document.getElementById(
-            "budget"
-          ).value = "";
-
-          document.getElementById(
-            "priority"
-          ).value = "";
-
-          document.getElementById(
-            "preference"
-          ).value = "";
-
-        }
-      );
+        <div
+          id="resultsList"
+          class="results-list"
+        ></div>
 
 
-    /* =====================================================
-       HOME
-    ====================================================== */
+        <div class="sources-section">
 
-    document
-      .getElementById("brandHome")
-      .addEventListener(
-        "click",
-        event => {
+          <div class="section-title">
+            FONTI ANALIZZATE
+          </div>
 
-          event.preventDefault();
+          <div
+            id="sourcesList"
+            class="sources-list"
+          ></div>
 
-          window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-          });
+        </div>
 
-        }
-      );
+      </section>
 
+    </main>
 
-    /* =====================================================
-       SECURITY HELPERS
-    ====================================================== */
-
-    function escapeHTML(value) {
-
-      return String(value || "")
-        .replace(
-          /&/g,
-          "&amp;"
-        )
-        .replace(
-          /</g,
-          "&lt;"
-        )
-        .replace(
-          />/g,
-          "&gt;"
-        )
-        .replace(
-          /"/g,
-          "&quot;"
-        )
-        .replace(
-          /'/g,
-          "&#039;"
-        );
-
-    }
+  </div>
 
 
-    function escapeAttribute(value) {
-
-      return escapeHTML(value);
-
-    }
-
-  </script>
+  <script src="script.js"></script>
 
 </body>
 </html>
