@@ -4,7 +4,7 @@
 ========================================================= */
 
 const FINDLY_CONFIG = {
-  WORKER_URL: "INCOLLA_QUI_IL_LINK_DEL_TUO_WORKER",
+  WORKER_URL: "https://shrill-firefly-79b6.astengoedoardo.workers.dev/",
   MAX_RESULTS: 10
 };
 
