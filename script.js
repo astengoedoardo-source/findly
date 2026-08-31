@@ -1,11 +1,13 @@
 /* =========================================================
-   FINDLY V6 — SCRIPT
+   FINDLY V7 — SCRIPT
    Frontend engine
 ========================================================= */
 
 const FINDLY_CONFIG = {
   WORKER_URL: "https://shrill-firefly-79b6.astengoedoardo.workers.dev/",
-  MAX_RESULTS: 10
+  DEFAULT_RESULTS: 6,
+  MAX_RESULTS: 6,
+  MIN_RESULTS: 1
 };
 
 
@@ -14,9 +16,20 @@ const FINDLY_CONFIG = {
 ========================================================= */
 
 const state = {
-  language: localStorage.getItem("findly_language") || "it",
-  theme: localStorage.getItem("findly_theme") || "dark",
-  fontSize: localStorage.getItem("findly_font_size") || "normal",
+  language:
+    localStorage.getItem("findly_language") || "it",
+
+  theme:
+    localStorage.getItem("findly_theme") || "dark",
+
+  fontSize:
+    localStorage.getItem("findly_font_size") || "normal",
+
+  resultCount:
+    Number(
+      localStorage.getItem("findly_result_count") ||
+      FINDLY_CONFIG.DEFAULT_RESULTS
+    ),
 
   currentCategory: "other",
   currentQuery: "",
@@ -24,9 +37,25 @@ const state = {
 
   lastSearch: null,
 
-  history: loadStorage("findly_history", []),
-  favorites: loadStorage("findly_favorites", [])
+  history:
+    loadStorage("findly_history", []),
+
+  favorites:
+    loadStorage("findly_favorites", [])
 };
+
+
+/* =========================================================
+   SAFETY
+========================================================= */
+
+state.resultCount = Math.min(
+  Math.max(
+    state.resultCount,
+    FINDLY_CONFIG.MIN_RESULTS
+  ),
+  FINDLY_CONFIG.MAX_RESULTS
+);
 
 
 /* =========================================================
@@ -263,6 +292,15 @@ const translations = {
 
     results:
       "risultati",
+
+    resultCount:
+      "Quanti risultati vuoi?",
+
+    resultCountDescription:
+      "Scegli fino a 6 opzioni. Meno risultati significa una risposta più veloce e un minore utilizzo dell'AI.",
+
+    resultSingular:
+      "risultato",
 
     noResults:
       "Non ho trovato risultati sufficientemente affidabili.",
@@ -529,6 +567,15 @@ const translations = {
     results:
       "results",
 
+    resultCount:
+      "How many results do you want?",
+
+    resultCountDescription:
+      "Choose up to 6 options. Fewer results means a faster response and lower AI usage.",
+
+    resultSingular:
+      "result",
+
     noResults:
       "I couldn't find enough reliable results.",
 
@@ -568,14 +615,16 @@ const translations = {
 
 
 /* =========================================================
-   DOM
+   DOM HELPERS
 ========================================================= */
 
 const $ = selector =>
   document.querySelector(selector);
 
 const $$ = selector =>
-  Array.from(document.querySelectorAll(selector));
+  Array.from(
+    document.querySelectorAll(selector)
+  );
 
 
 /* =========================================================
@@ -603,6 +652,8 @@ function init() {
   setupLocalSearch();
   setupSettings();
 
+  setupResultCount();
+
   renderHistory();
   renderFavorites();
 
@@ -623,49 +674,55 @@ function applyLanguage() {
     translations.it;
 
 
-  $$("[data-i18n]").forEach(element => {
+  $$("[data-i18n]").forEach(
+    element => {
 
-    const key =
-      element.dataset.i18n;
+      const key =
+        element.dataset.i18n;
 
-    if (
-      dictionary[key] !== undefined
-    ) {
+      if (
+        dictionary[key] !== undefined
+      ) {
 
-      element.textContent =
-        dictionary[key];
+        element.textContent =
+          dictionary[key];
 
-    }
-
-  });
-
-
-  $$("[data-i18n-placeholder]").forEach(element => {
-
-    const key =
-      element.dataset.i18nPlaceholder;
-
-    if (
-      dictionary[key] !== undefined
-    ) {
-
-      element.placeholder =
-        dictionary[key];
+      }
 
     }
+  );
 
-  });
+
+  $$("[data-i18n-placeholder]").forEach(
+    element => {
+
+      const key =
+        element.dataset.i18nPlaceholder;
+
+      if (
+        dictionary[key] !== undefined
+      ) {
+
+        element.placeholder =
+          dictionary[key];
+
+      }
+
+    }
+  );
 
 
-  $$(".language").forEach(button => {
+  $$(".language").forEach(
+    button => {
 
-    button.classList.toggle(
-      "active",
-      button.dataset.lang ===
-      state.language
-    );
+      button.classList.toggle(
+        "active",
+        button.dataset.lang ===
+        state.language
+      );
 
-  });
+    }
+  );
 
 
   const settingsLanguage =
@@ -677,6 +734,9 @@ function applyLanguage() {
       state.language;
 
   }
+
+
+  updateResultCountUI();
 
 }
 
@@ -697,6 +757,7 @@ function setLanguage(language) {
   state.language =
     language;
 
+
   localStorage.setItem(
     "findly_language",
     language
@@ -705,12 +766,6 @@ function setLanguage(language) {
 
   applyLanguage();
 
-  /*
-    IMPORTANT:
-    We also update the current UI state.
-    The next search is sent to the Worker
-    with the selected language.
-  */
 
   if (
     state.lastSearch
@@ -718,6 +773,188 @@ function setLanguage(language) {
 
     state.lastSearch.language =
       language;
+
+  }
+
+}
+
+
+/* =========================================================
+   RESULT COUNT
+========================================================= */
+
+function setupResultCount() {
+
+  let select =
+    $("#resultCountSelect");
+
+
+  /*
+    If the HTML already contains the selector,
+    we use it.
+
+    If it doesn't, Findly creates a small selector
+    automatically near the main search button.
+  */
+
+  if (!select) {
+
+    const searchButton =
+      $("#findButton");
+
+
+    if (searchButton) {
+
+      const wrapper =
+        document.createElement("div");
+
+
+      wrapper.className =
+        "findly-result-count";
+
+
+      wrapper.innerHTML = `
+
+        <label
+          for="resultCountSelect"
+          class="result-count-label">
+
+          <span>
+            ${escapeHTML(
+              getText("resultCount")
+            )}
+          </span>
+
+          <select
+            id="resultCountSelect"
+            aria-label="${escapeAttribute(
+              getText("resultCount")
+            )}">
+
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+
+          </select>
+
+        </label>
+
+        <small class="result-count-description">
+          ${escapeHTML(
+            getText("resultCountDescription")
+          )}
+        </small>
+
+      `;
+
+
+      searchButton.parentNode?.insertBefore(
+        wrapper,
+        searchButton
+      );
+
+
+      select =
+        $("#resultCountSelect");
+
+    }
+
+  }
+
+
+  if (!select) {
+    return;
+  }
+
+
+  select.value =
+    String(state.resultCount);
+
+
+  select.addEventListener(
+    "change",
+    () => {
+
+      let value =
+        Number(select.value);
+
+
+      if (
+        !Number.isFinite(value)
+      ) {
+        value =
+          FINDLY_CONFIG.DEFAULT_RESULTS;
+      }
+
+
+      value =
+        Math.min(
+          Math.max(
+            Math.round(value),
+            FINDLY_CONFIG.MIN_RESULTS
+          ),
+          FINDLY_CONFIG.MAX_RESULTS
+        );
+
+
+      state.resultCount =
+        value;
+
+
+      localStorage.setItem(
+        "findly_result_count",
+        String(value)
+      );
+
+    }
+  );
+
+}
+
+
+function updateResultCountUI() {
+
+  const select =
+    $("#resultCountSelect");
+
+
+  if (select) {
+
+    select.value =
+      String(state.resultCount);
+
+  }
+
+
+  const label =
+    document.querySelector(
+      ".result-count-label span"
+    );
+
+
+  if (label) {
+
+    label.textContent =
+      getText("resultCount");
+
+  }
+
+
+  const description =
+    document.querySelector(
+      ".result-count-description"
+    );
+
+
+  if (description) {
+
+    description.textContent =
+      getText(
+        "resultCountDescription"
+      );
 
   }
 
@@ -778,20 +1015,22 @@ function setupMenu() {
   }
 
 
-  $$(".language").forEach(button => {
+  $$(".language").forEach(
+    button => {
 
-    button.addEventListener(
-      "click",
-      () => {
+      button.addEventListener(
+        "click",
+        () => {
 
-        setLanguage(
-          button.dataset.lang
-        );
+          setLanguage(
+            button.dataset.lang
+          );
 
-      }
-    );
+        }
+      );
 
-  });
+    }
+  );
 
 }
 
@@ -813,23 +1052,25 @@ function closeMenu() {
 
 function setupNavigation() {
 
-  $$(".menu-item").forEach(button => {
+  $$(".menu-item").forEach(
+    button => {
 
-    button.addEventListener(
-      "click",
-      () => {
+      button.addEventListener(
+        "click",
+        () => {
 
-        const section =
-          button.dataset.section;
+          const section =
+            button.dataset.section;
 
-        showSection(section);
+          showSection(section);
 
-        closeMenu();
+          closeMenu();
 
-      }
-    );
+        }
+      );
 
-  });
+    }
+  );
 
 }
 
@@ -866,20 +1107,22 @@ function showSection(section) {
 
 
   Object.values(sections)
-    .forEach(selector => {
+    .forEach(
+      selector => {
 
-      const element =
-        $(selector);
+        const element =
+          $(selector);
 
-      if (element) {
+        if (element) {
 
-        element.classList.add(
-          "hidden"
-        );
+          element.classList.add(
+            "hidden"
+          );
+
+        }
 
       }
-
-    });
+    );
 
 
   const target =
@@ -891,14 +1134,16 @@ function showSection(section) {
   );
 
 
-  $$(".menu-item").forEach(item => {
+  $$(".menu-item").forEach(
+    item => {
 
-    item.classList.toggle(
-      "active",
-      item.dataset.section === section
-    );
+      item.classList.toggle(
+        "active",
+        item.dataset.section === section
+      );
 
-  });
+    }
+  );
 
 
   window.scrollTo({
@@ -988,7 +1233,8 @@ function setupSearch() {
         showSection("home");
 
         setTimeout(
-          () => $("#request")?.focus(),
+          () =>
+            $("#request")?.focus(),
           100
         );
 
@@ -1006,35 +1252,39 @@ function setupSearch() {
 
 function setupSuggestions() {
 
-  $$(".suggestion").forEach(button => {
+  $$(".suggestion").forEach(
+    button => {
 
-    button.addEventListener(
-      "click",
-      () => {
+      button.addEventListener(
+        "click",
+        () => {
 
-        const query =
-          button.dataset.query || "";
+          const query =
+            button.dataset.query || "";
 
-        const input =
-          $("#request");
+          const input =
+            $("#request");
 
-        if (input) {
 
-          input.value =
-            translateSuggestion(
-              query
-            );
+          if (input) {
 
-          input.focus();
+            input.value =
+              translateSuggestion(
+                query
+              );
+
+            input.focus();
+
+          }
+
+
+          performSearch();
 
         }
+      );
 
-        performSearch();
-
-      }
-    );
-
-  });
+    }
+  );
 
 }
 
@@ -1044,7 +1294,9 @@ function translateSuggestion(query) {
   if (
     state.language === "it"
   ) {
+
     return query;
+
   }
 
 
@@ -1076,24 +1328,26 @@ function translateSuggestion(query) {
 
 function setupCategories() {
 
-  $$(".category-card").forEach(card => {
+  $$(".category-card").forEach(
+    card => {
 
-    card.addEventListener(
-      "click",
-      () => {
+      card.addEventListener(
+        "click",
+        () => {
 
-        const category =
-          card.dataset.category ||
-          "other";
+          const category =
+            card.dataset.category ||
+            "other";
 
-        openDynamicSearch(
-          category
-        );
+          openDynamicSearch(
+            category
+          );
 
-      }
-    );
+        }
+      );
 
-  });
+    }
+  );
 
 }
 
@@ -1121,7 +1375,9 @@ function openDynamicSearch(category) {
     !container ||
     !dynamic
   ) {
+
     return;
+
   }
 
 
@@ -1189,35 +1445,113 @@ function getCategoryFields(category) {
       fields: `
 
         <label>
-          ${isEnglish ? "Movie, actor, genre or idea" : "Film, attore, genere o idea"}
+          ${
+            isEnglish
+              ? "Movie, actor, genre or idea"
+              : "Film, attore, genere o idea"
+          }
+
           <input
             name="query"
             class="dynamic-input"
-            placeholder="${isEnglish ? "e.g. funny movies with Adam Sandler" : "es. film divertenti con Adam Sandler"}">
+            placeholder="${
+              isEnglish
+                ? "e.g. funny movies with Adam Sandler"
+                : "es. film molto divertenti con Adam Sandler"
+            }">
+
         </label>
+
 
         <label>
           ${isEnglish ? "Genre" : "Genere"}
+
           <select name="genre">
-            <option value="">${isEnglish ? "Any genre" : "Qualsiasi genere"}</option>
-            <option value="comedy">${isEnglish ? "Comedy" : "Commedia"}</option>
-            <option value="action">${isEnglish ? "Action" : "Azione"}</option>
-            <option value="horror">${isEnglish ? "Horror" : "Horror"}</option>
-            <option value="thriller">${isEnglish ? "Thriller" : "Thriller"}</option>
-            <option value="drama">${isEnglish ? "Drama" : "Drammatico"}</option>
-            <option value="romance">${isEnglish ? "Romance" : "Romantico"}</option>
+
+            <option value="">
+              ${isEnglish ? "Any genre" : "Qualsiasi genere"}
+            </option>
+
+            <option value="comedy">
+              ${isEnglish ? "Comedy" : "Commedia"}
+            </option>
+
+            <option value="action">
+              ${isEnglish ? "Action" : "Azione"}
+            </option>
+
+            <option value="horror">
+              Horror
+            </option>
+
+            <option value="thriller">
+              Thriller
+            </option>
+
+            <option value="drama">
+              ${isEnglish ? "Drama" : "Drammatico"}
+            </option>
+
+            <option value="romance">
+              ${isEnglish ? "Romance" : "Romantico"}
+            </option>
+
           </select>
+
         </label>
 
+
         <label>
-          ${isEnglish ? "What matters most?" : "Cosa conta di più?"}
+          ${
+            isEnglish
+              ? "What matters most?"
+              : "Cosa conta di più?"
+          }
+
           <select name="priority">
-            <option value="">${isEnglish ? "Overall quality" : "Qualità generale"}</option>
-            <option value="reviews">${isEnglish ? "Reviews" : "Recensioni"}</option>
-            <option value="fun">${isEnglish ? "Fun" : "Divertimento"}</option>
-            <option value="scariness">${isEnglish ? "Scary" : "Paura"}</option>
-            <option value="story">${isEnglish ? "Story" : "Storia"}</option>
+
+            <option value="">
+              ${
+                isEnglish
+                  ? "Overall quality"
+                  : "Qualità generale"
+              }
+            </option>
+
+            <option value="reviews">
+              ${
+                isEnglish
+                  ? "Reviews"
+                  : "Recensioni"
+              }
+            </option>
+
+            <option value="fun">
+              ${
+                isEnglish
+                  ? "Fun"
+                  : "Divertimento"
+              }
+            </option>
+
+            <option value="scariness">
+              ${
+                isEnglish
+                  ? "Scary"
+                  : "Paura"
+              }
+            </option>
+
+            <option value="story">
+              ${
+                isEnglish
+                  ? "Story"
+                  : "Storia"
+              }
+            </option>
+
           </select>
+
         </label>
 
       `
@@ -1241,24 +1575,44 @@ function getCategoryFields(category) {
 
         <label>
           ${isEnglish ? "What are you looking for?" : "Cosa stai cercando?"}
+
           <input
             name="query"
             class="dynamic-input"
-            placeholder="${isEnglish ? "e.g. psychological thriller" : "es. thriller psicologico"}">
+            placeholder="${
+              isEnglish
+                ? "e.g. psychological thriller"
+                : "es. thriller psicologico"
+            }">
+
         </label>
+
 
         <label>
           ${isEnglish ? "Genre" : "Genere"}
+
           <input
             name="genre"
-            placeholder="${isEnglish ? "e.g. fantasy, romance..." : "es. fantasy, romance..."}">
+            placeholder="${
+              isEnglish
+                ? "e.g. fantasy, romance..."
+                : "es. fantasy, romance..."
+            }">
+
         </label>
+
 
         <label>
           ${isEnglish ? "Priority" : "Priorità"}
+
           <input
             name="priority"
-            placeholder="${isEnglish ? "e.g. highly rated" : "es. molto apprezzato"}">
+            placeholder="${
+              isEnglish
+                ? "e.g. highly rated"
+                : "es. molto apprezzato"
+            }">
+
         </label>
 
       `
@@ -1282,24 +1636,48 @@ function getCategoryFields(category) {
 
         <label>
           ${isEnglish ? "Item" : "Cosa cerchi?"}
+
           <input
             name="query"
             class="dynamic-input"
-            placeholder="${isEnglish ? "e.g. black oversized hoodie" : "es. felpa nera oversized"}">
+            placeholder="${
+              isEnglish
+                ? "e.g. black oversized hoodie"
+                : "es. felpa nera oversized"
+            }">
+
         </label>
+
 
         <label>
           ${isEnglish ? "Budget" : "Budget"}
+
           <input
             name="budget"
-            placeholder="${isEnglish ? "e.g. under €100" : "es. massimo €100"}">
+            placeholder="${
+              isEnglish
+                ? "e.g. under €100"
+                : "es. massimo €100"
+            }">
+
         </label>
 
+
         <label>
-          ${isEnglish ? "Style / priority" : "Stile / priorità"}
+          ${
+            isEnglish
+              ? "Style / priority"
+              : "Stile / priorità"
+          }
+
           <input
             name="style"
-            placeholder="${isEnglish ? "e.g. streetwear" : "es. streetwear"}">
+            placeholder="${
+              isEnglish
+                ? "e.g. streetwear"
+                : "es. streetwear"
+            }">
+
         </label>
 
       `
@@ -1323,24 +1701,44 @@ function getCategoryFields(category) {
 
         <label>
           ${isEnglish ? "Product" : "Prodotto"}
+
           <input
             name="query"
             class="dynamic-input"
-            placeholder="${isEnglish ? "e.g. wireless headphones" : "es. cuffie wireless"}">
+            placeholder="${
+              isEnglish
+                ? "e.g. wireless headphones"
+                : "es. cuffie wireless"
+            }">
+
         </label>
+
 
         <label>
           ${isEnglish ? "Budget" : "Budget"}
+
           <input
             name="budget"
-            placeholder="${isEnglish ? "e.g. under €150" : "es. massimo €150"}">
+            placeholder="${
+              isEnglish
+                ? "e.g. under €150"
+                : "es. massimo €150"
+            }">
+
         </label>
+
 
         <label>
           ${isEnglish ? "Priority" : "Priorità"}
+
           <input
             name="priority"
-            placeholder="${isEnglish ? "e.g. sound quality and battery" : "es. qualità audio e batteria"}">
+            placeholder="${
+              isEnglish
+                ? "e.g. sound quality and battery"
+                : "es. qualità audio e batteria"
+            }">
+
         </label>
 
       `
@@ -1363,25 +1761,49 @@ function getCategoryFields(category) {
       fields: `
 
         <label>
-          ${isEnglish ? "Destination or idea" : "Destinazione o idea"}
+          ${
+            isEnglish
+              ? "Destination or idea"
+              : "Destinazione o idea"
+          }
+
           <input
             name="query"
             class="dynamic-input"
-            placeholder="${isEnglish ? "e.g. beach holiday in Spain" : "es. vacanza al mare in Spagna"}">
+            placeholder="${
+              isEnglish
+                ? "e.g. beach holiday in Spain"
+                : "es. vacanza al mare in Spagna"
+            }">
+
         </label>
+
 
         <label>
           ${isEnglish ? "Budget" : "Budget"}
+
           <input
             name="budget"
-            placeholder="${isEnglish ? "e.g. €800" : "es. €800"}">
+            placeholder="${
+              isEnglish
+                ? "e.g. €800"
+                : "es. €800"
+            }">
+
         </label>
+
 
         <label>
           ${isEnglish ? "Priority" : "Priorità"}
+
           <input
             name="priority"
-            placeholder="${isEnglish ? "e.g. nightlife and beaches" : "es. vita notturna e spiagge"}">
+            placeholder="${
+              isEnglish
+                ? "e.g. nightlife and beaches"
+                : "es. vita notturna e spiagge"
+            }">
+
         </label>
 
       `
@@ -1404,25 +1826,49 @@ function getCategoryFields(category) {
       fields: `
 
         <label>
-          ${isEnglish ? "What are you looking for?" : "Cosa cerchi?"}
+          ${
+            isEnglish
+              ? "What are you looking for?"
+              : "Cosa cerchi?"
+          }
+
           <input
             name="query"
             class="dynamic-input"
-            placeholder="${isEnglish ? "e.g. best sushi restaurant" : "es. miglior ristorante sushi"}">
+            placeholder="${
+              isEnglish
+                ? "e.g. best sushi restaurant"
+                : "es. miglior ristorante sushi"
+            }">
+
         </label>
+
 
         <label>
           ${isEnglish ? "Budget" : "Budget"}
+
           <input
             name="budget"
-            placeholder="${isEnglish ? "e.g. €30 per person" : "es. €30 a persona"}">
+            placeholder="${
+              isEnglish
+                ? "e.g. €30 per person"
+                : "es. €30 a persona"
+            }">
+
         </label>
+
 
         <label>
           ${isEnglish ? "Priority" : "Priorità"}
+
           <input
             name="priority"
-            placeholder="${isEnglish ? "e.g. food quality and atmosphere" : "es. qualità del cibo e atmosfera"}">
+            placeholder="${
+              isEnglish
+                ? "e.g. food quality and atmosphere"
+                : "es. qualità del cibo e atmosfera"
+            }">
+
         </label>
 
       `
@@ -1446,24 +1892,44 @@ function getCategoryFields(category) {
 
         <label>
           ${isEnglish ? "Activity" : "Attività"}
+
           <input
             name="query"
             class="dynamic-input"
-            placeholder="${isEnglish ? "e.g. football field" : "es. campo da calcetto"}">
+            placeholder="${
+              isEnglish
+                ? "e.g. football field"
+                : "es. campo da calcetto"
+            }">
+
         </label>
+
 
         <label>
           ${isEnglish ? "Location" : "Zona"}
+
           <input
             name="location"
-            placeholder="${isEnglish ? "e.g. Rome" : "es. Roma"}">
+            placeholder="${
+              isEnglish
+                ? "e.g. Rome"
+                : "es. Roma"
+            }">
+
         </label>
+
 
         <label>
           ${isEnglish ? "Budget" : "Budget"}
+
           <input
             name="budget"
-            placeholder="${isEnglish ? "e.g. under €70" : "es. massimo €70"}">
+            placeholder="${
+              isEnglish
+                ? "e.g. under €70"
+                : "es. massimo €70"
+            }">
+
         </label>
 
       `
@@ -1486,18 +1952,39 @@ function getCategoryFields(category) {
       fields: `
 
         <label>
-          ${isEnglish ? "Your search" : "La tua ricerca"}
+          ${
+            isEnglish
+              ? "Your search"
+              : "La tua ricerca"
+          }
+
           <textarea
             name="query"
             class="dynamic-input"
-            placeholder="${isEnglish ? "Tell Findly what you need..." : "Dimmi cosa stai cercando..."}"></textarea>
+            placeholder="${
+              isEnglish
+                ? "Tell Findly what you need..."
+                : "Dimmi cosa stai cercando..."
+            }"></textarea>
+
         </label>
 
+
         <label>
-          ${isEnglish ? "Budget / limits" : "Budget / limiti"}
+          ${
+            isEnglish
+              ? "Budget / limits"
+              : "Budget / limiti"
+          }
+
           <input
             name="budget"
-            placeholder="${isEnglish ? "Optional" : "Facoltativo"}">
+            placeholder="${
+              isEnglish
+                ? "Optional"
+                : "Facoltativo"
+            }">
+
         </label>
 
       `
@@ -1524,32 +2011,34 @@ function performDynamicSearch() {
   const container =
     $("#dynamicFields");
 
+
   if (!container) {
     return;
   }
 
 
-  const data =
-    {};
+  const data = {};
 
 
   container
     .querySelectorAll(
       "input, textarea, select"
     )
-    .forEach(field => {
+    .forEach(
+      field => {
 
-      if (
-        field.value &&
-        field.value.trim()
-      ) {
+        if (
+          field.value &&
+          field.value.trim()
+        ) {
 
-        data[field.name] =
-          field.value.trim();
+          data[field.name] =
+            field.value.trim();
+
+        }
 
       }
-
-    });
+    );
 
 
   const query =
@@ -1650,6 +2139,22 @@ async function performSearch(
   hideError();
 
 
+  /*
+    IMPORTANT:
+
+    These settings are sent to the Worker.
+
+    maxResults:
+    controls how many recommendations Findly should return.
+
+    responseStyle:
+    asks the Worker/AI for a short but useful answer.
+
+    analysisMode:
+    tells the backend that Findly should compare
+    the overall evidence instead of relying on one source.
+  */
+
   const searchData = {
 
     query,
@@ -1659,7 +2164,22 @@ async function performSearch(
     fields,
 
     language:
-      state.language
+      state.language,
+
+    maxResults:
+      state.resultCount,
+
+    responseStyle:
+      "concise",
+
+    analysisMode:
+      "aggregate",
+
+    includeReasons:
+      true,
+
+    includeSources:
+      true
 
   };
 
@@ -1750,23 +2270,66 @@ async function requestWorker(
     endpoint;
 
 
-  const response =
-    await fetch(
-      url,
-      {
+  const controller =
+    new AbortController();
 
-        method: "POST",
 
-        headers: {
-          "Content-Type":
-            "application/json"
-        },
-
-        body:
-          JSON.stringify(body)
-
-      }
+  const timeout =
+    setTimeout(
+      () => controller.abort(),
+      30000
     );
+
+
+  let response;
+
+
+  try {
+
+    response =
+      await fetch(
+        url,
+        {
+
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
+
+          body:
+            JSON.stringify(body),
+
+          signal:
+            controller.signal
+
+        }
+      );
+
+  } catch (error) {
+
+    if (
+      error?.name ===
+      "AbortError"
+    ) {
+
+      throw new Error(
+        "REQUEST_TIMEOUT"
+      );
+
+    }
+
+
+    throw error;
+
+  } finally {
+
+    clearTimeout(
+      timeout
+    );
+
+  }
 
 
   let data;
@@ -1812,51 +2375,65 @@ function detectCategory(query) {
 
 
   if (
-    /film|movie|serie|netflix|cinema|attore|attrice/.test(q)
+    /film|movie|serie|netflix|cinema|attore|attrice|watch/.test(q)
   ) {
+
     return "movies";
+
   }
 
 
   if (
-    /libro|libri|romanzo|book|reading/.test(q)
+    /libro|libri|romanzo|book|reading|leggere/.test(q)
   ) {
+
     return "books";
+
   }
 
 
   if (
-    /vestito|scarpe|maglia|felpa|pantaloni|moda|fashion|clothes/.test(q)
+    /vestito|scarpe|maglia|felpa|pantaloni|moda|fashion|clothes|hoodie/.test(q)
   ) {
+
     return "fashion";
+
   }
 
 
   if (
-    /iphone|samsung|computer|pc|telefono|cuffie|tablet|laptop|tech|tecnologia/.test(q)
+    /iphone|samsung|computer|pc|telefono|cuffie|tablet|laptop|tech|tecnologia|headphones/.test(q)
   ) {
+
     return "tech";
+
   }
 
 
   if (
-    /viaggio|vacanza|hotel|volo|mare|trip|travel|destination/.test(q)
+    /viaggio|vacanza|hotel|volo|mare|trip|travel|destination|hotel/.test(q)
   ) {
+
     return "travel";
+
   }
 
 
   if (
-    /ristorante|pizza|sushi|mangiare|cibo|food|restaurant/.test(q)
+    /ristorante|pizza|sushi|mangiare|cibo|food|restaurant|locale/.test(q)
   ) {
+
     return "food";
+
   }
 
 
   if (
-    /calcio|palestra|sport|tennis|padel|campo/.test(q)
+    /calcio|palestra|sport|tennis|padel|campo|gym/.test(q)
   ) {
+
     return "sport";
+
   }
 
 
@@ -1874,6 +2451,7 @@ function showResults() {
   $("#results")
     ?.classList.remove("hidden");
 
+
   window.scrollTo({
     top: 0,
     behavior: "smooth"
@@ -1887,14 +2465,18 @@ function showLoading() {
   $("#resultsLoading")
     ?.classList.remove("hidden");
 
+
   $("#aiAnswer")
     ?.classList.add("hidden");
+
 
   $("#topPicks")
     ?.classList.add("hidden");
 
+
   $("#availability")
     ?.classList.add("hidden");
+
 
   $("#recommendations")
     ?.replaceChildren();
@@ -1922,6 +2504,7 @@ function showResultsError(message) {
 
   hideLoading();
 
+
   $("#resultsError")
     ?.classList.remove("hidden");
 
@@ -1939,6 +2522,10 @@ function showResultsError(message) {
 
 }
 
+
+/* =========================================================
+   ERROR FORMAT
+========================================================= */
 
 function formatError(error) {
 
@@ -1961,7 +2548,21 @@ function formatError(error) {
 
 
   if (
-    message.includes("Failed to fetch")
+    message ===
+    "REQUEST_TIMEOUT"
+  ) {
+
+    return state.language === "en"
+      ? "Findly took too long to respond. Try again."
+      : "Findly ha impiegato troppo tempo a rispondere. Riprova.";
+
+  }
+
+
+  if (
+    message.includes(
+      "Failed to fetch"
+    )
   ) {
 
     return getText(
@@ -1971,14 +2572,35 @@ function formatError(error) {
   }
 
 
-  return message ||
-    getText("errorGeneric");
+  if (
+    message.includes(
+      "insufficient_quota"
+    ) ||
+    message.includes(
+      "no credits remaining"
+    ) ||
+    message.includes(
+      "credits balance exhausted"
+    )
+  ) {
+
+    return state.language === "en"
+      ? "The AI service has no remaining credits."
+      : "Il servizio AI non ha più crediti disponibili.";
+
+  }
+
+
+  return (
+    message ||
+    getText("errorGeneric")
+  );
 
 }
 
 
 /* =========================================================
-   RENDER SEARCH
+   RENDER SEARCH RESULTS
 ========================================================= */
 
 function renderSearchResults(
@@ -1986,6 +2608,7 @@ function renderSearchResults(
 ) {
 
   hideLoading();
+
   hideError();
 
 
@@ -2003,9 +2626,9 @@ function renderSearchResults(
 
   const count =
     Number(
-      data.meta?.resultCount ||
-      data.sources?.length ||
-      data.topPicks?.length ||
+      data.meta?.resultCount ??
+      data.topPicks?.length ??
+      data.sources?.length ??
       0
     );
 
@@ -2016,8 +2639,14 @@ function renderSearchResults(
 
   if (countElement) {
 
+    const label =
+      count === 1
+        ? getText("resultSingular")
+        : getText("results");
+
+
     countElement.textContent =
-      `${count} ${getText("results")}`;
+      `${count} ${label}`;
 
   }
 
@@ -2053,11 +2682,14 @@ function renderSearchResults(
     const container =
       $("#recommendations");
 
+
     if (container) {
 
       container.innerHTML =
         `<div class="empty-state">
-          ${escapeHTML(getText("noResults"))}
+          ${escapeHTML(
+            getText("noResults")
+          )}
         </div>`;
 
     }
@@ -2087,12 +2719,15 @@ function renderAIAnswer(
     !text ||
     !answer
   ) {
+
     return;
+
   }
 
 
   text.textContent =
-    answer;
+    String(answer)
+      .trim();
 
 
   box.classList.remove(
@@ -2121,11 +2756,14 @@ function renderTopPicks(
     !section ||
     !grid
   ) {
+
     return;
+
   }
 
 
-  grid.innerHTML = "";
+  grid.innerHTML =
+    "";
 
 
   if (
@@ -2143,13 +2781,18 @@ function renderTopPicks(
 
 
   /*
-    IMPORTANT:
-    We do NOT limit the results to 3.
-    Findly can show up to 10 real options.
+    HARD FRONTEND LIMIT.
+
+    Even if the Worker accidentally sends
+    more than requested, the frontend will
+    NEVER display more than 6.
   */
 
   picks
-    .slice(0, FINDLY_CONFIG.MAX_RESULTS)
+    .slice(
+      0,
+      state.resultCount
+    )
     .forEach(
       (pick, index) => {
 
@@ -2158,6 +2801,7 @@ function renderTopPicks(
             pick,
             index
           );
+
 
         grid.appendChild(
           card
@@ -2208,6 +2852,12 @@ function createPickCard(
     "";
 
 
+  const source =
+    pick.url ||
+    pick.link ||
+    "";
+
+
   card.innerHTML = `
 
     <div class="result-card-top">
@@ -2235,16 +2885,46 @@ function createPickCard(
 
     ${
       score
-        ? `<div class="result-score">
-             ${escapeHTML(String(score))}
-           </div>`
+        ? `
+          <div class="result-score">
+            ${escapeHTML(
+              String(score)
+            )}
+          </div>
+        `
         : ""
     }
 
 
-    <p>
-      ${escapeHTML(reason)}
-    </p>
+    ${
+      reason
+        ? `
+          <p>
+            ${escapeHTML(reason)}
+          </p>
+        `
+        : ""
+    }
+
+
+    ${
+      source
+        ? `
+          <a
+            href="${escapeAttribute(source)}"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="source-link">
+
+            ${escapeHTML(
+              getText("visit")
+            )}
+            →
+
+          </a>
+        `
+        : ""
+    }
 
 
     <div class="result-card-actions">
@@ -2252,7 +2932,11 @@ function createPickCard(
       <button
         class="save-result-button secondary-button"
         type="button">
-        ♡ ${escapeHTML(getText("save"))}
+
+        ♡ ${escapeHTML(
+          getText("save")
+        )}
+
       </button>
 
     </div>
@@ -2271,11 +2955,19 @@ function createPickCard(
     () => {
 
       toggleFavorite({
+
         title,
+
         reason,
+
         category:
-          state.currentCategory
+          state.currentCategory,
+
+        url:
+          source
+
       });
+
 
       saveButton.textContent =
         `♥ ${getText("saved")}`;
@@ -2308,11 +3000,14 @@ function renderAvailability(
     !section ||
     !grid
   ) {
+
     return;
+
   }
 
 
-  grid.innerHTML = "";
+  grid.innerHTML =
+    "";
 
 
   if (
@@ -2337,94 +3032,116 @@ function renderAvailability(
     new Set();
 
 
-  items.forEach(item => {
+  items.forEach(
+    item => {
 
-    const key =
-      `${item.platform || ""}|${item.source || ""}`;
+      const key =
+        `${item.platform || ""}|${item.source || ""}`;
 
 
-    if (
-      !seen.has(key)
-    ) {
+      if (
+        !seen.has(key)
+      ) {
 
-      seen.add(key);
-      unique.push(item);
+        seen.add(key);
+
+        unique.push(item);
+
+      }
 
     }
-
-  });
-
-
-  unique.forEach(item => {
-
-    const card =
-      document.createElement(
-        "article"
-      );
+  );
 
 
-    card.className =
-      "availability-card";
+  unique
+    .slice(
+      0,
+      state.resultCount
+    )
+    .forEach(
+      item => {
+
+        const card =
+          document.createElement(
+            "article"
+          );
 
 
-    const platform =
-      item.platform ||
-      getText("source");
+        card.className =
+          "availability-card";
 
 
-    const source =
-      item.source ||
-      "#";
+        const platform =
+          item.platform ||
+          getText("source");
 
 
-    card.innerHTML = `
-
-      <div class="availability-logo">
-        ${escapeHTML(
-          item.logo ||
-          "▶"
-        )}
-      </div>
-
-      <div class="availability-info">
-
-        <strong>
-          ${escapeHTML(platform)}
-        </strong>
-
-        <span>
-          ${escapeHTML(
-            item.type ||
-            ""
-          )}
-        </span>
-
-        <small>
-          ${escapeHTML(
-            item.price ||
-            ""
-          )}
-        </small>
-
-      </div>
-
-      <a
-        href="${escapeAttribute(source)}"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="availability-link">
-        ${escapeHTML(getText("visit"))}
-        →
-      </a>
-
-    `;
+        const source =
+          item.source ||
+          "#";
 
 
-    grid.appendChild(
-      card
+        card.innerHTML = `
+
+          <div class="availability-logo">
+            ${escapeHTML(
+              item.logo ||
+              "▶"
+            )}
+          </div>
+
+
+          <div class="availability-info">
+
+            <strong>
+              ${escapeHTML(platform)}
+            </strong>
+
+            <span>
+              ${escapeHTML(
+                item.type ||
+                ""
+              )}
+            </span>
+
+            <small>
+              ${escapeHTML(
+                item.price ||
+                ""
+              )}
+            </small>
+
+          </div>
+
+
+          ${
+            source !== "#"
+              ? `
+                <a
+                  href="${escapeAttribute(source)}"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="availability-link">
+
+                  ${escapeHTML(
+                    getText("visit")
+                  )}
+                  →
+
+                </a>
+              `
+              : ""
+          }
+
+        `;
+
+
+        grid.appendChild(
+          card
+        );
+
+      }
     );
-
-  });
 
 
   section.classList.remove(
@@ -2459,88 +3176,103 @@ function renderSources(
     !Array.isArray(sources) ||
     !sources.length
   ) {
+
     return;
+
   }
 
 
   sources
     .slice(
       0,
-      FINDLY_CONFIG.MAX_RESULTS
+      state.resultCount
     )
-    .forEach(source => {
+    .forEach(
+      source => {
 
-      const card =
-        document.createElement(
-          "article"
+        const card =
+          document.createElement(
+            "article"
+          );
+
+
+        card.className =
+          "source-card";
+
+
+        const domain =
+          source.source ||
+          getDomain(
+            source.url
+          );
+
+
+        card.innerHTML = `
+
+          <div class="source-card-header">
+
+            <span class="source-domain">
+              ${escapeHTML(domain)}
+            </span>
+
+            <span class="source-label">
+              ${escapeHTML(
+                getText("source")
+              )}
+            </span>
+
+          </div>
+
+
+          <h3>
+            ${escapeHTML(
+              source.title ||
+              getText("source")
+            )}
+          </h3>
+
+
+          ${
+            source.description
+              ? `
+                <p>
+                  ${escapeHTML(
+                    source.description
+                  )}
+                </p>
+              `
+              : ""
+          }
+
+
+          ${
+            source.url
+              ? `
+                <a
+                  href="${escapeAttribute(source.url)}"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="source-link">
+
+                  ${escapeHTML(
+                    getText("visit")
+                  )}
+                  →
+
+                </a>
+              `
+              : ""
+          }
+
+        `;
+
+
+        container.appendChild(
+          card
         );
 
-
-      card.className =
-        "source-card";
-
-
-      const domain =
-        source.source ||
-        getDomain(
-          source.url
-        );
-
-
-      card.innerHTML = `
-
-        <div class="source-card-header">
-
-          <span class="source-domain">
-            ${escapeHTML(domain)}
-          </span>
-
-          <span class="source-label">
-            ${escapeHTML(getText("source"))}
-          </span>
-
-        </div>
-
-
-        <h3>
-          ${escapeHTML(
-            source.title ||
-            getText("source")
-          )}
-        </h3>
-
-
-        <p>
-          ${escapeHTML(
-            source.description ||
-            ""
-          )}
-        </p>
-
-
-        ${
-          source.url
-            ? `
-              <a
-                href="${escapeAttribute(source.url)}"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="source-link">
-                ${escapeHTML(getText("visit"))}
-                →
-              </a>
-            `
-            : ""
-        }
-
-      `;
-
-
-      container.appendChild(
-        card
-      );
-
-    });
+      }
+    );
 
 }
 
@@ -2571,13 +3303,21 @@ function setupComparison() {
 async function performComparison() {
 
   const first =
-    $("#compareOne")?.value.trim();
+    $("#compareOne")
+      ?.value
+      .trim();
+
 
   const second =
-    $("#compareTwo")?.value.trim();
+    $("#compareTwo")
+      ?.value
+      .trim();
+
 
   const context =
-    $("#comparisonContext")?.value.trim() ||
+    $("#comparisonContext")
+      ?.value
+      .trim() ||
     "";
 
 
@@ -2610,7 +3350,9 @@ async function performComparison() {
 
     result.innerHTML =
       `<div class="loading-state">
-        ${escapeHTML(getText("analyzing"))}
+        ${escapeHTML(
+          getText("analyzing")
+        )}
       </div>`;
 
   }
@@ -2624,22 +3366,27 @@ async function performComparison() {
         {
 
           first,
+
           second,
+
           context,
 
           language:
-            state.language
+            state.language,
+
+          responseStyle:
+            "concise"
 
         }
       );
 
 
     if (
-      !data.ok
+      !data?.ok
     ) {
 
       throw new Error(
-        data.error ||
+        data?.error ||
         getText("errorGeneric")
       );
 
@@ -2721,6 +3468,7 @@ function renderComparison(
           <div class="comparison-reasons">
 
             ${data.reasons
+              .slice(0, 4)
               .map(
                 reason =>
                   `<div>
@@ -2766,7 +3514,7 @@ function renderComparisonError(
 
 
 /* =========================================================
-   LOCAL
+   LOCAL SEARCH
 ========================================================= */
 
 function setupLocalSearch() {
@@ -2831,6 +3579,7 @@ function setupSettings() {
     theme.value =
       state.theme;
 
+
     theme.addEventListener(
       "change",
       () => {
@@ -2838,10 +3587,12 @@ function setupSettings() {
         state.theme =
           theme.value;
 
+
         localStorage.setItem(
           "findly_theme",
           state.theme
         );
+
 
         applyTheme();
 
@@ -2855,6 +3606,7 @@ function setupSettings() {
 
     language.value =
       state.language;
+
 
     language.addEventListener(
       "change",
@@ -2875,6 +3627,7 @@ function setupSettings() {
     font.value =
       state.fontSize;
 
+
     font.addEventListener(
       "change",
       () => {
@@ -2882,10 +3635,12 @@ function setupSettings() {
         state.fontSize =
           font.value;
 
+
         localStorage.setItem(
           "findly_font_size",
           state.fontSize
         );
+
 
         applyFontSize();
 
@@ -2930,6 +3685,7 @@ function applyTheme() {
   document.documentElement
     .dataset.theme =
       state.theme;
+
 
   document.body
     .dataset.theme =
@@ -3028,9 +3784,13 @@ function renderHistory() {
 
     container.innerHTML =
       `<div class="empty-state">
-        ${state.language === "en"
-          ? "Your searches will appear here."
-          : "Le tue ricerche appariranno qui."}
+
+        ${
+          state.language === "en"
+            ? "Your searches will appear here."
+            : "Le tue ricerche appariranno qui."
+        }
+
       </div>`;
 
     return;
@@ -3074,8 +3834,10 @@ function renderHistory() {
 
           showSection("home");
 
+
           const input =
             $("#request");
+
 
           if (input) {
 
@@ -3083,6 +3845,7 @@ function renderHistory() {
               item.query;
 
           }
+
 
           performSearch(
             item.query,
@@ -3132,7 +3895,8 @@ function toggleFavorite(
 
     state.favorites.unshift({
       ...item,
-      id: Date.now()
+      id:
+        Date.now()
     });
 
   }
@@ -3170,11 +3934,13 @@ function renderFavorites() {
 
     container.innerHTML =
       `<div class="empty-state">
+
         ${
           state.language === "en"
             ? "Save something and it will appear here."
             : "Salva qualcosa e apparirà qui."
         }
+
       </div>`;
 
     return;
@@ -3204,6 +3970,7 @@ function renderFavorites() {
               item.title
             )}
           </strong>
+
 
           <p>
             ${escapeHTML(
@@ -3449,5 +4216,5 @@ function escapeAttribute(
 
 
 /* =========================================================
-   END
+   END — FINDLY V7
 ========================================================= */
